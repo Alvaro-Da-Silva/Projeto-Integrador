@@ -5,47 +5,36 @@ import Link from 'next/link'
 import { ChevronLeftIcon } from 'lucide-react'
 
 // Component Import
-import Logo from '@/components/shared/Logo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import ForgotPasswordForm from '@/views/pages/auth/forgot-password/forgot-password-form'
 
-// SVG Import
-import AuthBackgroundShape from '@/assets/svg/auth-background-shape'
 
 const ForgotPassword = () => {
   return (
-    <div className='relative flex h-auto min-h-screen items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>
-      <div className='absolute'>
-        <AuthBackgroundShape />
-      </div>
-
+    <div className='flex-1 flex h-auto min-h-screen items-center justify-center px-4 py-10 sm:px-6 lg:px-8'>
       <Card className='z-1 w-full gap-6 py-6 sm:max-w-md'>
         <CardHeader className='gap-6 px-6'>
-          <Link href='/'>
-            <Logo className='gap-3' />
-          </Link>
 
           <div>
-            <CardTitle className='mb-1.5 text-2xl font-semibold'>Forgot Password?</CardTitle>
+            <CardTitle className='mb-1.5 text-2xl font-semibold'>Esqueci minha senha</CardTitle>
             <CardDescription className='text-base'>
-              Enter your email and we&apos;ll send you instructions to reset your password
+              Digite seu email cadastrado e enviaremos instruções para redefinir sua senha
             </CardDescription>
           </div>
         </CardHeader>
 
         <CardContent className='space-y-4 px-6'>
-          {/* ForgotPassword Form */}
           <ForgotPasswordForm />
 
           <Button
             variant='ghost'
             className='group w-full'
-            render={<Link href='/pages/auth/login' />}
+            render={<Link href='/login' />}
             nativeButton={false}
           >
             <ChevronLeftIcon className='size-5 transition-transform duration-200 group-hover:-translate-x-0.5' />
-            Back to login
+            Voltar para página de login
           </Button>
         </CardContent>
       </Card>

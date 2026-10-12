@@ -18,7 +18,7 @@ import {
 import { CalendarCheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from 'lucide-react'
 
 // Type Imports
-import type { CalendarView } from '@/types/apps/calendar-types'
+import type { CalendarView, CalendarEvent } from '@/types/apps/calendar-types'
 
 // Component Imports
 import { Button } from '@/components/ui/button'
@@ -38,12 +38,21 @@ import { cn } from '@/lib/utils'
 
 // Data Imports
 import { EventGap, EventHeight, WeekCellsHeight } from '@/assets/data/constants'
-import { db } from '@/fake-db/apps/calendar'
 
 export interface EventCalendarProps {
   className?: string
   initialView?: CalendarView
 }
+
+const mockEvents: CalendarEvent[] = [
+  {
+    id: '1',
+    title: 'Event 1',
+    start: new Date(),
+    end: new Date(new Date().getTime() + 60 * 60 * 1000),
+    allDay: false
+  }
+]
 
 export function EventCalendar({ className, initialView = 'month' }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(() => new Date())
@@ -196,13 +205,13 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
 
         <div className='flex flex-1 flex-col'>
           {view === 'month' && (
-            <MonthView currentDate={currentDate} events={db} onEventSelect={() => {}} onEventCreate={() => {}} />
+            <MonthView currentDate={currentDate} events={mockEvents} onEventSelect={() => { }} onEventCreate={() => { }} />
           )}
           {view === 'week' && (
-            <WeekView currentDate={currentDate} events={db} onEventSelect={() => {}} onEventCreate={() => {}} />
+            <WeekView currentDate={currentDate} events={mockEvents} onEventSelect={() => { }} onEventCreate={() => { }} />
           )}
           {view === 'day' && (
-            <DayView currentDate={currentDate} events={db} onEventSelect={() => {}} onEventCreate={() => {}} />
+            <DayView currentDate={currentDate} events={mockEvents} onEventSelect={() => { }} onEventCreate={() => { }} />
           )}
         </div>
       </div>

@@ -15,10 +15,29 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
-
-const { connectionCardActions, connectionCards } = db
+const connectionCardActions = ['Share', 'Block', 'Delete']
+const connectionCards = [
+  {
+    id: '1',
+    avatar: '',
+    initials: 'JD',
+    name: 'John Doe',
+    role: 'Developer',
+    tags: [{ label: 'React' }, { label: 'Node' }],
+    stats: { projects: 12, tasks: 45, connections: 890 },
+    isConnected: true
+  },
+  {
+    id: '2',
+    avatar: '',
+    initials: 'MS',
+    name: 'Maria Smith',
+    role: 'Designer',
+    tags: [{ label: 'Figma' }, { label: 'UI' }],
+    stats: { projects: 8, tasks: 32, connections: 450 },
+    isConnected: false
+  }
+]
 
 function ConnectionsCard() {
   return (

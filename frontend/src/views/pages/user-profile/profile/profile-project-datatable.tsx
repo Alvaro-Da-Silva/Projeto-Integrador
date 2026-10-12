@@ -27,8 +27,7 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem } fro
 import { Progress } from '@/components/ui/progress'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
+
 
 // Hook Imports
 import { usePagination } from '@/hooks/use-pagination'
@@ -89,7 +88,25 @@ function ProjectTeamAvatars({ project }: { project: ProjectDatatable }) {
   )
 }
 
-const { projectDatatable } = db
+const projectDatatable: ProjectDatatable[] = [
+  {
+    id: '1',
+    name: 'Website SEO',
+    type: 'React Project',
+    leader: 'Eileen',
+    team: [{ avatar: '', initials: 'AB' }],
+    teamExtraCount: 2,
+    progress: 75
+  },
+  {
+    id: '2',
+    name: 'Dashboard UI',
+    type: 'Figma Design',
+    leader: 'Owen',
+    team: [{ avatar: '', initials: 'CD' }],
+    progress: 30
+  }
+]
 
 function ProfileProjectDatatable({ className }: ProfileProjectDatatableProps) {
   const [search, setSearch] = useState('')

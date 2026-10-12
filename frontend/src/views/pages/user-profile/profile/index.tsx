@@ -5,10 +5,16 @@ import Connections from '@/views/pages/user-profile/profile/connections'
 import ProfileProjectDatatable from '@/views/pages/user-profile/profile/profile-project-datatable'
 import Teams from '@/views/pages/user-profile/profile/teams'
 
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
+import type { UserActivityItem } from '@/types/pages/user-profile-types'
 
-const { activityLog } = db
+const activityLog: UserActivityItem[] = [
+  {
+    id: '1',
+    description: 'Client Meeting',
+    timestamp: 'Today',
+    detail: 'Project discussion with client.'
+  }
+]
 
 function Profile() {
   return (

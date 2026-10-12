@@ -1,3 +1,5 @@
+'use client'
+
 import { TruckIcon, TriangleAlertIcon, CalendarX2Icon } from 'lucide-react'
 
 import { Card } from '@/components/ui/card'
@@ -7,6 +9,9 @@ import SalesMetricsCard from '@/views/dashboards/charts/chart-sales-metrics'
 import StatisticsCard from '@/views/dashboards/statistics/statistics-card-01'
 import TotalEarningCard from '@/views/dashboards/widgets/widget-total-earning'
 import TransactionDatatable, { type Item } from '@/views/datatables/datatable-transaction'
+import { authClient } from '@/lib/auth-client'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 // Statistics card data
 const StatisticsCardData = [
@@ -303,6 +308,16 @@ const transactionData: Item[] = [
 ]
 
 const OrdersDashboard = () => {
+  const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!session && !isPending) {
+      router.push('/login');
+    }
+  },[session, isPending]);
+
+  
   return (
     <div className='grid grid-cols-2 gap-6 lg:grid-cols-3'>
       {/* Statistics Cards */}

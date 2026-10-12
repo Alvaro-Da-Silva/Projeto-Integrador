@@ -5,135 +5,153 @@ import { useEffect, useRef, useState } from 'react'
 
 // Third-party Imports
 import { ImageIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
+import { UpdateUserDataFormSchema, updateUserDataSchema } from '@/lib/schemas/user-configs'
+import { Controller, useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 // Component Imports
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { authClient } from '@/lib/auth-client'
+import { Field, FieldLabel } from '@/components/ui/field'
+import { toast } from 'sonner'
+import ImageCropperModal from '@/components/modals/ImageCropperModal'
+import { Spinner } from '@/components/ui/spinner'
 
-const countries = [
-  {
-    value: 'india',
-    label: 'India',
-    flag: '/images/flags/india.webp'
-  },
-  {
-    value: 'china',
-    label: 'China',
-    flag: '/images/flags/china.webp'
-  },
-  {
-    value: 'monaco',
-    label: 'Monaco',
-    flag: '/images/flags/monaco.webp'
-  },
-  {
-    value: 'serbia',
-    label: 'Serbia',
-    flag: '/images/flags/serbia.webp'
-  },
-  {
-    value: 'romania',
-    label: 'Romania',
-    flag: '/images/flags/romania.webp'
-  },
-  {
-    value: 'mayotte',
-    label: 'Mayotte',
-    flag: '/images/flags/mayotte.webp'
-  },
-  {
-    value: 'iraq',
-    label: 'Iraq',
-    flag: '/images/flags/iraq.webp'
-  },
-  {
-    value: 'syria',
-    label: 'Syria',
-    flag: '/images/flags/syria.webp'
-  },
-  {
-    value: 'korea',
-    label: 'Korea',
-    flag: '/images/flags/korea.webp'
-  },
-  {
-    value: 'zimbabwe',
-    label: 'Zimbabwe',
-    flag: '/images/flags/zimbabwe.webp'
-  }
-]
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
 
 const PersonalInfo = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null)
+  const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
+
+  const form = useForm<UpdateUserDataFormSchema>({
+    resolver: zodResolver(updateUserDataSchema),
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      image: undefined,
+    },
+  })
 
   useEffect(() => {
-    if (!file) {
-      const t = window.setTimeout(() => setPreview(null), 0)
+    form.register('image')
+  }, [form])
 
-      return () => clearTimeout(t)
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.replace("/login");
+    } else {
+      if (session?.user.name) {
+        form.setValue("name", session.user.name)
+      }
+      if (session?.user.image) {
+        setPreview(session.user.image)
+        form.setValue("image", session.user.image)
+      }
+    }
+  }, [session, isPending, form, router])
+
+  const onSubmit = async (values: UpdateUserDataFormSchema) => {
+    let imageToUpdate: string | null | undefined = undefined
+
+    if (values.image instanceof File) {
+      imageToUpdate = await fileToBase64(values.image)
+    } else if (values.image === null) {
+      imageToUpdate = null
     }
 
-    const url = URL.createObjectURL(file)
-
-    const t = window.setTimeout(() => setPreview(url), 0)
-
-    return () => {
-      clearTimeout(t)
-      URL.revokeObjectURL(url)
-    }
-  }, [file])
-
-  const onSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0]
-
-    if (!f) return
-
-    if (!f.type.startsWith('image/')) {
-      window.alert('Please select an image file')
-      e.currentTarget.value = ''
-
-      return
-    }
-
-    if (f.size > 1024 * 1024) {
-      window.alert('File must be smaller than 1MB')
-      e.currentTarget.value = ''
-
-      return
-    }
-
-    setFile(f)
+    const { data, error } = await authClient.updateUser({
+      name: values.name,
+      ...(imageToUpdate !== undefined ? { image: imageToUpdate } : {}),
+    }, {
+      onSuccess: () => {
+        toast.success("Informações atualizadas com sucesso!");
+      },
+      onError: (ctx) => {
+        toast.error("Erro ao atualizar informações");
+        console.log("Deu erro ao atualizar informações:", ctx.error)
+      }
+    })
   }
 
   const openPicker = () => inputRef.current?.click()
 
-  const remove = () => {
-    setFile(null)
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
+    if (!selectedFile) return
+
+    form.setValue('image', selectedFile, { shouldValidate: true, shouldDirty: true })
+    const isValid = await form.trigger('image')
+    if (!isValid) {
+      if (inputRef.current) inputRef.current.value = ''
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile)
+    setCropImageSrc(objectUrl)
+  }
+
+  const handleCropComplete = (croppedFile: File, croppedUrl: string) => {
+    setFile(croppedFile)
+    setPreview(croppedUrl)
+    form.setValue('image', croppedFile, { shouldValidate: true, shouldDirty: true })
+    setCropImageSrc(null)
     if (inputRef.current) inputRef.current.value = ''
   }
 
-  return (
-    <div className='grid grid-cols-1 gap-10 lg:grid-cols-3'>
-      {/* Vertical Tabs List */}
-      <div className='flex flex-col space-y-1'>
-        <h3 className='text-base font-semibold'>Personal Information</h3>
-        <p className='text-muted-foreground text-sm'>Manage your personal information and role.</p>
-      </div>
+  const handleCropCancel = () => {
+    setCropImageSrc(null)
+    if (inputRef.current) inputRef.current.value = ''
+    form.setValue('image', file ?? session?.user.image ?? undefined, { shouldValidate: true })
+  }
 
-      {/* Content */}
-      <div className='space-y-6 lg:col-span-2'>
-        <form className='mx-auto'>
+  const remove = () => {
+    setFile(null)
+    setPreview(null)
+    form.setValue('image', null, { shouldValidate: true, shouldDirty: true })
+    if (inputRef.current) inputRef.current.value = ''
+  }
+
+  if (isPending) {
+    return (
+      <div className='flex items-center justify-center py-12'>
+        <Spinner className='size-8' />
+      </div>
+    )
+  }
+
+  return (
+    <div className='grid grid-cols-1 gap-10 w-full'>
+      {cropImageSrc && (
+        <ImageCropperModal
+          imageSrc={cropImageSrc}
+          aspectRatio={1}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
+
+      <div className='space-y-6 w-full'>
+        <form className='mx-auto' onSubmit={form.handleSubmit(onSubmit)}>
           <div className='mb-6 w-full space-y-2'>
-            <Label>Your Avatar</Label>
+            <Label>Foto de Perfil</Label>
             <div className='flex items-center gap-4'>
               <div
                 role='button'
                 tabIndex={0}
-                aria-label='Upload your avatar'
+                aria-label='Upload sua foto'
                 onClick={openPicker}
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -144,108 +162,68 @@ const PersonalInfo = () => {
                 className='flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed hover:opacity-95'
               >
                 {preview ? (
-                  <img src={preview} alt='avatar preview' className='h-full w-full object-cover' />
+                  <img src={preview} alt='Foto de perfil' className='h-full w-full object-cover' />
                 ) : (
                   <ImageIcon />
                 )}
               </div>
 
               <div className='flex items-center gap-2'>
-                <input ref={inputRef} type='file' accept='image/*' className='hidden' onChange={onSelect} />
-                <Button type='button' variant='outline' onClick={openPicker} className='flex items-center gap-2'>
+                <input
+                  ref={inputRef}
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={onFileChange}
+                />
+                <Button type='button' variant='outline' onClick={openPicker} className='flex items-center gap-2 cursor-pointer'>
                   <UploadCloudIcon />
-                  Upload avatar
+                  Carregar foto de perfil
                 </Button>
-                <Button type='button' variant='ghost' onClick={remove} disabled={!file} className='text-destructive!'>
+                <Button type='button' variant='ghost' onClick={remove} disabled={!file && !preview} className='text-destructive! cursor-pointer'>
                   <Trash2Icon />
                 </Button>
               </div>
             </div>
-            <p className='text-muted-foreground text-sm'>Pick a photo up to 1MB.</p>
+            <p className='text-muted-foreground text-sm'>Certifique-se de que a imagem não ultrapasse 7MB.</p>
+            {form.formState.errors.image && (
+              <p className='text-sm text-destructive'>{form.formState.errors.image.message}</p>
+            )}
           </div>
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
-            <div className='flex flex-col items-start gap-2'>
-              <Label htmlFor='multi-step-personal-info-first-name'>First Name</Label>
-              <Input id='multi-step-personal-info-first-name' placeholder='John' />
-            </div>
-            <div className='flex flex-col items-start gap-2'>
-              <Label htmlFor='multi-step-personal-info-last-name'>Last Name</Label>
-              <Input id='multi-step-personal-info-last-name' placeholder='Doe' />
-            </div>
-            <div className='flex flex-col items-start gap-2'>
-              <Label htmlFor='multi-step-personal-info-mobile'>Mobile</Label>
-              <Input id='multi-step-personal-info-mobile' type='tel' placeholder='+1 (555) 123-4567' />
-            </div>
-            <div className='flex flex-col items-start gap-2'>
-              <Label htmlFor='country'>Country</Label>
-              <Select defaultValue='1' required items={countries}>
-                <SelectTrigger id='country' className='w-full'>
-                  <SelectValue placeholder='Select Country'>
-                    {(value: string) => {
-                      const country = countries.find(c => c.value === value)
-
-                      return country ? (
-                        <span className='flex items-center gap-2'>
-                          <img src={country.flag} alt={`${country.label} flag`} className='h-4 w-5 shrink-0' />
-                          <span className='truncate'>{country.label}</span>
-                        </span>
-                      ) : (
-                        <span>Select Country</span>
-                      )
-                    }}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className='max-h-100'>
-                  <SelectGroup>
-                    {countries.map(country => (
-                      <SelectItem key={country.value} value={country.value}>
-                        <img src={country.flag} alt={`${country.label} flag`} className='h-4 w-5' />{' '}
-                        <span className='truncate'>{country.label}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className='space-y-2'>
-              <Label htmlFor='gender'>Gender</Label>
-              <Select>
-                <SelectTrigger id='gender' className='w-full'>
-                  <SelectValue placeholder='Select a gender' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value='male'>Male</SelectItem>
-                    <SelectItem value='female'>Female</SelectItem>
-                    <SelectItem value='other'>Other</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className='space-y-2'>
-              <Label htmlFor='role'>Role</Label>
-              <Select>
-                <SelectTrigger id='role' className='w-full'>
-                  <SelectValue placeholder='Select a role' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value='admin'>Admin</SelectItem>
-                    <SelectItem value='user'>User</SelectItem>
-                    <SelectItem value='other'>Other</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+            <Controller
+              name='name'
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field className='gap-2'>
+                  <FieldLabel htmlFor='name' className='leading-5'>
+                    Nome
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id='name'
+                    placeholder='Digite seu nome'
+                    aria-invalid={!!fieldState.error}
+                  />
+                  {fieldState.error && (
+                    <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+                  )}
+                </Field>
+              )}
+            />
+          </div>
+          <div className='flex justify-end'>
+            <Button type='submit' className='max-sm:w-full' disabled={form.formState.isSubmitting || !form.formState.isValid}>
+              {form.formState.isSubmitting ? (
+                <span className='flex items-center gap-2'>
+                  <Spinner className='size-4' />
+                </span>
+              ) : (
+                'Salvar'
+              )}
+            </Button>
           </div>
         </form>
-        <div className='flex justify-end'>
-          <Button type='submit' className='max-sm:w-full'>
-            Save Changes
-          </Button>
-        </div>
       </div>
     </div>
   )

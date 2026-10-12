@@ -55,8 +55,6 @@ import themeConfig from '@/configs/themeConfig'
 // Util Imports
 import { cn } from '@/lib/utils'
 
-import { getNavApps } from '@/lib/nav-apps'
-
 const isSubGroup = (item: MenuSubItem): item is MenuGroupSubItem => 'childItems' in item
 
 const isExternalLink = (href: string) => href.startsWith('http://') || href.startsWith('https://')
@@ -92,9 +90,6 @@ function isLinkActive(
   return pathname === href
 }
 
-// Keys of every branch (top-level item, plus nested sub-group) that contains the active
-// route. Branches the user has never toggled fall back to this, so the tree opens itself
-// on first render and follows the route on every navigation.
 function getActiveBranchKeys(
   groups: NavItem[],
   pathname: string,
@@ -120,7 +115,6 @@ function getActiveBranchKeys(
   return keys
 }
 
-// A single navigable link inside the icon-mode flyout, at either nesting level.
 const FlyoutMenuLink = ({ item, isActive }: { item: MenuLeafSubItem; isActive: boolean }) => (
   <DropdownMenuItem
     className={cn('justify-between gap-2', isActive && 'bg-primary/10 text-accent-foreground font-medium')}
@@ -138,9 +132,6 @@ const FlyoutMenuLink = ({ item, isActive }: { item: MenuLeafSubItem; isActive: b
   </DropdownMenuItem>
 )
 
-// Icon-mode stand-in for a collapsible menu item. The rail is too narrow to show the
-// inline sub-menu, so the children open in a dropdown to the right of the rail — with
-// nested sub-groups rendered as submenus so every leaf stays reachable.
 const FlyoutMenuItem = ({
   item,
   childItems,
@@ -167,7 +158,6 @@ const FlyoutMenuItem = ({
           <ChevronRightIcon className='ml-auto' />
         </DropdownMenuTrigger>
         <DropdownMenuContent side='right' align='start' sideOffset={12} className='w-auto min-w-52'>
-          {/* The label must live inside a Group — Base UI's GroupLabel throws without one. */}
           <DropdownMenuGroup>
             <DropdownMenuLabel className='text-foreground flex items-center gap-2 text-sm'>
               <span className='truncate'>{item.label}</span>
@@ -447,40 +437,13 @@ const SidebarLayout = () => {
   const searchParams = useSearchParams()
   const { state, isMobile } = useSidebar()
 
-  // Remove this state when the nav-apps API is removed. Until then, this state is used to hold the external nav-apps fetched from the API JSON.
   const [externalApps, setExternalApps] = useState<MenuItem[]>([])
 
-  // Branches the user has explicitly opened or closed, keyed by label. It lives here rather
-  // than inside each Collapsible so it survives the swap between the inline sub-menu and the
-  // icon-mode flyout — collapsing and re-expanding the sidebar keeps the tree as it was.
-  // Anything absent from this map falls back to "open if it holds the active route".
+ 
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({})
 
-  useEffect(() => {
-    let mounted = true
 
-    getNavApps().then(data => {
-      if (!mounted) return
 
-      setExternalApps(
-        data.map(app => ({
-          icon: app.icon as MenuItem['icon'],
-          label: app.name,
-          href: app.href,
-          badge: 'Pro',
-          badgeClassName: 'right-8',
-          ...(app.openInNewTab ? { target: '_blank' as const } : {})
-        }))
-      )
-    })
-
-    return () => {
-      mounted = false
-    }
-  }, [])
-
-  // Nav groups rendered in the sidebar.
-  // Remove the externalApps branch when the nav-apps API is removed. Until then, this is used to merge external nav-apps into the "Apps" group.
   const navGroups = useMemo(
     () =>
       externalApps.length > 0
@@ -496,7 +459,6 @@ const SidebarLayout = () => {
     [navGroups, pathname, searchParams]
   )
 
-  // A user toggle wins; otherwise the branch mirrors whether it holds the active route.
   const isBranchOpen = useCallback(
     (key: string) => openItems[key] ?? activeBranchKeys.has(key),
     [openItems, activeBranchKeys]
@@ -506,8 +468,6 @@ const SidebarLayout = () => {
     setOpenItems(prev => ({ ...prev, [key]: open }))
   }, [])
 
-  // Only the icon rail is too narrow for the inline sub-menu. Mobile renders the full-width
-  // sheet, so it keeps the normal tree.
   const isIconMode = state === 'collapsed' && !isMobile
 
   return (
