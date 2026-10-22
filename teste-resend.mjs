@@ -1,17 +1,28 @@
 
-import { Resend } from "resend";
+const express = require("express");
+const { enviarEmail } = require("../services/email.service");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const router = express.Router();
 
-const { data, error } = await resend.emails.send({
-  from: "SISCOTA <onboarding@resend.dev>",
-  to: "delivered@resend.dev",
-  subject: "Teste de envio - SISCOTA",
-  text: "Teste de integração do SISCOTA com o Resend."
+router.post("/teste-email", async (req, res) => {
+  try {
+    const resultado = await enviarEmail({
+      para: req.body.email,
+      assunto: "Teste de e-mail — SISCOTA",
+      mensagem: "O serviço de envio do SISCOTA está funcionando.",
+    });
+
+    res.status(200).json({
+      mensagem: "Solicitação de envio aceita.",
+      id: resultado.id,
+    });
+  } catch (erro) {
+    console.error("Erro no envio de e-mail:", erro.message);
+
+    res.status(500).json({
+      mensagem: "Não foi possível enviar o e-mail.",
+    });
+  }
 });
 
-if (error) {
-  console.error("Falha no envio:", error);
-} else {
-  console.log("Solicitação aceita pelo Resend:", data);
-}
+module.exports = router;
