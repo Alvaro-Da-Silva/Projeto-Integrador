@@ -320,7 +320,6 @@ const OrdersDashboard = () => {
   
   return (
     <div className='grid grid-cols-2 gap-6 lg:grid-cols-3'>
-      {/* Statistics Cards */}
       <div className='col-span-full grid gap-6 sm:grid-cols-3 md:max-lg:grid-cols-1'>
         {StatisticsCardData.map((card, index) => (
           <StatisticsCard
@@ -334,10 +333,8 @@ const OrdersDashboard = () => {
       </div>
 
       <div className='grid gap-6 max-xl:col-span-full lg:max-xl:grid-cols-2'>
-        {/* Product Insights Card */}
         <ProductInsightsCard className='justify-between gap-3 *:data-[slot=card-content]:space-y-5' />
 
-        {/* Total Earning Card */}
         <TotalEarningCard
           title='Total Earning'
           earning={24650}

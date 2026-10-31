@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { UpdateEmailFormSchema, updateEmailSchema } from '@/lib/schemas/user-configs'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { sendEmail } from '@/lib/email'
 
 // Component Imports
 import { Button } from '@/components/ui/button'
@@ -31,12 +32,15 @@ const ChangeEmail = () => {
       newEmail: values.newEmail,
     }, {
       onSuccess: () => {
-        toast.success("Email alterado com sucesso")
+        toast.success("Email Enviado para confirmação!")
         form.reset()
       },
       onError: (ctx) => {
         if (ctx.error.message === "Invalid email") {
           toast.error("Email inválido")
+        } else {
+          toast.error("Erro ao alterar o email")
+          console.error(ctx.error)
         }
       }
     })
@@ -72,7 +76,6 @@ const ChangeEmail = () => {
               )}
             />
             <p className='text-foreground text-sm font-medium'>Aviso:</p>
-
             <p>O email será redefinido definitivamente após a confirmação do novo email.</p>
           </div>
 
@@ -83,7 +86,7 @@ const ChangeEmail = () => {
                   <Spinner className='size-4' />
                 </span>
               ) : (
-                'Salvar Alterações'
+                'Alterar Email'
               )}
             </Button>
           </div>

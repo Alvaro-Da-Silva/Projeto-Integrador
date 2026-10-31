@@ -5,9 +5,6 @@ import { Fragment } from 'react'
 
 import { usePathname } from 'next/navigation'
 
-// Third-party Imports
-import { LanguagesIcon } from 'lucide-react'
-
 // Component Imports
 import ModeToggle from '@/components/layout/ModeToggle'
 import ProfileDropdown from '@/components/shared/ProfileDropdown'
@@ -43,7 +40,13 @@ const Header = () => {
                 return (
                   <Fragment key={href}>
                     <BreadcrumbItem>
-                      {isLast ? <BreadcrumbPage>{label}</BreadcrumbPage> : <BreadcrumbLink>{label}</BreadcrumbLink>}
+                      {isLast ? (
+                        <BreadcrumbPage>{label}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink className='cursor-pointer' href={href}>
+                          {label}
+                        </BreadcrumbLink>
+                      )}
                     </BreadcrumbItem>
                     {!isLast && <BreadcrumbSeparator />}
                   </Fragment>

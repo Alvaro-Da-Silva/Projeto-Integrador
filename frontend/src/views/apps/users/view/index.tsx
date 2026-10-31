@@ -14,7 +14,7 @@ const STATIC_USER: AppUser = {
   id: '1',
   name: 'John Doe',
   email: 'john@example.com',
-  role: 'Admin',
+  role: 'admin',
   plan: 'Enterprise',
   status: 'Active',
   billing: 'Auto Debit',

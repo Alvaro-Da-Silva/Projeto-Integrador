@@ -49,11 +49,12 @@ import {
 } from '@/components/ui/sidebar'
 
 // Config Imports
-import { navItems } from '@/configs/navConfig'
+import { navItems, filtrarMenu } from '@/configs/navConfig'
 import themeConfig from '@/configs/themeConfig'
 
 // Util Imports
 import { cn } from '@/lib/utils'
+import { authClient } from '@/lib/auth-client'
 
 const isSubGroup = (item: MenuSubItem): item is MenuGroupSubItem => 'childItems' in item
 
@@ -436,23 +437,24 @@ const SidebarLayout = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { state, isMobile } = useSidebar()
+  const { data: session } = authClient.useSession()
+  const role = session?.user.role
 
   const [externalApps, setExternalApps] = useState<MenuItem[]>([])
 
- 
+
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({})
 
 
 
-  const navGroups = useMemo(
-    () =>
+  const navGroups = useMemo(() => {
+    const base =
       externalApps.length > 0
-        ? navItems.map(item =>
-            item.groupLabel === 'Apps' ? { ...item, items: item.items.concat(externalApps) } : item
-          )
-        : navItems,
-    [externalApps]
-  )
+        ? navItems.map(item => (item.groupLabel === 'Apps' ? { ...item, items: item.items.concat(externalApps) } : item))
+        : navItems
+
+    return filtrarMenu(base, role)
+  }, [externalApps, role])
 
   const activeBranchKeys = useMemo(
     () => getActiveBranchKeys(navGroups, pathname, searchParams),

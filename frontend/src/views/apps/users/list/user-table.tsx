@@ -13,16 +13,41 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 // Util Imports
 import { cn } from '@/lib/utils'
-import { userTableColumns } from './user-table-columns'
+import { userTableColumns, type UserTableColumnHandlers } from './user-table-columns'
 
 export interface UserTableProps {
   paginatedUsers: AppUser[]
   totalPages: number
   sorting: UserSorting | null
   onSortingChange: (sorting: UserSorting | null) => void
+  isLoading?: boolean
+  errorMessage?: string | null
+  onBan: UserTableColumnHandlers['onBan']
+  onUnban: UserTableColumnHandlers['onUnban']
+  onEdit: UserTableColumnHandlers['onEdit']
+  onSave: UserTableColumnHandlers['onSave']
+  onCancelEdit: UserTableColumnHandlers['onCancelEdit']
+  editingUserId: UserTableColumnHandlers['editingUserId']
+  editingState: UserTableColumnHandlers['editingState']
+  onEditingStateChange: UserTableColumnHandlers['onEditingStateChange']
 }
 
-export function UserTable({ paginatedUsers, totalPages, sorting, onSortingChange }: UserTableProps) {
+export function UserTable({
+  paginatedUsers,
+  totalPages,
+  sorting,
+  onSortingChange,
+  isLoading = false,
+  errorMessage = null,
+  onBan,
+  onUnban,
+  onEdit,
+  onSave,
+  onCancelEdit,
+  editingUserId,
+  editingState,
+  onEditingStateChange
+}: UserTableProps) {
   const sortingState: SortingState = sorting ? [sorting] : []
 
   const handleSortingChange = (updater: Updater<SortingState>) => {
@@ -40,10 +65,19 @@ export function UserTable({ paginatedUsers, totalPages, sorting, onSortingChange
     })
   }
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: paginatedUsers,
     columns: userTableColumns,
+    meta: {
+      onBan,
+      onUnban,
+      onEdit,
+      onSave,
+      onCancelEdit,
+      editingUserId,
+      editingState,
+      onEditingStateChange
+    },
     manualPagination: true,
     manualFiltering: true,
     manualSorting: true,
@@ -57,6 +91,8 @@ export function UserTable({ paginatedUsers, totalPages, sorting, onSortingChange
     },
     onSortingChange: handleSortingChange
   })
+
+  const rows = table.getRowModel().rows
 
   return (
     <Table>
@@ -98,10 +134,16 @@ export function UserTable({ paginatedUsers, totalPages, sorting, onSortingChange
           </TableRow>
         ))}
       </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.length ? (
-          table.getRowModel().rows.map(row => (
-            <TableRow key={row.id}>
+      <TableBody className={cn(isLoading && 'opacity-60 transition-opacity')}>
+        {errorMessage ? (
+          <TableRow>
+            <TableCell colSpan={userTableColumns.length} className='text-destructive h-24 text-center'>
+              {errorMessage}
+            </TableCell>
+          </TableRow>
+        ) : rows.length ? (
+          rows.map(row => (
+            <TableRow key={row.id} className={cn(editingUserId === row.id && 'bg-muted/40')}>
               {row.getVisibleCells().map(cell => (
                 <TableCell key={cell.id} className='h-14 first:w-12.5 first:pl-4 last:w-29 last:px-4'>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -112,7 +154,7 @@ export function UserTable({ paginatedUsers, totalPages, sorting, onSortingChange
         ) : (
           <TableRow>
             <TableCell colSpan={userTableColumns.length} className='h-24 text-center'>
-              No results.
+              {isLoading ? 'Carregando usuários…' : 'Nenhum usuário encontrado.'}
             </TableCell>
           </TableRow>
         )}

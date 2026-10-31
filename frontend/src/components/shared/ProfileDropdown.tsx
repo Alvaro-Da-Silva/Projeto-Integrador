@@ -19,12 +19,13 @@ import {
 import { useState } from 'react'
 import LogoutModal from '../modals/LogoutModal'
 import { authClient } from '@/lib/auth-client'
+import { getInitialsFromName } from '@/configs/mailConfig'
 
 const ProfileDropdown = () => {
   const [showModalLogout, setShowModalLogout] = useState(false)
   const { data:session } = authClient.useSession()
 
-  const Initials = session?.user?.name.slice(0, 2).toUpperCase()
+  const Initials = getInitialsFromName(session?.user?.name || '')
 
   return (
     <DropdownMenu>
@@ -32,7 +33,7 @@ const ProfileDropdown = () => {
         render={<Button variant='ghost' size='icon' className='relative rounded-full hover:bg-transparent' />}
       >
         <Avatar>
-          <AvatarImage src={session?.user?.image || Initials} alt={session?.user?.name} />
+          {session?.user?.image ? <AvatarImage src={session.user.image} alt={session?.user?.name} /> : null}
           <AvatarFallback>{Initials}</AvatarFallback>
         </Avatar>
         <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2' />
@@ -42,14 +43,14 @@ const ProfileDropdown = () => {
           <DropdownMenuLabel className='flex items-center gap-4 px-2 py-2.5 font-normal'>
             <div className='relative'>
               <Avatar className='size-10'>
-                <AvatarImage src={session?.user.image || Initials} alt={session?.user.name} />
+                {session?.user?.image ? <AvatarImage src={session.user.image} alt={session?.user?.name} /> : null}
                 <AvatarFallback>{Initials}</AvatarFallback>
               </Avatar>
               <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2' />
             </div>
             <div className='flex flex-1 flex-col items-start'>
-              <span className='text-foreground text-base font-semibold'>{session?.user.name}</span>
-              <span className='text-muted-foreground text-xs'>{session?.user.email}</span>
+              <span className='text-foreground text-base font-semibold'>{session?.user?.name || 'Usuário'}</span>
+              <span className='text-muted-foreground text-xs'>{session?.user?.email || ''}</span>
             </div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>

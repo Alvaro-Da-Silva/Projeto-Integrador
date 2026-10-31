@@ -33,20 +33,24 @@ const RegisterForm = () => {
       name: "",
       email: "",
       password: "",
+      patent: "",
       confirmPassword: "",
     },
   })
 
   const onSubmit = async (values: RegisterFormData) => {
-    const { data, error } = await authClient.signUp.email({
+    const { data, error } = await authClient.admin.createUser({
       name: values.name,
       email: values.email,
       password: values.password,
+      data: {
+        patent: values.patent,
+      },
     },{
       onSuccess: () => {
         toast.success("Conta criada com sucesso!")
         form.reset()
-        router.push("/login")
+        router.push("/")
       },
       onError: (ctx) => {
         toast.error("Erro ao cadastrar conta, tente novamente")
@@ -91,6 +95,26 @@ const RegisterForm = () => {
                 type='email'
                 id='userEmail'
                 placeholder='Digite seu email'
+                {...field}
+                aria-invalid={!!fieldState.error} />
+              {fieldState.error && (
+                <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+              )}
+            </Field>
+          )}
+        />
+        <Controller
+          name='patent'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='gap-2'>
+              <FieldLabel className='leading-5' htmlFor='userPatent'>
+                Patente
+              </FieldLabel>
+              <Input
+                type='text'
+                id='userPatent'
+                placeholder='Digite sua patente'
                 {...field}
                 aria-invalid={!!fieldState.error} />
               {fieldState.error && (

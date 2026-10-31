@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
-const ROLES: UserRole[] = ['Admin', 'Editor', 'Subscriber', 'Maintainer', 'Guest']
+const ROLES: UserRole[] = ['admin', 'user']
 const PLANS: UserPlan[] = ['Basic', 'Team', 'Enterprise']
 const STATUSES: UserStatus[] = ['Active', 'Pending', 'Suspended', 'Inactive']
 
@@ -46,7 +46,8 @@ const userFormSchema = z.object({
   contact: z.string().optional(),
   company: z.string().optional(),
   country: z.string().optional(),
-  role: z.enum(['Admin', 'Editor', 'Subscriber', 'Maintainer', 'Guest']),
+  patent: z.string().optional(),
+  role: z.enum(['admin', 'user']),
   plan: z.enum(['Basic', 'Team', 'Enterprise']),
   status: z.enum(['Active', 'Pending', 'Suspended', 'Inactive'])
 })
@@ -59,7 +60,8 @@ const defaultValues: UserFormValues = {
   contact: '',
   company: '',
   country: '',
-  role: 'Subscriber',
+  patent: '',
+  role: 'user',
   plan: 'Basic',
   status: 'Active'
 }
@@ -86,6 +88,7 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
         contact: user.contact ?? '',
         company: user.company ?? '',
         country: user.country ?? '',
+        patent: user.patent ?? '',
         role: user.role,
         plan: user.plan,
         status: user.status
@@ -106,6 +109,7 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
       contact: values.contact || undefined,
       company: values.company || undefined,
       country: values.country || undefined,
+      patent: values.patent || undefined,
       role: values.role,
       plan: values.plan,
       status: values.status
@@ -172,6 +176,18 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
                     placeholder='+1 (555) 000-0000'
                     aria-invalid={fieldState.invalid}
                   />
+                  {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : null}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name='patent'
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-2'>
+                  <FieldLabel htmlFor={field.name}>Patente</FieldLabel>
+                  <Input {...field} id={field.name} placeholder='Patente do usuário' aria-invalid={fieldState.invalid} />
                   {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : null}
                 </Field>
               )}

@@ -50,7 +50,7 @@ const LoginForm = () => {
       rememberMe: values.rememberMe,
     },{
       onSuccess: () => {
-        router.push('/dashboard/orders')
+        router.push('/')
       },
       onError: (ctx) => {
         if(ctx.error.message == "Invalid email or password"){

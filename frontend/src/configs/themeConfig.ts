@@ -1,6 +1,6 @@
 const themeConfig = {
   templateName: 'AdminCN',
-  homePageUrl: '/dashboard/orders'
+  homePageUrl: '/'
 } as const
 
 export default themeConfig

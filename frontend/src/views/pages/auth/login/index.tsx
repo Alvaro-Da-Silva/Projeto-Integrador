@@ -24,13 +24,6 @@ const Login = () => {
         <CardContent className='px-6'>
           <div className='space-y-4'>
             <LoginForm />
-
-            <p className='text-muted-foreground text-center text-base'>
-              Novo na nossa plataforma?{' '}
-              <Link href='/register' className='text-card-foreground hover:underline'>
-                Crie uma conta
-              </Link>
-            </p>
           </div>
         </CardContent>
       </Card>
