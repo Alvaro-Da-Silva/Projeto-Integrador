@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 // Icons Imports
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { ArrowRightIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon } from 'lucide-react'
 
 //Zod Imports
 import { Controller, useForm } from 'react-hook-form'
@@ -24,7 +24,6 @@ import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { toast } from "sonner"
 import { Spinner } from '@/components/ui/spinner'
@@ -66,22 +65,28 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FieldGroup className='gap-4'>
+      <FieldGroup className='gap-5'>
         <Controller
           name='email'
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='gap-2'>
-              <FieldLabel htmlFor='email' className='leading-5'>
+              <FieldLabel htmlFor='email' className='leading-5 font-semibold'>
                 Email
               </FieldLabel>
-              <Input
-                {...field}
-                type='email'
-                id='email'
-                placeholder='Digite seu email'
-                aria-invalid={!!fieldState.error}
-              />
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <MailIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  {...field}
+                  type='email'
+                  id='email'
+                  placeholder='Digite seu email'
+                  autoComplete='email'
+                  aria-invalid={!!fieldState.error}
+                />
+              </InputGroup>
               {fieldState.error && (
                 <p className='text-sm text-destructive'>{fieldState.error.message}</p>
               )}
@@ -94,15 +99,19 @@ const LoginForm = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='w-full gap-2'>
-              <FieldLabel htmlFor='password' className='leading-5'>
+              <FieldLabel htmlFor='password' className='leading-5 font-semibold'>
                 Senha
               </FieldLabel>
-              <InputGroup>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <LockKeyholeIcon />
+                </InputGroupAddon>
                 <InputGroupInput
                   {...field}
                   id='password'
                   type={isVisible ? 'text' : 'password'}
                   placeholder='Digite sua senha'
+                  autoComplete='current-password'
                   aria-invalid={!!fieldState.error}
                 />
                 <InputGroupAddon align='inline-end' className='pr-1.5'>
@@ -125,12 +134,12 @@ const LoginForm = () => {
           )}
         />
 
-        <div className='flex items-center justify-between gap-y-2'>
+        <div className='flex flex-wrap items-center justify-between gap-x-4 gap-y-2'>
           <Controller
             name='rememberMe'
             control={form.control}
             render={({ field }) => (
-              <Field orientation='horizontal' className='flex items-center gap-2'>
+              <Field orientation='horizontal' className='flex w-auto items-center gap-2'>
                 <Checkbox
                   id='rememberMe'
                   checked={field.value}
@@ -144,19 +153,26 @@ const LoginForm = () => {
               </Field>
             )}
           />
-          <Link href='/forgot_password' className='text-base text-nowrap hover:underline'>
+          <Link href='/forgot_password' className='text-sm font-semibold text-nowrap text-(--auth-accent) hover:underline'>
             Esqueci minha senha
           </Link>
         </div>
 
-        <Field>
-          <Button className='w-full' type='submit' disabled={form.formState.isSubmitting || !form.formState.isValid}>
+        <Field className='pt-1'>
+          <Button
+            className='group h-11 w-full rounded-lg text-base font-semibold shadow-lg shadow-primary/25 hover:bg-primary/90'
+            type='submit'
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
             {form.formState.isSubmitting ? (
               <span className='flex items-center gap-2'>
                 <Spinner className='size-4' />
               </span>
             ) : (
-              'Entrar'
+              <>
+                Entrar
+                <ArrowRightIcon className='transition-transform duration-200 group-hover:translate-x-0.5' />
+              </>
             )}
           </Button>
         </Field>

@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useRouter,useSearchParams } from "next/navigation";
 
 // Icon Imports
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, MailIcon, SendIcon } from 'lucide-react'
 
 // Zod Imports
 import { Controller, useForm } from 'react-hook-form'
@@ -56,17 +56,20 @@ const ForgotPasswordForm = () => {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FieldGroup className='gap-4'>
+      <FieldGroup className='gap-5'>
 
         <Controller
         name="email"
         control={form.control}
         render={({field,fieldState}) => (
         <Field>
-          <FieldLabel className='leading-5' htmlFor='email'>
+          <FieldLabel className='leading-5 font-semibold' htmlFor='email'>
             Email
           </FieldLabel>
-          <InputGroup>
+          <InputGroup className='h-11 rounded-lg bg-background'>
+            <InputGroupAddon align='inline-start' className='pl-3'>
+              <MailIcon />
+            </InputGroupAddon>
             <InputGroupInput
               id='email'
               type='email'
@@ -83,13 +86,20 @@ const ForgotPasswordForm = () => {
         />
 
         <Field>
-          <Button className='w-full' type='submit' disabled={form.formState.isSubmitting || !form.formState.isValid}>
+          <Button
+            className='h-11 w-full rounded-lg text-base font-semibold shadow-lg shadow-primary/25 hover:bg-primary/90'
+            type='submit'
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
             {form.formState.isSubmitting ? (
               <span className='flex items-center gap-2'>
                 <Spinner className='size-4' />
               </span>
             ) : (
-              "Enviar Link de Redefinição"
+              <>
+                <SendIcon />
+                Enviar Link de Redefinição
+              </>
             )}
           </Button>
         </Field>

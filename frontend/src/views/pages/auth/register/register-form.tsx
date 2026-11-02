@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon, MedalIcon, ShieldCheckIcon, UserIcon } from 'lucide-react'
 
 // Zod Imports
 import { Controller, useForm } from 'react-hook-form'
@@ -16,7 +16,6 @@ import { authClient } from "@/lib/auth-client";
 // Components Imports
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { toast } from "sonner"
 import { Spinner } from '@/components/ui/spinner'
@@ -62,21 +61,26 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FieldGroup className='gap-4'>
+      <FieldGroup className='gap-5'>
         <Controller
           name='name'
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='gap-2'>
-              <FieldLabel className='leading-5' htmlFor='username'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='username'>
                 Nome
               </FieldLabel>
-              <Input
-                type='text'
-                id='username'
-                placeholder='Digite seu nome'
-                {...field}
-                aria-invalid={!!fieldState.error} />
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <UserIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  type='text'
+                  id='username'
+                  placeholder='Digite seu nome'
+                  {...field}
+                  aria-invalid={!!fieldState.error} />
+              </InputGroup>
               {fieldState.error && (
                 <p className='text-sm text-destructive'>{fieldState.error.message}</p>
               )}
@@ -88,15 +92,20 @@ const RegisterForm = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='gap-2'>
-              <FieldLabel className='leading-5' htmlFor='userEmail'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='userEmail'>
                 Email
               </FieldLabel>
-              <Input
-                type='email'
-                id='userEmail'
-                placeholder='Digite seu email'
-                {...field}
-                aria-invalid={!!fieldState.error} />
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <MailIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  type='email'
+                  id='userEmail'
+                  placeholder='Digite seu email'
+                  {...field}
+                  aria-invalid={!!fieldState.error} />
+              </InputGroup>
               {fieldState.error && (
                 <p className='text-sm text-destructive'>{fieldState.error.message}</p>
               )}
@@ -108,15 +117,20 @@ const RegisterForm = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='gap-2'>
-              <FieldLabel className='leading-5' htmlFor='userPatent'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='userPatent'>
                 Patente
               </FieldLabel>
-              <Input
-                type='text'
-                id='userPatent'
-                placeholder='Digite sua patente'
-                {...field}
-                aria-invalid={!!fieldState.error} />
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <MedalIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  type='text'
+                  id='userPatent'
+                  placeholder='Digite sua patente'
+                  {...field}
+                  aria-invalid={!!fieldState.error} />
+              </InputGroup>
               {fieldState.error && (
                 <p className='text-sm text-destructive'>{fieldState.error.message}</p>
               )}
@@ -128,10 +142,13 @@ const RegisterForm = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='w-full gap-2'>
-              <FieldLabel className='leading-5' htmlFor='password'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='password'>
                 Senha
               </FieldLabel>
-              <InputGroup>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <LockKeyholeIcon />
+                </InputGroupAddon>
                 <InputGroupInput
                   id='password'
                   type={isPasswordVisible ? 'text' : 'password'}
@@ -163,10 +180,13 @@ const RegisterForm = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field className='w-full gap-2'>
-              <FieldLabel className='leading-5' htmlFor='confirmPassword'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='confirmPassword'>
                 Confirmar Senha
               </FieldLabel>
-              <InputGroup>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <ShieldCheckIcon />
+                </InputGroupAddon>
                 <InputGroupInput
               id='confirmPassword'
               type={isConfirmPasswordVisible ? 'text' : 'password'}
@@ -176,6 +196,7 @@ const RegisterForm = () => {
             />
             <InputGroupAddon align='inline-end' className='pr-1.5'>
               <Button
+                type='button'
                 variant='ghost'
                 size='icon'
                 onClick={() => setIsConfirmPasswordVisible(prevState => !prevState)}
@@ -193,7 +214,11 @@ const RegisterForm = () => {
         )}
         />
        <Field>
-          <Button className='w-full' type='submit' disabled={form.formState.isSubmitting || !form.formState.isValid}>
+          <Button
+            className='h-11 w-full rounded-lg text-base font-semibold shadow-lg shadow-primary/25 hover:bg-primary/90'
+            type='submit'
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
             {form.formState.isSubmitting ? (
               <span className='flex items-center gap-2'>
                 <Spinner className='size-4' />

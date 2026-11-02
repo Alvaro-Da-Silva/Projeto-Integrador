@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useRouter,useSearchParams } from "next/navigation";
 
 // Icon Imports
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, LockKeyholeIcon, ShieldCheckIcon } from 'lucide-react'
 
 // Zod Imports
 import { Controller, useForm } from 'react-hook-form'
@@ -42,11 +42,11 @@ const ResetPasswordForm = () => {
 
   if (!token) {
     return (
-      <div className='text-center space-y-4'>
+      <div className='space-y-4 rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center'>
         <p className='text-sm text-destructive'>
           Link inválido ou expirado. Solicite um novo e-mail de redefinição.
         </p>
-        <Button onClick={() => router.push('/forgot_password')}>
+        <Button className='h-11 w-full rounded-lg font-semibold' onClick={() => router.push('/forgot_password')}>
           Solicitar novo link
         </Button>
       </div>
@@ -72,17 +72,20 @@ const ResetPasswordForm = () => {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FieldGroup className='gap-4'>
+      <FieldGroup className='gap-5'>
 
         <Controller
         name="password"
         control={form.control}
         render={({field,fieldState}) => (
         <Field>
-          <FieldLabel className='leading-5' htmlFor='password'>
+          <FieldLabel className='leading-5 font-semibold' htmlFor='password'>
             Nova Senha
           </FieldLabel>
-          <InputGroup>
+          <InputGroup className='h-11 rounded-lg bg-background'>
+            <InputGroupAddon align='inline-start' className='pl-3'>
+              <LockKeyholeIcon />
+            </InputGroupAddon>
             <InputGroupInput
               id='password'
               type={isPasswordVisible ? 'text' : 'password'}
@@ -115,10 +118,13 @@ const ResetPasswordForm = () => {
         control={form.control}
         render={({field,fieldState}) => (
         <Field>
-          <FieldLabel className='leading-5' htmlFor='confirmPassword'>
+          <FieldLabel className='leading-5 font-semibold' htmlFor='confirmPassword'>
             Confirmar Senha
           </FieldLabel>
-          <InputGroup>
+          <InputGroup className='h-11 rounded-lg bg-background'>
+            <InputGroupAddon align='inline-start' className='pl-3'>
+              <ShieldCheckIcon />
+            </InputGroupAddon>
             <InputGroupInput
               id='confirmPassword'
               type={isConfirmPasswordVisible ? 'text' : 'password'}
@@ -147,7 +153,11 @@ const ResetPasswordForm = () => {
         />
 
         <Field>
-          <Button className='w-full' type='submit' disabled={form.formState.isSubmitting || !form.formState.isValid}>
+          <Button
+            className='h-11 w-full rounded-lg text-base font-semibold shadow-lg shadow-primary/25 hover:bg-primary/90'
+            type='submit'
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
             {form.formState.isSubmitting ? (
               <span className='flex items-center gap-2'>
                 <Spinner className='size-4' />
