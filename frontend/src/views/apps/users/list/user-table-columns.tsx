@@ -161,7 +161,6 @@ function UserRowActions({
               </DropdownMenuItem>
             ) : (
               <>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem variant='destructive' onClick={() => meta?.onBan?.(user.id)}>
                   <UserX className='size-4' />
                   Desativar

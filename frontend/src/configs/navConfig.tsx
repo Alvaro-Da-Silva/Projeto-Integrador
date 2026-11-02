@@ -56,17 +56,17 @@ export const navItems: NavItem[] = [
       {
         icon: 'CalendarIcon',
         label: 'Solicitações',
-        href: '/apps/distributions'
+        href: '/solicitacoes'
       },
       {
         icon: 'CalendarIcon',
         label: 'Distribuição definitiva',
-        href: '/apps/definitive'
+        href: '/definitiva'
       },
       {
         icon: 'UsersIcon',
-        label: 'Users',
-        href: '/apps/users/list',
+        label: 'Usuários',
+        href: '/users',
         roles: ['admin']
       }
     ]

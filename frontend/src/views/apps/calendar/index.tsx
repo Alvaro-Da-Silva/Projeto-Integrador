@@ -15,6 +15,7 @@ import {
   subMonths,
   subWeeks
 } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { CalendarCheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from 'lucide-react'
 
 // Type Imports
@@ -47,12 +48,20 @@ export interface EventCalendarProps {
 const mockEvents: CalendarEvent[] = [
   {
     id: '1',
-    title: 'Event 1',
+    title: 'Evento 1',
     start: new Date(),
     end: new Date(new Date().getTime() + 60 * 60 * 1000),
     allDay: false
   }
 ]
+
+const VIEW_LABELS: Record<CalendarView, string> = {
+  month: 'Mês',
+  week: 'Semana',
+  day: 'Dia'
+}
+
+const capitalize = (str: string) => (str ? str.charAt(0).toUpperCase() + str.slice(1) : '')
 
 export function EventCalendar({ className, initialView = 'month' }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(() => new Date())
@@ -92,6 +101,7 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
         case 'm':
           setView('month')
           break
+        case 's':
         case 'w':
           setView('week')
           break
@@ -110,30 +120,32 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
 
   const viewTitle = useMemo(() => {
     if (view === 'month') {
-      return format(currentDate, 'MMMM yyyy')
+      return capitalize(format(currentDate, "MMMM 'de' yyyy", { locale: ptBR }))
     } else if (view === 'week') {
       const start = startOfWeek(currentDate, { weekStartsOn: 0 })
       const end = endOfWeek(currentDate, { weekStartsOn: 0 })
 
       if (isSameMonth(start, end)) {
-        return format(start, 'MMMM yyyy')
+        return capitalize(format(start, "MMMM 'de' yyyy", { locale: ptBR }))
       } else {
-        return `${format(start, 'MMM')} - ${format(end, 'MMM yyyy')}`
+        return `${capitalize(format(start, 'MMM', { locale: ptBR }))} - ${capitalize(format(end, "MMM 'de' yyyy", { locale: ptBR }))}`
       }
     } else if (view === 'day') {
       return (
         <>
           <span className='min-[480px]:hidden' aria-hidden='true'>
-            {format(currentDate, 'MMM d, yyyy')}
+            {format(currentDate, "d 'de' MMM, yyyy", { locale: ptBR })}
           </span>
           <span className='max-[479px]:hidden md:hidden' aria-hidden='true'>
-            {format(currentDate, 'MMMM d, yyyy')}
+            {format(currentDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </span>
-          <span className='max-md:hidden'>{format(currentDate, 'EEE MMMM d, yyyy')}</span>
+          <span className='max-md:hidden'>
+            {capitalize(format(currentDate, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR }))}
+          </span>
         </>
       )
     } else {
-      return format(currentDate, 'MMMM yyyy')
+      return capitalize(format(currentDate, "MMMM 'de' yyyy", { locale: ptBR }))
     }
   }, [currentDate, view])
 
@@ -154,14 +166,14 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
             <div className='flex items-center gap-1'>
               <Button className='max-sm:hidden md:max-lg:h-8'>
                 <PlusIcon size={16} aria-hidden='true' />
-                <span>New event</span>
+                <span>Novo evento</span>
               </Button>
               <Button size='icon-sm' className='sm:hidden'>
                 <PlusIcon size={16} aria-hidden='true' />
               </Button>
               <Button variant='outline' className='max-sm:hidden md:max-lg:h-8' onClick={goToToday}>
                 <CalendarCheckIcon size={16} aria-hidden='true' />
-                <span>Today</span>
+                <span>Hoje</span>
               </Button>
               <Button variant='outline' size='icon-sm' className='sm:hidden' onClick={goToToday}>
                 <CalendarCheckIcon size={16} aria-hidden='true' />
@@ -169,11 +181,11 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
             </div>
           </div>
           <div className='flex items-center gap-1'>
-            <Button variant='ghost' size='icon-sm' onClick={goToPrevious} aria-label='Previous'>
+            <Button variant='ghost' size='icon-sm' onClick={goToPrevious} aria-label='Anterior'>
               <ChevronLeftIcon size={16} aria-hidden='true' />
             </Button>
             <h2 className='text-sm font-semibold sm:text-lg md:text-xl'>{viewTitle}</h2>
-            <Button variant='ghost' size='icon-sm' onClick={goToNext} aria-label='Next'>
+            <Button variant='ghost' size='icon-sm' onClick={goToNext} aria-label='Próximo'>
               <ChevronRightIcon size={16} aria-hidden='true' />
             </Button>
           </div>
@@ -182,21 +194,21 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
               <DropdownMenuTrigger render={<Button variant='outline' className='max-sm:h-8!' />}>
                 <span>
                   <span className='sm:hidden' aria-hidden='true'>
-                    {view.charAt(0).toUpperCase()}
+                    {VIEW_LABELS[view].charAt(0)}
                   </span>
-                  <span className='max-sm:sr-only'>{view.charAt(0).toUpperCase() + view.slice(1)}</span>
+                  <span className='max-sm:sr-only'>{VIEW_LABELS[view]}</span>
                 </span>
                 <ChevronDownIcon className='-me-1 opacity-60' size={16} aria-hidden='true' />
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end' className='min-w-32'>
                 <DropdownMenuItem onClick={() => setView('month')}>
-                  Month <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                  Mês <DropdownMenuShortcut>M</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView('week')}>
-                  Week <DropdownMenuShortcut>W</DropdownMenuShortcut>
+                  Semana <DropdownMenuShortcut>S</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView('day')}>
-                  Day <DropdownMenuShortcut>D</DropdownMenuShortcut>
+                  Dia <DropdownMenuShortcut>D</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

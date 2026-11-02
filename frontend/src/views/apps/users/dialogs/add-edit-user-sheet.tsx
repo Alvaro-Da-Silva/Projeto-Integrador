@@ -20,7 +20,7 @@ import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/com
 
 const ROLES: UserRole[] = ['admin', 'user']
 const PLANS: UserPlan[] = ['Basic', 'Team', 'Enterprise']
-const STATUSES: UserStatus[] = ['Active', 'Pending', 'Suspended', 'Inactive']
+const STATUSES: UserStatus[] = ['Ativo', 'Suspenso', 'Inativo']
 
 const COUNTRIES = [
   'United States',
@@ -49,7 +49,7 @@ const userFormSchema = z.object({
   patent: z.string().optional(),
   role: z.enum(['admin', 'user']),
   plan: z.enum(['Basic', 'Team', 'Enterprise']),
-  status: z.enum(['Active', 'Pending', 'Suspended', 'Inactive'])
+  status: z.enum(['Ativo', 'Suspenso', 'Inativo'])
 })
 
 type UserFormValues = z.infer<typeof userFormSchema>
@@ -63,7 +63,7 @@ const defaultValues: UserFormValues = {
   patent: '',
   role: 'user',
   plan: 'Basic',
-  status: 'Active'
+  status: 'Ativo'
 }
 
 export interface AddEditUserSheetProps {
@@ -128,7 +128,7 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
     <Sheet open={mode !== null} onOpenChange={open => !open && onClose()}>
       <SheetContent side='right' className='w-full overflow-y-auto sm:max-w-[420px]'>
         <SheetHeader className='pb-0'>
-          <SheetTitle className='text-lg font-medium'>{mode === 'edit' ? 'Edit User' : 'Add New User'}</SheetTitle>
+          <SheetTitle className='text-lg font-medium'>{mode === 'edit' ? 'Editar Usuário' : 'Adicionar Usuário'}</SheetTitle>
         </SheetHeader>
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className='flex flex-col gap-4 px-4 pb-4'>
@@ -308,10 +308,10 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
 
           <SheetFooter className='px-0 sm:flex-row'>
             <Button type='submit' variant='outline' onClick={onClose} className='sm:flex-1'>
-              Cancel
+              Cancelar
             </Button>
             <Button type='submit' className='sm:flex-1'>
-              Save Changes
+              Salvar Alterações
             </Button>
           </SheetFooter>
         </form>
