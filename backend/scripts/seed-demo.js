@@ -47,8 +47,8 @@ if (!process.argv.includes('--apply')) {
         ids.periodos.push({id:result.rows[0].id,codigo:period.codigo});
       }
       for (const cotista of plan.cotistas) {
-        const result = await run(`INSERT INTO public.cotista (nome,cpf,observacao)
-          VALUES ($1,$2,$3) RETURNING id`,[cotista.nome,cotista.cpf,stamp]);
+        const result = await run(`INSERT INTO public.cotista (nome,observacao)
+          VALUES ($1,$2) RETURNING id`,[cotista.nome,stamp]);
         ids.cotistas.push({id:result.rows[0].id,nome:cotista.nome});
       }
       for (const scale of plan.escalas) {

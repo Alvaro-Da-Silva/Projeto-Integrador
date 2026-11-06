@@ -48,8 +48,7 @@ if(!process.argv.includes('--apply-authorized')) {
       }
       for(let n=1;n<=4;n++) {
         const nome=`TESTE Cotista ${String(n).padStart(2,'0')}`;
-        const cpf=String(n).padStart(11,'0');
-        const r=await run('INSERT INTO public.cotista (nome,cpf,observacao) VALUES ($1,$2,$3) RETURNING id',[nome,cpf,marker]);
+        const r=await run('INSERT INTO public.cotista (nome,observacao) VALUES ($1,$2) RETURNING id',[nome,marker]);
         result.ids.cotistas.push({id:r.rows[0].id,nome}); result.criados.cotista++;
       }
       for(let day=1;day<=30;day++) {

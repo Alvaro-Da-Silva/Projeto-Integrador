@@ -1,17 +1,9 @@
 import { Router } from 'express';
 import { authenticate, requireRole } from '../middleware/auth.js';
-import { saveAvailability,listMyAvailability } from '../services/availabilityService.js';
-import { objectBody,optionalObservation,periodCode,positiveId } from '../services/workflowValidation.js';
+import { getMyAvailability,saveMyAvailability } from '../controllers/availabilityController.js';
 
 const router = Router();
 router.use(authenticate,requireRole('cotista'));
-router.get('/',async(req,res)=> {
-  res.set('Cache-Control','no-store');
-  res.json(await listMyAvailability(req.user.cotistaId,positiveId(req.query.escalaId)));
-});
-router.put('/:diaId',async(req,res)=> {
-  const b = objectBody(req.body,['codigoPeriodo','observacao']);
-  res.json(await saveAvailability(req.user.cotistaId,positiveId(req.params.diaId),
-    periodCode(b.codigoPeriodo),optionalObservation(b.observacao)));
-});
+router.get('/',getMyAvailability);
+router.put('/:diaId',saveMyAvailability);
 export default router;

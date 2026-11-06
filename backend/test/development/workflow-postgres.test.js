@@ -42,8 +42,8 @@ test('Fluxo autenticado com PostgreSQL real (transacao revertida)',async t=> {
   const users=[['admin',next(2)],['cotista',next(3)],['cotista',next(4)]];
   for(const [role,userId] of users) await write(`INSERT INTO usuario (id,nome,email,senha_hash,perfil_id)
     OVERRIDING SYSTEM VALUE VALUES ($1,$2,$3,$4,$5)`,[userId,label,`${userId}@example.invalid`,hash,roleId(role)]);
-  for(const [n,userId] of [[5,next(3)],[6,next(4)]]) await write(`INSERT INTO cotista (id,usuario_id,nome,cpf)
-    OVERRIDING SYSTEM VALUE VALUES ($1,$2,$3,$4)`,[next(n),userId,label,String(randomInt(10000000000,99999999999))]);
+  for(const [n,userId] of [[5,next(3)],[6,next(4)]]) await write(`INSERT INTO cotista (id,usuario_id,nome)
+    OVERRIDING SYSTEM VALUE VALUES ($1,$2,$3)`,[next(n),userId,label]);
   const free=(await client.query(`SELECT y AS ano,m AS mes FROM generate_series(2000,9999) y
     CROSS JOIN generate_series(1,12) m WHERE NOT EXISTS(SELECT FROM escala e WHERE e.ano=y AND e.mes=m)
     ORDER BY y,m LIMIT 1`)).rows[0];

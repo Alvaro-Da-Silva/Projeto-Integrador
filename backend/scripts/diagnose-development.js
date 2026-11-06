@@ -38,8 +38,8 @@ try {
       OVERRIDING SYSTEM VALUE VALUES ($1,'TESTE PROBE ROLLBACK',11,9998,'9998-11-01','9998-11-30')`,[id]],
     ['periodo','INSERT',`INSERT INTO public.periodo (id,codigo,nome,hora_inicio,hora_fim)
       OVERRIDING SYSTEM VALUE VALUES ($1,'TESTE_PRB','TESTE PROBE ROLLBACK','08:00','20:00')`,[id]],
-    ['cotista','INSERT',`INSERT INTO public.cotista (id,nome,cpf)
-      OVERRIDING SYSTEM VALUE VALUES ($1,'TESTE PROBE ROLLBACK','00000000009')`,[id]],
+    ['cotista','INSERT',`INSERT INTO public.cotista (id,nome)
+      OVERRIDING SYSTEM VALUE VALUES ($1,'TESTE PROBE ROLLBACK')`,[id]],
     ['dia','INSERT',`INSERT INTO public.dia (id,escala_id,data)
       OVERRIDING SYSTEM VALUE VALUES ($1,$1,'9998-11-01')`,[id]],
     ['plantao','INSERT',`INSERT INTO public.plantao (id,dia_id,periodo_id,quantidade_necessaria)

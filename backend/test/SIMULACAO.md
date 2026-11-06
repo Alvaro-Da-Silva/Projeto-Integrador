@@ -24,7 +24,7 @@ Plano completo editável: `scripts/demo-plan.json`. SHA256 atual: `fb55486751aed
 
 Períodos sintéticos propostos: TESTE_D 08:00–20:00 e TESTE_N 20:00–08:00. Os horários são dados de demonstração sujeitos à confirmação, não novas regras produtivas. TESTE_N representa o agregado noturno da demonstração; não divide N1/N2. A API continuará retornando nightPeriodAllocation=pending conforme o serviço existente.
 
-Cotistas propostos: TESTE Cotista 01, 02, 03 e 04, sem vínculo a usuario (FK opcional). CPFs de teste, respectivamente `00000000001` a `00000000004`: valores sintéticos deliberadamente sem validade documental, aceitos pelas constraints físicas atuais, sem alegação de validade de dígitos verificadores. O backend analisado não implementa validação de CPF.
+Cotistas propostos: TESTE Cotista 01 a 04, sem vínculo a usuario. CPF removido do plano; scripts dependem da migração 001 antes de novas cargas.
 
 Participações manuais, todas pendentes, somente no primeiro dia de cada escala:
 
@@ -62,7 +62,7 @@ npm.cmd run demo:audit
 
 O script de preparação cria o banco com proprietário igual ao usuário da conexão de origem; restaura somente o esquema via conexão de siscota_test. A conexão administrativa não é usada pela suíte ou API. Não concede novos privilégios ao banco principal. A identidade é consultada antes de CREATE DATABASE no banco administrativo postgres; nas escritas do destino, SELECT current_database() exige siscota_test. O banco inexistente não poderia ser a conexão da operação CREATE DATABASE.
 
-O seed exige confirmação do hash do arquivo e autorização de escrita, verifica current_database() antes de cada INSERT e antes de COMMIT, e executa a carga inteira em transação. Colisões de mês/ano, código ou CPF não provocam sobrescrita. Uma demonstração já identificada com o mesmo hash não é reaplicada. Alterações manuais não são revertidas pelo seed. IDs só são retornados como PERSISTIDO após COMMIT; não foram antecipados como se já existissem.
+O seed exige confirmação do hash do arquivo e autorização de escrita, verifica current_database() antes de cada INSERT e antes de COMMIT, e executa a carga inteira em transação. Colisões de mês/ano, código não provocam sobrescrita. Uma demonstração já identificada com o mesmo hash não é reaplicada. Alterações manuais não são revertidas pelo seed. IDs só são retornados como PERSISTIDO após COMMIT; não foram antecipados como se já existissem.
 
 ## URLs propostas (respostas reais ainda não obtidas)
 

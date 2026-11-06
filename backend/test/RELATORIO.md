@@ -48,14 +48,14 @@ Após autorização e disponibilidade das ferramentas, configurar TEST_SCHEMA_SO
 
 Para os testes com inserção, copiar `.env.test.example` para `.env.test`, informar TEST_DATABASE_URL com destino `/siscota_test` e, **somente após autorização**, definir TEST_DB_WRITES=authorized. O arquivo está ignorado pelo Git. A suíte não carrega o .env principal; variáveis TEST_* já definidas no terminal têm precedência. O mesmo comando `npm run test:integration` passa então a executar o grupo real.
 
-Fixtures preparadas para todas as 16 tabelas, na ordem das FKs, com valores sintéticos identificados como teste; não representam cadastros existentes. Valores de canal/tipo de notificação, dados criptográficos e campos de autenticação servem apenas para integridade estrutural, pois não há validações desses valores no backend analisado. Não são credenciais ou chaves utilizáveis. O CPF sintético atende às constraints físicas (texto obrigatório e único), não a uma validação de dígitos verificadores inexistente no backend.
+Fixtures preparadas para todas as 16 tabelas, na ordem das FKs, com valores sintéticos identificados como teste; não representam cadastros existentes. Valores de canal/tipo de notificação, dados criptográficos e campos de autenticação servem apenas para integridade estrutural, pois não há validações desses valores no backend analisado. Não são credenciais ou chaves utilizáveis. O requisito de CPF foi revogado posteriormente; fixtures atuais dependem da migração 001, ainda não executada.
 
 ## Cobertura preparada para PostgreSQL real (não executada)
 
 - Fixtures válidas, HTTP 200 com vínculos e 404 para período confirmado ausente.
 - Distribuição 4/3 cotas e 5 cotas sem regra aprovada, lidas pelo serviço real.
 - Limites mês 0/13, ano 1999, datas invertidas, quantidade zero/negativa e status/tipo inválidos.
-- Unicidade de dias/plantões, perfil, email, CPF, código de período, mês/ano, disponibilidade e participação.
+- Unicidade de dias/plantões, perfil, email, código de período, mês/ano, disponibilidade e participação.
 - FKs e NOT NULL obtidas do catálogo real, aplicadas às entidades com fixture. Colunas de identidade não sofrem UPDATE NULL, operação proibida por GENERATED ALWAYS antes da verificação NOT NULL.
 - SAVEPOINT por tentativa inválida, verificação de SQLSTATE, ROLLBACK final e confirmação de remoção das fixtures nas 16 tabelas.
 

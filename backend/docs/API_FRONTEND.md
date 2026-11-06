@@ -1,6 +1,72 @@
 # API disponível para o frontend — atualização do fluxo admin/cotista
 
-Base local: **http://localhost:8080**. Existem **9 combinações de método/rota** implementadas. Reiniciar o processo Node após atualizar o código; um servidor iniciado antes da alteração continua com as rotas antigas.
+## Estado atual confirmado
+
+CPF ausente no banco; telefone, email e dataNascimento obrigatórios, com CHECKs de telefone/email não vazios. Quatro cotistas preservados. Usuário 2 sincronizado ao cotista 5 após autorização: email atual de login cotista05@example.com; senha preservada. Leituras confirmaram o estado, sem teste HTTP de login.
+
+Primeiro acesso por link temporário para definição de senha aprovado; endpoints de cadastro/convite/definição de senha ainda não implementados. Nenhum envio realizado e nenhum frontend alterado. Notas de migração pendente abaixo descrevem etapas históricas anteriores, superadas pela conferência atual do banco.
+
+## Preparação final — sem aplicação de migrações (05/11/2026)
+
+Valores fictícios dos cotistas 5–8 aprovados apenas para desenvolvimento; ainda não gravados. Marcadores TESTE-TELEFONE-05 a 08 têm 17 caracteres e atendem ao limite físico 20 e aos CHECKs não vazios propostos. Não representam telefones discáveis; formato numérico futuro exigirá decisão explícita, sem exceções automáticas em produção.
+
+Cotista 5 e usuario 2 têm nomes/emails divergentes. A regularização proposta modifica só cotista e mantém o email atual de login; sincronização futura depende de aprovação própria e revisão transacional de unicidade. Nenhuma autenticação ou endpoint foi alterado. O email proposto não apresentou conflito na consulta atual, o que não elimina necessidade de nova checagem futura.
+
+Nome, telefone, email e dataNascimento são obrigatórios no contrato planejado; observacao opcional. POST de cadastro ainda não implementado. Migrações 002 → 001 → 003 continuam pendentes de backup recuperável, privilégio de proprietário e autorização explícita. Procedimento de backup/recuperação preparado em [STATUS_BACKEND.md](STATUS_BACKEND.md), sem executar utilitários. Nenhum UPDATE, DDL, teste ou HTTP executado nesta preparação.
+
+## Situação real da migração (05/11/2026)
+
+**PENDENTE, NÃO EXECUTADA.** Leitura da configuração real confirmou `siscota.public.cotista`, com 4 registros (IDs 5–8). Todos têm telefone nulo/vazio, email nulo/vazio e data_nascimento nula. Esses campos continuam opcionais no banco; CPF continua armazenado com NOT NULL e UNIQUE, embora já removido da resposta administrativa no código. Nenhum endpoint foi alterado nesta verificação.
+
+O requisito aprovado passa a exigir telefone, email e dataNascimento no futuro cadastro. O exemplo planejado com valores nulos abaixo está superado para esses três campos e não deve orientar a implementação. Contrato definitivo de cadastro e sincronização ainda exige revisão; cadastro não foi implementado nesta etapa. A migração depende da correção autorizada dos dados reais, backup recuperável confirmado, privilégios de ALTER e confirmação explícita após análise. Não houve testes HTTP ou automatizados. Detalhes: [STATUS_BACKEND.md](STATUS_BACKEND.md).
+
+Base local: **http://localhost:8080**. Existem **13 combinações de método/rota** implementadas. Reiniciar o processo Node após atualizar o código; um servidor iniciado antes da alteração continua com as rotas antigas.
+
+## Consulta administrativa — Entrega 1
+
+**IMPLEMENTADO; NÃO VALIDADO EM EXECUÇÃO.** Os nove endpoints anteriores foram preservados.
+
+| Método | Rota | Perfil | Resposta 200 |
+| --- | --- | --- | --- |
+| GET | /api/usuarios | admin | Array de usuários |
+| GET | /api/usuarios/:id | admin | Objeto de usuário |
+| GET | /api/cotistas | admin | Array de cotistas |
+| GET | /api/cotistas/:id | admin | Objeto de cotista |
+
+Usar a base local acima e Authorization: Bearer <accessToken> do login existente. Sem body, filtros ou paginação. Listas incluem todos os status, ordenadas por ID; lista vazia retorna []. Cache-Control: no-store.
+
+Usuário: id, nome, email, perfil (nome), status, cotistaId (null sem vínculo).
+Cotista: id, usuarioId, nome, dataNascimento, telefone, email, status, observacao.
+Campos opcionais podem ser null. IDs bigint são strings. dataNascimento segue a serialização existente do driver/Express, ainda não conferida em execução.
+
+Campos explicitamente selecionados e projetados; nenhum hash, senha ou token é incluído. Nome/email refletem cada registro armazenado; GET não sincroniza nem altera dados.
+
+Erros esperados pelo código, no formato {"error":"mensagem"}:
+
+- 400: ID inválido. IDs devem ser inteiros positivos no limite bigint.
+- 401: autenticação ausente/inválida/expirada ou usuário sem acesso, conforme middleware existente.
+- 403: Perfil sem permissão para esta operação.
+- 404: Usuário não encontrado. ou Cotista não encontrado.
+- 503 para PostgreSQL 42501/25006: Permissões de escrita do banco não configuradas para esta operação. Mensagem existente preservada inclusive nas leituras.
+- Demais erros preservam o handler existente; falha inesperada retorna 500: Não foi possível concluir a operação.
+
+**PENDENTE:** cadastro, atualização, status, vínculo e sincronização. Aprovar o contrato de entrada/saída antes da Entrega 2 e definir o tratamento do email opcional do cotista antes da sincronização. O DDL salvo não comprova equivalência com o banco ativo.
+
+## Cadastro planejado — sem CPF
+
+CPF removido dos requisitos por solicitação do cliente. **PENDENTE: POST /api/cotistas e POST /api/usuarios ainda não implementados.** CPF não será solicitado, aceito, armazenado ou usado como identificador.
+
+Body proposto para POST /api/cotistas, sujeito à aprovação antes da Entrega 2:
+
+```json
+{"nome":"Cotista Exemplo FICTÍCIO","dataNascimento":"1990-01-05","telefone":"TESTE-TELEFONE-05","email":"cotista05@example.com","observacao":null}
+```
+
+Campos de consulta atuais: id, usuarioId, nome, dataNascimento, telefone, email, status, observacao. O futuro cadastro deverá rejeitar campos não permitidos, incluindo CPF; não há endpoint de cadastro para exercer essa rejeição nesta entrega.
+
+POST /api/usuarios mantém o planejamento aprovado: somente admin; pode criar admin; perfil cotista vinculado a cotista existente; dados do cotista prevalecem no vínculo; hash seguro existente; criação/vínculo e sincronização na mesma transação. O novo requisito torna email do cotista obrigatório, substituindo a dúvida anterior sobre email opcional. Revisar o contrato definitivo antes de implementar.
+
+**Migração preparada, não executada:** backend/migrations/001_remove_cotista_cpf.sql. Seeds e fixtures atuais exigem esquema migrado; o DDL salvo não comprova o banco ativo. Consultas deixam de retornar CPF. Nenhuma referência textual a CPF foi encontrada no frontend; não houve alterações nele. Revisar consumidores externos que ainda esperem o campo. Inventário e riscos: [STATUS_BACKEND.md](STATUS_BACKEND.md).
 
 ## Login e preenchimento de escala
 
@@ -300,7 +366,7 @@ if (!response.ok) {
 
 ## Limitações e execução
 
-O cadastro/liberação de escala e as escolhas do cotista estão implementados nas rotas acima. Não há CRUD público de usuários/cotistas/períodos/participações nem endpoint de distribuição automática. Não integrar por caminhos hipotéticos.
+O cadastro/liberação de escala e as escolhas do cotista estão implementados nas rotas acima. Consultas administrativas de usuários/cotistas foram implementadas sem validação em execução. Escritas desses cadastros, CRUD de períodos/participações e distribuição automática permanecem pendentes. Não integrar por caminhos hipotéticos.
 
 Na pasta backend:
 

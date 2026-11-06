@@ -1,6 +1,6 @@
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual, createHmac } from 'node:crypto';
 import { promisify } from 'node:util';
-import { pool } from '../config/database.js';
+import * as authRepository from '../repositories/authRepository.js';
 import { HttpError } from './workflowValidation.js';
 
 const scrypt = promisify(scryptCallback);
@@ -63,10 +63,6 @@ export function verifyToken(token, now = Math.floor(Date.now()/1000)) {
   return claims.sub;
 }
 
-const userSelect = `SELECT u.id,u.nome,u.email,u.senha_hash AS "senhaHash",u.status,
-  p.nome AS perfil,c.id AS "cotistaId",c.status AS "cotistaStatus"
-  FROM usuario u JOIN perfil p ON p.id=u.perfil_id LEFT JOIN cotista c ON c.usuario_id=u.id`;
-
 function publicUser(row) {
   if (!row || row.status !== 'ativo' || !['admin','cotista'].includes(row.perfil)) {
     throw new HttpError(401, 'Credenciais inválidas ou usuário inativo.');
@@ -76,7 +72,7 @@ function publicUser(row) {
 }
 
 export async function authenticatedUser(id) {
-  const result = await pool.query(`${userSelect} WHERE u.id=$1`,[id]);
+  const result = await authRepository.findUserById(id);
   return publicUser(result.rows[0]);
 }
 
@@ -86,7 +82,7 @@ export async function login(email, password) {
   if (activeLogins >= 4) throw new HttpError(429, 'Muitas tentativas simultâneas. Tente novamente.');
   activeLogins++;
   try {
-    const result = await pool.query(`${userSelect} WHERE lower(u.email)=$1 LIMIT 2`,[email]);
+    const result = await authRepository.findUsersByEmail(email);
     const row = result.rowCount === 1 ? result.rows[0] : null;
     const valid = await verifyPassword(password,row?.senhaHash || dummyHash);
     if (!row || !valid) throw new HttpError(401, 'Credenciais inválidas ou usuário inativo.');

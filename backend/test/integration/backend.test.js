@@ -180,7 +180,6 @@ test('PostgreSQL real: fixtures, constraints e HTTP transacional', {
     ['tipo de solicitacao', 'UPDATE public.solicitacao SET tipo=$1 WHERE id=$2', ['fixture_invalida',fixture.solicitacao], '23514'],
     ['perfil repetido', 'INSERT INTO public.perfil (id,nome) OVERRIDING SYSTEM VALUE SELECT $1,nome FROM public.perfil WHERE id=$2', [fixture.missingId,fixture.perfil], '23505'],
     ['email de usuario repetido', 'INSERT INTO public.usuario (id,nome,email,senha_hash,perfil_id) OVERRIDING SYSTEM VALUE SELECT $1,nome,email,senha_hash,perfil_id FROM public.usuario WHERE id=$2', [fixture.missingId,fixture.usuario], '23505'],
-    ['CPF repetido', 'INSERT INTO public.cotista (id,nome,cpf) OVERRIDING SYSTEM VALUE SELECT $1,nome,cpf FROM public.cotista WHERE id=$2', [fixture.missingId,fixture.cotista], '23505'],
     ['codigo de periodo repetido', 'INSERT INTO public.periodo (id,codigo,nome,hora_inicio,hora_fim) OVERRIDING SYSTEM VALUE SELECT $1,codigo,nome,hora_inicio,hora_fim FROM public.periodo WHERE id=$2', [fixture.missingId,fixture.periodo], '23505'],
     ['mes e ano repetidos', 'INSERT INTO public.escala (id,nome,mes,ano,data_inicio,data_fim) OVERRIDING SYSTEM VALUE SELECT $1,nome,mes,ano,data_inicio,data_fim FROM public.escala WHERE id=$2', [fixture.missingId,fixture.escala], '23505'],
     ['disponibilidade repetida', 'INSERT INTO public.disponibilidade (id,cotista_id,dia_id,periodo_id) OVERRIDING SYSTEM VALUE SELECT $1,cotista_id,dia_id,periodo_id FROM public.disponibilidade WHERE id=$2', [fixture.missingId,fixture.disponibilidade], '23505'],

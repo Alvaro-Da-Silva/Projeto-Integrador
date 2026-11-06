@@ -1,3 +1,4 @@
+-- Target test schema adjusted for migration 001_remove_cotista_cpf.sql; not evidence of live schema.
 --
 -- PostgreSQL database dump
 --
@@ -66,7 +67,6 @@ CREATE TABLE public.cotista (
     id bigint NOT NULL,
     usuario_id bigint,
     nome character varying(200) NOT NULL,
-    cpf character varying(11) NOT NULL,
     data_nascimento date,
     telefone character varying(20),
     email character varying(200),
@@ -457,12 +457,6 @@ ALTER TABLE ONLY public.account
     ADD CONSTRAINT account_pkey PRIMARY KEY (id);
 
 
---
--- Name: cotista cotista_cpf_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.cotista
-    ADD CONSTRAINT cotista_cpf_key UNIQUE (cpf);
 
 
 --

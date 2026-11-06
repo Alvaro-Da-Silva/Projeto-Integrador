@@ -29,8 +29,8 @@ export async function seedFixtures(client) {
   await insert('INSERT INTO public.perfil (id, nome) VALUES ($1, $2)', [ids.perfil, `test-${token}`]);
   await insert('INSERT INTO public.usuario (id, nome, email, senha_hash, perfil_id) VALUES ($1,$2,$3,$4,$5)',
     [ids.usuario, 'Teste isolado', `${token}@example.invalid`, 'fixture-sem-login', ids.perfil]);
-  await insert('INSERT INTO public.cotista (id, usuario_id, nome, cpf) VALUES ($1,$2,$3,$4)',
-    [ids.cotista, ids.usuario, 'Teste isolado', String(randomInt(10000000000, 99999999999))]);
+  await insert('INSERT INTO public.cotista (id, usuario_id, nome) VALUES ($1,$2,$3)',
+    [ids.cotista, ids.usuario, 'Teste isolado']);
   await insert(`INSERT INTO public.escala (id,nome,mes,ano,data_inicio,data_fim,quantidade_cotas_padrao)
     VALUES ($1,$2,$3,$4,$5,$5,4)`, [ids.escala, `test-${token}`, mes, ano, date]);
   await insert(`INSERT INTO public.periodo (id,codigo,nome,hora_inicio,hora_fim)
