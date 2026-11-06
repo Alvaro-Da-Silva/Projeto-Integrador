@@ -1,5 +1,6 @@
 import { pool } from '../config/database.js';
 import { getDailyQuotaDistribution } from './quotaDistributionService.js';
+import { availabilityOptions } from './availabilityOptions.js';
 
 const scaleQuery = `
   SELECT
@@ -76,7 +77,11 @@ export async function getMonthlyCalendar(year, month) {
 
   return {
     escala,
-    dias: dias.map(day => ({ ...day, plantoes: plantoesPorDia.get(String(day.id)) })),
+    dias: dias.map(day => {
+      const result = { ...day, plantoes: plantoesPorDia.get(String(day.id)) };
+      const opcoesDisponibilidade = availabilityOptions(escala,result,periodsResult.rows);
+      return { ...result, opcoesDisponibilidade, liberadoParaPreenchimento:opcoesDisponibilidade.length>0 };
+    }),
     periodos: periodsResult.rows,
     distribuicaoDiariaPadrao: getDailyQuotaDistribution(escala.quantidadeCotasPadrao)
   };

@@ -1,0 +1,415 @@
+{
+  "info": {
+    "_postman_id": "deddd1d9-ea19-46b9-b6f3-ccf3e21c3f07",
+    "name": "SISCOTA - Admin e Cotista",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Importar tambem o ambiente workflow. Senhas/tokens vazios intencionalmente. Copiar accessToken dos logins para adminToken/cotistaToken. Copiar id do POST escala para escalaId e dia.id do calendario para diaId. As requisicoes de escrita alteram dados reais. Sem scripts de teste pagos."
+  },
+  "item": [
+    {
+      "name": "01 Login administrador",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "http://localhost:8080/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{adminEmail}}\",\"senha\":\"{{adminSenha}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "02 Login cotista",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "http://localhost:8080/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{cotistaEmail}}\",\"senha\":\"{{cotistaSenha}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "03 Meu perfil cotista",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/auth/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "me"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{cotistaToken}}"
+          }
+        ],
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "04 Administrador cria escala",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "http://localhost:8080/api/escalas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "escalas"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\":\"TESTE Escala workflow\",\"ano\":{{ano}},\"mes\":{{mes}},\"quantidadeCotasPadrao\":4}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 201. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "05 Consultar calendario",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/escalas/{{ano}}/{{mes}}/calendario",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "escalas",
+            "{{ano}}",
+            "{{mes}}",
+            "calendario"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "06 Administrador libera plantao",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "http://localhost:8080/api/escalas/{{escalaId}}/dias/{{data}}/plantoes/{{codigoPeriodo}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "escalas",
+            "{{escalaId}}",
+            "dias",
+            "{{data}}",
+            "plantoes",
+            "{{codigoPeriodo}}"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"quantidadeNecessaria\":2}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "07 Cotista informa sua escolha",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "http://localhost:8080/api/disponibilidades/{{diaId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "disponibilidades",
+            "{{diaId}}"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{cotistaToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"codigoPeriodo\":\"{{codigoPeriodo}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "08 Minhas escolhas",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/disponibilidades?escalaId={{escalaId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "disponibilidades"
+          ],
+          "query": [
+            {
+              "key": "escalaId",
+              "value": "{{escalaId}}"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{cotistaToken}}"
+          }
+        ],
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "09 Administrador fecha plantao",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "http://localhost:8080/api/escalas/{{escalaId}}/dias/{{data}}/plantoes/{{codigoPeriodo}}/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "escalas",
+            "{{escalaId}}",
+            "dias",
+            "{{data}}",
+            "plantoes",
+            "{{codigoPeriodo}}",
+            "status"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\":\"encerrado\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    },
+    {
+      "name": "10 Administrador fecha escala",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "http://localhost:8080/api/escalas/{{escalaId}}/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "escalas",
+            "{{escalaId}}",
+            "status"
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\":\"fechada\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "HTTP esperado: 200. Operacao protegida conforme o perfil. Gravacoes sao persistentes; nao executar a colecao inteira sem revisar os dados."
+      },
+      "response": []
+    }
+  ]
+}
