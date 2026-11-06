@@ -1,0 +1,29 @@
+{
+  "marker": "TESTE SISCOTA DEMO v1",
+  "periodos": [
+    { "codigo": "TESTE_D", "nome": "TESTE Diurno", "horaInicio": "08:00", "horaFim": "20:00" },
+    { "codigo": "TESTE_N", "nome": "TESTE Noturno agregado", "horaInicio": "20:00", "horaFim": "08:00" }
+  ],
+  "cotistas": [
+    { "nome": "TESTE Cotista 01" },
+    { "nome": "TESTE Cotista 02" },
+    { "nome": "TESTE Cotista 03" },
+    { "nome": "TESTE Cotista 04" }
+  ],
+  "escalas": [
+    {
+      "nome": "TESTE Novembro 2026 - 4 cotas", "ano": 2026, "mes": 11, "cotas": 4,
+      "plantoesPorDia": [{ "periodo": "TESTE_D", "quantidade": 2 }, { "periodo": "TESTE_N", "quantidade": 2 }],
+      "participacoesPrimeiroDia": [{ "cotista": 0, "periodo": "TESTE_D" }, { "cotista": 1, "periodo": "TESTE_D" }, { "cotista": 2, "periodo": "TESTE_N" }, { "cotista": 3, "periodo": "TESTE_N" }]
+    },
+    {
+      "nome": "TESTE Dezembro 2026 - 3 cotas", "ano": 2026, "mes": 12, "cotas": 3,
+      "plantoesPorDia": [{ "periodo": "TESTE_D", "quantidade": 1 }, { "periodo": "TESTE_N", "quantidade": 2 }],
+      "participacoesPrimeiroDia": [{ "cotista": 0, "periodo": "TESTE_D" }, { "cotista": 2, "periodo": "TESTE_N" }, { "cotista": 3, "periodo": "TESTE_N" }]
+    },
+    {
+      "nome": "TESTE Janeiro 2027 - 5 cotas pendentes", "ano": 2027, "mes": 1, "cotas": 5,
+      "plantoesPorDia": [], "participacoesPrimeiroDia": []
+    }
+  ]
+}

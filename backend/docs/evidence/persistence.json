@@ -1,0 +1,193 @@
+{
+  "banco": "siscota",
+  "counts": {
+    "escala": 1,
+    "dia": 30,
+    "periodo": 2,
+    "plantao": 60,
+    "cotista": 4,
+    "user": 1,
+    "account": 1,
+    "session": 10,
+    "verification": 0,
+    "jwks": 1,
+    "usuario": 0,
+    "participacao": 0
+  },
+  "diasComDoisPlantoesEQuatroCotas": 30,
+  "totals": [
+    {
+      "data": "2026-11-01",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-02",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-03",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-04",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-05",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-06",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-07",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-08",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-09",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-10",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-11",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-12",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-13",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-14",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-15",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-16",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-17",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-18",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-19",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-20",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-21",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-22",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-23",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-24",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-25",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-26",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-27",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-28",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-29",
+      "plantoes": 2,
+      "cotas": 4
+    },
+    {
+      "data": "2026-11-30",
+      "plantoes": 2,
+      "cotas": 4
+    }
+  ],
+  "cotistas": [
+    {
+      "id": "5",
+      "nome": "TESTE Cotista 01",
+      "usuario_id": null
+    },
+    {
+      "id": "6",
+      "nome": "TESTE Cotista 02",
+      "usuario_id": null
+    },
+    {
+      "id": "7",
+      "nome": "TESTE Cotista 03",
+      "usuario_id": null
+    },
+    {
+      "id": "8",
+      "nome": "TESTE Cotista 04",
+      "usuario_id": null
+    }
+  ],
+  "authCountsUnchanged": true
+}

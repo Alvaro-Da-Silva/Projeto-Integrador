@@ -1,12 +1,24 @@
 {
-  "name": "Projeto-Integrador",
+  "name": "projeto-integrador",
   "version": "1.0.0",
-  "description": "",
+  "description": "> **Projeto Integrador** | Engenharia de Software — UNISATC  \\\r > **Orientador:** Prof. Hyan Dias Tavares  \\\r > **Instituição Atendida:** Corpo de Bombeiros Militar de Urussanga (SC) — Setor B3",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alvaro-Da-Silva/Projeto-Integrador.git"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues"
+  },
+  "homepage": "https://github.com/Alvaro-Da-Silva/Projeto-Integrador#readme",
+  "dependencies": {
+    "resend": "^6.34.1"
+  }
 }

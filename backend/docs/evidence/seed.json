@@ -1,0 +1,14 @@
+{
+  "banco": "siscota",
+  "estado": "JA_EXISTENTE_SEM_ALTERACOES",
+  "criados": {
+    "escala": 0,
+    "dia": 0,
+    "periodo": 0,
+    "plantao": 0,
+    "cotista": 0
+  },
+  "ids": {
+    "escala": "2"
+  }
+}
