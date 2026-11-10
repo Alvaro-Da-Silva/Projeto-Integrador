@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { createApp } from '../src/app.js';
 import { pool } from '../src/config/database.js';
-import { hashPassword,verifyPassword,issueToken,verifyToken } from '../src/services/authService.js';
+import { mockAuthProvider } from './support/mockAuth.js';
 import { availabilityOptions } from '../src/services/availabilityOptions.js';
 import { positiveId,calendarDate } from '../src/services/workflowValidation.js';
 import { transaction } from '../src/config/transaction.js';
@@ -34,21 +34,16 @@ test('Validacoes e opcoes do preenchimento',async t=> {
   });
 });
 
-test('Login, permissoes, liberacao e disponibilidade (PostgreSQL simulado)',async t=> {
-  const oldSecret=process.env.AUTH_TOKEN_SECRET;
-  process.env.AUTH_TOKEN_SECRET='segredo-exclusivo-dos-testes-nao-utilizar-em-producao';
-  t.after(()=> { if(oldSecret===undefined) delete process.env.AUTH_TOKEN_SECRET; else process.env.AUTH_TOKEN_SECRET=oldSecret; });
-  const password='SenhaSomenteTeste123!';
-  const hash=await hashPassword(password);
+test('Sessao simulada, permissoes, liberacao e disponibilidade (PostgreSQL simulado)',async t=> {
   const users=[
-    {id:'1',nome:'TESTE Admin',email:'admin@example.invalid',senhaHash:hash,status:'ativo',perfil:'admin',cotistaId:null},
-    {id:'2',nome:'TESTE Cotista',email:'cotista@example.invalid',senhaHash:hash,status:'ativo',perfil:'cotista',cotistaId:'10',cotistaStatus:'ativo'},
-    {id:'3',nome:'TESTE Outro',email:'outro@example.invalid',senhaHash:hash,status:'ativo',perfil:'cotista',cotistaId:'11',cotistaStatus:'ativo'},
-    {id:'4',nome:'TESTE Inativo',email:'inativo@example.invalid',senhaHash:hash,status:'desativado',perfil:'admin'}
+    {id:'1',nome:'TESTE Admin',email:'admin@example.invalid',status:'ativo',perfil:'admin',cotistaId:null},
+    {id:'2',nome:'TESTE Cotista',email:'cotista@example.invalid',status:'ativo',perfil:'cotista',cotistaId:'10',cotistaStatus:'ativo'},
+    {id:'3',nome:'TESTE Outro',email:'outro@example.invalid',status:'ativo',perfil:'cotista',cotistaId:'11',cotistaStatus:'ativo'},
+    {id:'4',nome:'TESTE Inativo',email:'inativo@example.invalid',status:'desativado',perfil:'admin'}
   ];
   t.mock.method(pool,'query',async(sql,values)=> {
     if(sql.includes('FROM usuario')) {
-      const rows=users.filter(u=>sql.includes('lower(u.email)') ? u.email===values[0] : u.id===values[0]);
+      const rows=users.filter(u=>sql.includes('lower(u.email)') ? u.email===values[0] : `auth-${u.id}`===values[0]);
       return {rows,rowCount:rows.length};
     }
     throw new Error('Query fora de transacao nao esperada');
@@ -63,12 +58,12 @@ test('Login, permissoes, liberacao e disponibilidade (PostgreSQL simulado)',asyn
       return handle(sql,values);
     }, release:()=> {releases++;}
   }));
-  const server=createApp().listen(0,'127.0.0.1');
+  const server=createApp({authProvider:mockAuthProvider,origins:['http://localhost:3000']}).listen(0,'127.0.0.1');
   await once(server,'listening');
   t.after(()=>new Promise(resolve=> {server.close(resolve);server.closeAllConnections();}));
   const request=async(method,path,body,userId)=> {
     const response=await fetch(`http://127.0.0.1:${server.address().port}${path}`,{
-      method,headers:{'Content-Type':'application/json',...(userId?{Authorization:`Bearer ${issueToken(userId)}`}:{})},
+      method,headers:{'Content-Type':'application/json',Origin:'http://localhost:3000',...(userId?{Cookie:`test-session=${userId}`}:{})},
       body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(10000)});
     return {status:response.status,body:await response.json(),headers:response.headers};
   };
@@ -91,43 +86,11 @@ test('Login, permissoes, liberacao e disponibilidade (PostgreSQL simulado)',asyn
     throw new Error('SQL nao esperado');
   };
   handle=defaultHandle;
-  await t.test('Hash de senha salgado e verificacao correta/incorreta',async()=> {
-    assert(!hash.includes(password));
-    assert.notEqual(await hashPassword(password),hash);
-    assert.equal(await verifyPassword(password,hash),true);
-    assert.equal(await verifyPassword('senha-errada',hash),false);
-    await assert.rejects(hashPassword('curta'));
-  });
-  await t.test('Token adulterado, expirado e segredo diferente sao rejeitados',()=> {
-    const token=issueToken('1',1000);
-    assert.equal(verifyToken(token,1001),'1');
-    assert.throws(()=>verifyToken(token,4600));
-    const pieces=token.split('.');pieces[1]=Buffer.from('{"sub":"2"}').toString('base64url');
-    assert.throws(()=>verifyToken(pieces.join('.'),1001));
-    process.env.AUTH_TOKEN_SECRET='outro-segredo-exclusivo-dos-testes-1234567890';
-    assert.throws(()=>verifyToken(token,1001));
-    process.env.AUTH_TOKEN_SECRET='segredo-exclusivo-dos-testes-nao-utilizar-em-producao';
-  });
-  await t.test('Login correto retorna perfil, token e nunca senhaHash',async()=> {
-    const result=await request('POST','/api/auth/login',{email:'ADMIN@example.invalid',senha:password});
-    assert.equal(result.status,200);assert.equal(result.body.usuario.perfil,'admin');
-    assert.equal(verifyToken(result.body.accessToken),'1');
-    assert.equal(result.headers.get('cache-control'),'no-store');
-    assert(!JSON.stringify(result.body).includes(hash));
-  });
-  await t.test('Senha incorreta e usuario inativo retornam 401',async()=> {
-    assert.equal((await request('POST','/api/auth/login',{email:'admin@example.invalid',senha:'errada'})).status,401);
-    assert.equal((await request('POST','/api/auth/login',{email:'inativo@example.invalid',senha:password})).status,401);
-  });
-  await t.test('Campos de login ausentes ou perfil enviado pelo cliente retornam 400',async()=> {
-    assert.equal((await request('POST','/api/auth/login',{})).status,400);
-    assert.equal((await request('POST','/api/auth/login',{email:'admin@example.invalid',senha:password,perfil:'admin'})).status,400);
-  });
-  await t.test('GET me exige token e consulta perfil atual no banco',async()=> {
-    assert.equal((await request('GET','/api/auth/me')).status,401);
-    assert.equal((await request('GET','/api/auth/me',undefined,'2')).body.cotistaId,'10');
+  await t.test('GET me exige sessao e consulta perfil atual no banco',async()=> {
+    assert.equal((await request('GET','/api/me')).status,401);
+    assert.equal((await request('GET','/api/me',undefined,'2')).body.cotistaId,'10');
     users[1].status='desativado';
-    assert.equal((await request('GET','/api/auth/me',undefined,'2')).status,401);
+    assert.equal((await request('GET','/api/me',undefined,'2')).status,403);
     users[1].status='ativo';
   });
   await t.test('Sem token nao cria escala; cotista recebe 403',async()=> {
@@ -226,11 +189,5 @@ test('Login, permissoes, liberacao e disponibilidade (PostgreSQL simulado)',asyn
     const before=releases;
     await assert.rejects(transaction(async()=> {throw new Error('teste');}));
     assert.equal(releases,before+1);assert.equal(queries.at(-1).sql,'ROLLBACK');
-  });
-  await t.test('Limite de login retorna 429 com Retry-After',async()=> {
-    let result;
-    for(let n=0;n<12;n++) result=await request('POST','/api/auth/login',{});
-    assert.equal(result.status,429);
-    assert(Number(result.headers.get('retry-after'))>0);
   });
 });

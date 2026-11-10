@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { authenticate, requireRole } from '../middleware/auth.js';
+import { getScaleAvailability } from '../controllers/availabilityController.js';
 import { createMonthlyScale,changeScaleStatus,releaseDayShift,changeShiftStatus } from '../controllers/escalaController.js';
 
 const router = Router();
 const admin = [authenticate,requireRole('admin')];
+router.get('/:escalaId/disponibilidades',...admin,getScaleAvailability);
 router.post('/',...admin,createMonthlyScale);
 router.patch('/:escalaId/status',...admin,changeScaleStatus);
 router.put('/:escalaId/dias/:data/plantoes/:codigoPeriodo',...admin,releaseDayShift);

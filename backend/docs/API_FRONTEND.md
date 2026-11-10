@@ -1,3 +1,51 @@
+# Estado real de ativação — conferência de 09/11/2026
+
+Banco principal siscota/public autorizado. Os efeitos estruturais da 004 e campos da 005 já estavam presentes antes desta sessão; nenhum arquivo foi aplicado/reaplicado pelo agente. Referência de identidade com FK/UNIQUE validadas e senha_hash nullable. Dois usuarios internos, quatro cotistas e zero associações Better Auth.
+
+Login/logout PostgreSQL NÃO testados: papel siscota_codex sem escrita nas tabelas Better Auth, default_transaction_read_only=on, nenhuma conexão administrativa disponível e variáveis privadas Better Auth ausentes. Nenhuma identidade criada ou vinculada; nenhuma permissão ou credencial alterada. Backup informado no GitHub, com validação dispensada pelo responsável; não examinado.
+
+Contrato por sessão/cookie preservado: POST /api/auth/sign-in/email, POST /api/auth/sign-out, GET /api/auth/get-session e GET /api/me, com credentials: include. Caminhos implementados não significam autenticação operacional no banco atual. HS256 permanece desativado. Detalhes e comando de privilégios preparado em [BETTER_AUTH_MIGRATION_PLAN.md](BETTER_AUTH_MIGRATION_PLAN.md). Não executar 004/005 novamente. As notas antigas de migração pendente abaixo são históricas, superadas por esta conferência de estrutura.
+
+# Autenticação oficial Better Auth — 09/11/2026
+
+**Este contrato substitui o login HS256 e as orientações Bearer históricas abaixo.** Better Auth 1.7.19 está instalado no backend Express; autenticação por sessão/cookie implementada e validada em memória, ainda pendente de schema, permissões, configuração privada e provisionamento para funcionar no PostgreSQL. Não há JWT/JWKS/Bearer ou Admin plugin no servidor HTTP. Não confundir o código entregue com ativação no banco atual.
+
+- Login: POST `/api/auth/sign-in/email` com `{email,password}` pelo cliente oficial Better Auth React.
+- Logout: POST `/api/auth/sign-out`.
+- Sessão externa: GET `/api/auth/get-session` (200/null quando não autenticado).
+- Identidade funcional interna: GET `/api/me`, com id, nome, email, perfil, cotistaId, cotistaStatus.
+- Enviar cookies com `credentials: 'include'`; não usar o accessToken antigo. Rotas `/api/auth/login` e `/api/auth/me` agora respondem 404.
+- 401 para sessão ausente/inválida; 403 para falta de vínculo/perfil/status e origem não autorizada; 503 para indisponibilidade/configuração pendente identificada. Cadastro público: 403. Erros normais do Better Auth têm contrato próprio do cliente oficial; erros de domínio continuam `{error}`.
+- CORS limitado às origens exatas de SISCOTA_TRUSTED_ORIGINS (padrão dev localhost:3000) e origem configurada da API. Escritas autenticadas de domínio exigem Origin autorizado; navegador envia automaticamente. HTTP de scripts precisa informar Origin e cookie.
+
+Guia completo para a equipe: [FRONTEND_BETTER_AUTH.md](FRONTEND_BETTER_AUTH.md). Plano de banco/provisionamento, sem execução: [BETTER_AUTH_MIGRATION_PLAN.md](BETTER_AUTH_MIGRATION_PLAN.md). A migração proposta 004 associa explicitamente user.id externo a usuario, sem igualdade presumida de IDs ou associação por email. Perfis internos continuam admin/cotista; o cookie sozinho não concede acesso funcional. Cotista sem login permanece permitido. Cadastro administrativo e primeiro acesso por link não foram implementados.
+
+GET `/api/escalas/:escalaId/disponibilidades?cotistaId=ID` preservado para admin, agora exigindo sessão e associação interna. `cotistaNome` é nome do cotista; `cotistas` permanece omitido até definição e confirmação do frontend. DELETE de disponibilidade continua não implementado; a regra aprovada de alteração de participação por solicitação/decisão administrativa não foi modificada nesta tarefa.
+
+# Histórico — integração auditada antes da troca para sessão
+
+Registro histórico superado pelo contrato Better Auth no início deste documento; não usar o fluxo HS256 descrito nesta seção.
+
+Autenticação disponível: enviar `Authorization: Bearer <accessToken>` retornado por `POST /api/auth/login`. Login e resposta preservados. `authenticate` verifica assinatura HS256, algoritmo/tipo, issuer `siscota-backend`, audience `siscota-frontend`, subject bigint, emissão e expiração (1 hora); em seguida consulta `usuario`, `perfil` e `cotista`. `GET /api/auth/me` continua usando esse fluxo. Perfil e status vêm do banco a cada chamada. Token ausente/inválido/expirado ou usuário inativo: 401; perfil sem permissão ou cotista sem vínculo ativo: 403; segredo local indisponível: 503. Cookie de sessão externo não é aceito como JWT.
+
+**Better Auth/JWKS bloqueado por ausência da configuração real.** O frontend local não declara `better-auth` em package.json/lockfile nem contém configuração de servidor/client, plugin JWT, rota `/api/auth/jwks` ou obtenção/envio de token. A tela de login disponível é um formulário de template. Não foi possível identificar versão, algoritmo, issuer, audience, claims ou URL absoluta do JWKS. O caminho relativo informado não comprova um endpoint ativo. O DDL salvo contém `user`, `account`, `session`, `verification`, `jwks`; isso não comprova emissão JWT e não representa auditoria atual do banco. Não foram consultados tokens, chaves ou registros de autenticação. A configuração de ambiente do backend foi examinada somente pelos nomes das variáveis; nenhuma configuração Better Auth foi encontrada. Nenhuma dependência foi instalada e nenhum verificador JWKS foi ativado.
+
+Proposta de vínculo, **sujeita a aprovação estrutural**: tabela de identidades com issuer confiável + subject externo únicos e FK para `usuario.id`, com unicidade de usuario por issuer se aprovado vínculo 1:1. Se a identidade externa residir no mesmo banco, avaliar também FK para `user.id` após confirmar a implantação. Vincular somente contas explicitamente verificadas por responsável; nunca presumir igualdade dos IDs nem associar automaticamente por nome/email. A cadeia seria JWT verificado → vínculo persistente → usuario/perfil atuais → cotista.usuario_id. O esquema salvo não contém esse vínculo; nenhum vínculo real foi conferido nesta tarefa. Sem vínculo, rejeitar com 401; sem perfil/vínculo cotista ativo, 403. A claim externa `user` não concede automaticamente perfil cotista, e `admin` não concede administração local: a autorização interna continua sendo a fonte de permissão.
+
+Plano JWT após receber a configuração: confirmar plugin, versão, algoritmo e claims; escolher biblioteca compatível; fixar JWKS/issuer/audience na configuração confiável do servidor; verificar assinatura, expiração e claims exigidos, rejeitar `none`, usar mensagens 401 genéricas e não registrar tokens. Nenhuma URL virá da requisição. Aprovar a migração e os pares de identidades separadamente. Para transição, propor modo de autenticação explícito por implantação, validação em ambiente isolado e data de corte acordada; eventual sobreposição temporária exige decisão e prazo próprios. Não foi adicionada aceitação dupla. A desativação futura do login legado exige decisão adicional e não faz parte desta alteração.
+
+`GET /api/escalas/:escalaId/disponibilidades?cotistaId=ID` está implementado para **admin**, com authenticate seguido de requireRole('admin'). IDs decimais positivos até bigint máximo; `cotistaId` opcional, mas vazio/repetido/inválido retorna 400. Escala ausente: 404. Escala existente sem escolhas (ou filtro sem resultados): 200 com `[]`. Retorna somente escolhas da escala solicitada, ordenadas por data/id, sem modificar dados e com `Cache-Control: no-store`:
+
+```json
+[{"id":"1","diaId":"10","data":"2026-11-09","codigoPeriodo":"D","periodoId":"5","observacao":null,"registradaEm":"2026-11-09T12:00:00.000Z","cotistaNome":"Exemplo fictício"}]
+```
+
+IDs bigint são strings, conforme o driver e os endpoints existentes. Data vem de `dia.data` como YYYY-MM-DD; nome vem de `cotista.nome`; demais campos vêm de disponibilidade/periodo. `registrada_em` no DDL salvo é timestamp sem timezone: a serialização mantém o comportamento atual do driver; o sufixo Z do exemplo não comprova que a gravação original foi em UTC. **Contrato parcial:** `cotistas` foi omitido até esclarecer seu significado com o frontend; não foi inventada coleção, quantidade ou relacionamento. Disponibilidade não representa participação confirmada. Erros usam `{ "error": "mensagem" }`, conforme middleware existente.
+
+`DELETE /api/disponibilidades/:diaId` **não implementado**, aguardando regra de negócio: remoção em escala fechada, participação pendente/confirmada/cancelada e registros antigos com múltiplos períodos. A UNIQUE física é por cotista/dia/período; PUT atual serializa por cotista e recusa mais de uma escolha antiga no dia. Não há regra de remoção existente que resolva essas situações. A rota DELETE continua ausente (404 padrão Express; não é sucesso de exclusão). Contrato pretendido após decisão: authenticate → requireRole('cotista'), identidade exclusivamente de req.user.cotistaId, dia validado, remoção restrita à própria escolha e resposta 204 sem corpo. Ainda definir ausência de escolha (404 ou 204), conflitos (409) e política de múltiplos registros; não integrar o botão até a conclusão.
+
+Validação desta alteração: 40 testes passaram usando Express local e pool PostgreSQL simulado, sem conexão com banco real. Comando: `node --test --test-isolation=none test/adminAvailability.test.js test/workflow.test.js`. A tentativa inicial com isolamento por processos falhou por `spawn EPERM`; a opção sem processos filhos resolveu a restrição. Nenhum teste contra banco, migração, escrita de dados, alteração de credencial ou frontend foi executado.
+
 # API disponível para o frontend — atualização do fluxo admin/cotista
 
 ## Estado atual confirmado
