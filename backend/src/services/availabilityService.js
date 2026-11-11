@@ -38,3 +38,10 @@ export async function listMyAvailability(cotistaId,scaleId) {
   const result = await availabilityRepository.findAvailabilityByCotistaAndScale(cotistaId,scaleId);
   return result.rows;
 }
+
+export async function listScaleAvailability(scaleId,cotistaId) {
+  const scale = await availabilityRepository.findScaleById(scaleId);
+  if (!scale.rowCount) throw new HttpError(404,'Escala não encontrada.');
+  const result = await availabilityRepository.findAvailabilityByScale(scaleId,cotistaId);
+  return result.rows;
+}

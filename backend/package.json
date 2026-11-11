@@ -1,4 +1,3 @@
-
 {
   "name": "backend",
   "version": "1.0.0",
@@ -7,9 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "node --test --test-isolation=none --test-skip-pattern=\"^PostgreSQL real:\" test/*.test.js test/integration/*.test.js test/development/*.test.js",
-    "test:integration": "node --test --test-isolation=none --test-skip-pattern=\"^PostgreSQL real:\" test/*.test.js test/integration/*.test.js test/development/*.test.js",
-    "test:unit": "node --test test/*.test.js",
+    "test": "node --test --test-isolation=none --test-skip-pattern=\"^PostgreSQL real:\" test/*.test.js test/integration/*.test.js",
+    "test:integration": "node --test --test-isolation=none --test-skip-pattern=\"^PostgreSQL real:\" test/*.test.js test/integration/*.test.js",
+    "test:unit": "node --test --test-isolation=none test/*.test.js",
     "test:http:mock": "node --test --test-isolation=none --test-name-pattern=\"Protecao|HTTP e servico\" test/integration/*.test.js",
     "test:db:prepare": "node scripts/prepare-test-database.js --authorize-create",
     "demo:plan": "node scripts/seed-demo.js",
@@ -20,13 +19,15 @@
     "seed:dev": "node scripts/seed-development.js --apply-authorized",
     "test:dev:real": "node --test test/development/*.test.js",
     "setup:periodos": "node scripts/setup-workflow-periods.js",
-    "setup:conta": "node scripts/setup-workflow-account.js"
+    "setup:conta": "node scripts/setup-workflow-account.js",
+    "test:auth": "node --test --test-isolation=none test/betterAuth.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "better-auth": "1.7.19",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

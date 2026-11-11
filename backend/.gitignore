@@ -5,3 +5,5 @@
 !.env.*.example
 .workflow-demo-credentials.json
 node_modules/
+.npm-cache/
+.env.example
