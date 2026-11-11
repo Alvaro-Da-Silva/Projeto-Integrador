@@ -1,3 +1,72 @@
+# Issue 80 — autorização e validação do vínculo — 10/11/2026
+
+Vínculo autorizado, ainda sem execução confirmada. O papel siscota_codex não tem UPDATE sobre a coluna de vínculo. Aguardando operador PostgreSQL autorizado. Login, sessão persistida, perfil admin com cookie e logout ainda aguardam validação no PostgreSQL real.
+
+O responsável autorizou exclusivamente a associação do administrador ID 1 ao identificador externo aprovado e dispensou novo backup nesta fase de desenvolvimento. Nenhuma migração ou concessão foi executada. O operador deve possuir a permissão necessária para a associação. O roteiro local solicita credenciais por entrada mascarada, verifica o par e as constraints, executa UPDATE parametrizado com contagem de uma linha, e verifica o vínculo após COMMIT. Somente o usuário aprovado pode ser testado.
+
+Verificações HTTP no Express local: /api/auth/ok 200, /api/me e /api/usuarios sem sessão 401, cadastro público 403. A suíte de autenticação em memória aprovou 13 testes, incluindo bloqueio de perfil incorreto, usuário desativado, cotista sem vínculo ativo, elevação por perfil externo e Bearer legado. Esses casos simulados não confirmam sessão PostgreSQL.
+
+No desenvolvimento, use API em http://localhost:8080 e frontend em http://localhost:3000, com cookies e credentials: include. Resolva o perfil pelo GET /api/me. O próximo marco é concluir o roteiro de login e logout no banco real, seguido da validação do cliente React. Esta seção prevalece sobre os estados históricos abaixo.
+
+# Preparação do primeiro acesso real — 10/11/2026
+
+A [#80](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/80) está com o Better Auth inicializado no Express local. O vínculo administrativo e o login real aguardam autorização e backup recuperável. Esta seção substitui os estados anteriores sobre configuração e privilégios.
+
+## Diagnóstico e execução local
+
+- O processo Node que carregava apenas o ambiente do backend encontrava `BETTER_AUTH_URL` e `BETTER_AUTH_SECRET` ausentes. `authSettings()` retornava `503` com “Better Auth não configurado”. `SISCOTA_TRUSTED_ORIGINS` também estava ausente, com padrão local, e a conexão PostgreSQL funcionava.
+- A configuração Better Auth foi criada fora do projeto, em `%LOCALAPPDATA%\SISCOTA-Private\better-auth.dev.env`, com acesso exclusivo do usuário Windows. Foi gerado um segredo com 48 bytes aleatórios criptográficos após verificar a ausência de segredo no ambiente inspecionado e zero sessões não expiradas no banco. A configuração existente de PostgreSQL foi preservada.
+- O Express foi iniciado apenas no loopback, porta 8080, com base `http://localhost:8080` e origens locais `http://localhost:3000` e `http://127.0.0.1:3000`. Prefira usar `localhost` no navegador para a API e para o frontend. A origem efetivamente usada nesta verificação foi `http://localhost:3000`.
+
+Para iniciar a mesma configuração em uma porta 8080 livre, a partir do PowerShell:
+
+```powershell
+$private = Join-Path $env:LOCALAPPDATA 'SISCOTA-Private'
+node --env-file="$private\better-auth.dev.env" "$private\start-express-dev.mjs"
+```
+
+## Banco e cópia de segurança
+
+- O processo Node confirmou `siscota/public`, PostgreSQL 18.6 e papel `siscota_codex`, com `default_transaction_read_only=off` e transação normal leitura/escrita. A auditoria de catálogo e identidades executou somente consultas e `ROLLBACK`.
+- Efeitos da 004 confirmados: `usuario.better_auth_user_id` é `text` nullable, com UNIQUE e FK validada para `public."user"(id)` e `ON DELETE RESTRICT`. `senha_hash` é nullable. Os cinco campos opcionais da 005 existem. O comparativo com os modelos gerados pelo Better Auth 1.7.19 encontrou zero colunas ausentes ou incompatíveis nas quatro tabelas básicas. As migrações não devem ser reaplicadas.
+- `siscota_codex` tem SELECT nas quatro tabelas de autenticação, INSERT em `user` e `account`, INSERT/UPDATE/DELETE em `session` e UPDATE nas colunas `account.password` e `account.updatedAt`. Falta UPDATE na coluna do vínculo interno e escrita em `verification`. Os IDs das quatro tabelas Better Auth não usam sequences. O papel tem USAGE em `public.usuario_id_seq`.
+- O `pg_dump` completo em formato customizado falhou ao ler `notificacao_id_seq`. O catálogo confirmou falta de SELECT também em `participacao_id_seq` e `solicitacao_id_seq`. A tentativa não produziu arquivo válido, checksum ou restauração. Usar um operador de backup que já tenha as permissões necessárias, sem ampliar a conta da aplicação. Gerar um novo arquivo exclusivo fora do projeto, conferir o catálogo e SHA-256 e restaurar em destino isolado. A cópia antiga não cobre a autenticação.
+
+## Associação proposta para aprovação
+
+O usuário interno **ID 1** tem perfil `admin`, status `ativo`, identificação de teste e vínculo nulo. Há uma única identidade Better Auth candidata, com uma credencial `credential` e `accountId = user.id`, sem vínculos existentes. O identificador externo exato é informado ao responsável fora deste documento. O formato armazenado coincide com o formato produzido pela versão instalada, e o verificador dessa versão passou com uma credencial sintética em memória. A senha da conta candidata ainda precisa ser confirmada privadamente, sem teste de login ou redefinição nesta etapa.
+
+SQL proposto para operador autorizado, somente depois do backup validado e da aprovação do par exato. Em `psql`, definir `ba_user_id` com o identificador aprovado. A prévia abaixo termina em `ROLLBACK`. Para a execução autorizada, só confirmar a transação após validar que o retorno contém exatamente o par aprovado.
+
+```sql
+BEGIN;
+UPDATE public.usuario AS u
+   SET better_auth_user_id = b.id
+  FROM public."user" AS b, public.perfil AS p
+ WHERE u.id = 1
+   AND p.id = u.perfil_id
+   AND p.nome = 'admin'
+   AND u.status = 'ativo'
+   AND u.better_auth_user_id IS NULL
+   AND b.id = :'ba_user_id'
+   AND (SELECT COUNT(*) FROM public.account AS a
+         WHERE a."userId" = b.id AND a."providerId" = 'credential') = 1
+   AND EXISTS (
+       SELECT 1 FROM public.account AS a
+        WHERE a."userId" = b.id AND a."accountId" = b.id
+          AND a."providerId" = 'credential' AND a.password IS NOT NULL)
+   AND NOT EXISTS (
+       SELECT 1 FROM public.usuario AS v WHERE v.better_auth_user_id = b.id)
+RETURNING u.id, u.better_auth_user_id;
+ROLLBACK;
+```
+
+## Testes e roteiro após aprovação
+
+**Confirmado no Express local:** `GET /api/auth/ok` retornou 200 com `ok=true`, `GET /api/auth/get-session` sem sessão retornou 200 com `null`, `GET /api/me` e `GET /api/usuarios` sem sessão retornaram 401, cadastro público retornou 403, e a requisição com origem fora da lista retornou 403. Nenhuma sessão foi criada.
+
+**Roteiro do primeiro acesso:** antes do teste HTTP, o responsável confirma a senha da identidade por entrada mascarada e verificação em memória com `verifyPassword`, usando apenas a credencial da conta aprovada e sem registrar senha ou hash. Após o vínculo autorizado, testar login inválido e válido, cookie criado, consulta de sessão, `/api/me` com o perfil interno admin, consulta administrativa, acesso sem cookie, logout e rejeição do cookie anterior. Confirmar o cadastro público bloqueado. Usar apenas o ambiente local e evitar ações de escrita em escala ou plantões. Nunca registrar o cookie, o valor do token ou dados da conta.
+
 # Estado conferido em siscota/public — 09/11/2026
 
 A autorização atual permite o banco principal. Backup informado no GitHub, com validação dispensada expressamente pelo responsável; não foi examinado. Os efeitos da 004 já estavam presentes: better_auth_user_id text nullable, UNIQUE/FK ON DELETE RESTRICT validadas e senha_hash nullable. Campos da 005 também já existem. Nenhum arquivo foi executado/reaplicado pelo agente; origem dessas mudanças externas não verificada. As instruções antigas de aplicar 004/005 abaixo são históricas e NÃO devem ser seguidas sobre a estrutura atual.

@@ -1,3 +1,13 @@
+# Issue 80 — autorização e validação do vínculo — 10/11/2026
+
+Vínculo autorizado, ainda sem execução confirmada. O papel siscota_codex não tem UPDATE sobre a coluna de vínculo. Aguardando operador PostgreSQL autorizado. Login, sessão persistida, perfil admin com cookie e logout ainda aguardam validação no PostgreSQL real.
+
+O responsável autorizou exclusivamente a associação do administrador ID 1 ao identificador externo aprovado e dispensou novo backup nesta fase de desenvolvimento. Nenhuma migração ou concessão foi executada. O operador deve possuir a permissão necessária para a associação. O roteiro local solicita credenciais por entrada mascarada, verifica o par e as constraints, executa UPDATE parametrizado com contagem de uma linha, e verifica o vínculo após COMMIT. Somente o usuário aprovado pode ser testado.
+
+Verificações HTTP no Express local: /api/auth/ok 200, /api/me e /api/usuarios sem sessão 401, cadastro público 403. A suíte de autenticação em memória aprovou 13 testes, incluindo bloqueio de perfil incorreto, usuário desativado, cotista sem vínculo ativo, elevação por perfil externo e Bearer legado. Esses casos simulados não confirmam sessão PostgreSQL.
+
+No desenvolvimento, use API em http://localhost:8080 e frontend em http://localhost:3000, com cookies e credentials: include. Resolva o perfil pelo GET /api/me. O próximo marco é concluir o roteiro de login e logout no banco real, seguido da validação do cliente React. Esta seção prevalece sobre os estados históricos abaixo.
+
 # Ativação PostgreSQL — conferência de 09/11/2026
 
 Banco principal autorizado. Os efeitos estruturais da 004 e os campos da 005 já estavam presentes antes desta sessão; nenhum arquivo foi aplicado/reaplicado pelo agente. FK/UNIQUE de identidade validadas e senha_hash nullable. Dois usuarios internos, quatro cotistas e zero associações Better Auth.

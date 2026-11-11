@@ -1,3 +1,129 @@
+# Issue 80 — autorização e validação do vínculo — 10/11/2026
+
+Vínculo autorizado, ainda sem execução confirmada. O papel siscota_codex não tem UPDATE sobre a coluna de vínculo. Aguardando operador PostgreSQL autorizado. Login, sessão persistida, perfil admin com cookie e logout ainda aguardam validação no PostgreSQL real.
+
+O responsável autorizou exclusivamente a associação do administrador ID 1 ao identificador externo aprovado e dispensou novo backup nesta fase de desenvolvimento. Nenhuma migração ou concessão foi executada. O operador deve possuir a permissão necessária para a associação. O roteiro local solicita credenciais por entrada mascarada, verifica o par e as constraints, executa UPDATE parametrizado com contagem de uma linha, e verifica o vínculo após COMMIT. Somente o usuário aprovado pode ser testado.
+
+Verificações HTTP no Express local: /api/auth/ok 200, /api/me e /api/usuarios sem sessão 401, cadastro público 403. A suíte de autenticação em memória aprovou 13 testes, incluindo bloqueio de perfil incorreto, usuário desativado, cotista sem vínculo ativo, elevação por perfil externo e Bearer legado. Esses casos simulados não confirmam sessão PostgreSQL.
+
+No desenvolvimento, use API em http://localhost:8080 e frontend em http://localhost:3000, com cookies e credentials: include. Resolva o perfil pelo GET /api/me. O próximo marco é concluir o roteiro de login e logout no banco real, seguido da validação do cliente React. Esta seção prevalece sobre os estados históricos abaixo.
+
+# Estado da autenticação após configuração local — 10/11/2026
+
+O Express local está ativo em `http://localhost:8080` com Better Auth configurado em ambiente privado fora do projeto. `GET /api/auth/ok` retorna **200** com `ok=true`. O cliente de desenvolvimento deve usar `http://localhost:3000` com `credentials: 'include'`. A falta de configuração e o 503 descritos nas seções anteriores foram resolvidos localmente.
+
+**Login e acesso administrativo com sessão real ainda pendem.** Foram confirmados sessão ausente com `200/null`, rotas privadas com `401` e cadastro público e origem não permitida com `403`. A auditoria encontrou um par candidato sem vínculo. O backup completo falhou por falta de leitura em três sequences. O plano e o SQL para aprovação estão em [BETTER_AUTH_MIGRATION_PLAN.md](BETTER_AUTH_MIGRATION_PLAN.md).
+
+# Contrato de integração com o Express
+
+Atualização de 10/11/2026 para a [issue #80](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/80). As referências auditadas foram `Frontend` em [6d5d77f](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/tree/6d5d77f) e `Backend` em [7769825](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/tree/7769825). O **Express é a fonte oficial de autenticação**. A troca efetiva do cliente React e a desativação do handler Next.js ficam para o corte de integração.
+
+## Matriz Frontend × Backend
+
+| Entrega | Implementado no Frontend | Implementado no Backend | Situação |
+|---|---|---|---|
+| Login, logout e sessão | Next.js 16.2.6, Better Auth 1.7.7 no lockfile, handler próprio e cliente React com `signIn.email`, `signOut` e `useSession`. | Express 5.2.1, Better Auth 1.7.19, sessão por cookie e `GET /api/me`. | **Pendente de validação** com PostgreSQL real e o frontend integrado. [#40](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/40) · [#80](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/80) |
+| Autorização | Cliente usa sessão e funções do plugin Admin. | Middleware exige sessão válida e vínculo explícito com usuário interno ativo. Rotas de admin ou cotista exigem perfil interno, e cotista precisa de vínculo ativo. | **Incompatível** usar o perfil externo como autorização de domínio. [#43](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/43) |
+| Admin e JWT/JWKS | Plugins Admin e JWT habilitados no Next.js. Cadastro e gestão chamam `authClient.admin.*`. | Admin HTTP e JWT/JWKS **não implementados**. Cadastro público bloqueado e Bearer HS256 legado rejeitado. Listagem e consulta administrativa disponíveis. | **Incompatível** reapontar as chamadas Admin atuais para o Express. [#41](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/41) · [#46](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/46) |
+| Resend e recuperação | Formulários de solicitação e redefinição. O handler Next.js tem callback de envio via Resend. | Recuperação e primeiro acesso **não implementados** no handler oficial. | Reutilizar telas e conteúdo de e-mail após publicar e testar o fluxo no Express. [#44](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/44) · [#79](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/79) |
+| Calendário, escala e disponibilidade | Calendário usa `mockEvents`. Não foram localizadas chamadas aos endpoints de domínio abaixo. | Consulta mensal, criação e status da escala, liberação e status de plantão, registro e consultas de disponibilidade. | Calendário verificado com PostgreSQL real. Escritas e consultas autenticadas **pendentes de validação** ponta a ponta. [#45](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/45) · [#52](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/52) · [#53](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/53) · [#54](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/54) |
+
+## Estado do PostgreSQL e da autenticação
+
+- O próprio Express conectou a `siscota/public` no PostgreSQL 18.6 como `siscota_codex`, com `transaction_read_only=off`. Consultas de catálogo e contagens usaram transação explicitamente somente leitura. O padrão consultado é `default_transaction_read_only=off`, ao contrário do registro anterior.
+- Os efeitos da **004** estão presentes: coluna `better_auth_user_id`, FK e unicidade validadas, e `senha_hash` aceita `NULL`. Os cinco campos da **005** também existem. Não reaplicar as duas migrações. Cotistas já têm nome, telefone, e-mail e nascimento obrigatórios, sem coluna CPF.
+- O papel já pode gravar e revogar em `session` e atualizar `account.password` e `account.updatedAt`. Falta permissão de atualização da coluna de vínculo em `usuario` e de inserção em `verification`. Validar a necessidade exata dessas operações antes de conceder permissões. O script histórico de concessões não é uma etapa automática.
+- Há **um administrador interno ativo identificado como teste**, **uma identidade Better Auth com credencial de senha** e **zero vínculos**. Os registros ainda precisam ser identificados e aprovados separadamente. Não associar por e-mail.
+- A cópia local `H:/siscota/siscota_bkp.sql` é um arquivo PostgreSQL customizado de **16/09/2026**, apesar da extensão. O catálogo abriu com `pg_restore --list`. O arquivo não contém as quatro tabelas de autenticação nem o vínculo 004. Uma cópia atual recuperável segue sem comprovação.
+- O ambiente local do backend não tinha `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `SISCOTA_TRUSTED_ORIGINS` ou `RESEND_API_KEY`. Definir URL e origens HTTPS exatas em homologação, sem caminho nem barra final, e fornecer o segredo Better Auth de pelo menos 32 caracteres pelo ambiente privado. Não registrar valores em arquivos versionados.
+
+### Primeiro administrador
+
+Confirmar backup recuperável atual e aprovar o par exato **usuário interno de teste + identidade Better Auth de teste**, por identificadores verificados em canal privado. Priorizar reaproveitar os registros existentes se a identidade for de teste e a credencial estiver sob controle. Caso contrário, apresentar os dados fictícios de uma nova identidade para aprovação.
+
+Executar o vínculo com papel operador aprovado e transação que verifique perfil admin, status ativo, credencial e ausência de vínculo conflitante. Registrar resultado sem senhas, tokens ou hashes. Validar login, sessão persistida, `/api/me`, perfis, usuário desativado, logout e recusa do cookie revogado.
+
+## Contrato disponível para integração
+
+API local padrão: `http://localhost:8080`. Origem HTTPS de homologação a definir. O endpoint base Better Auth é `/api/auth`. O cookie é `HttpOnly`, `SameSite=Lax` e `Secure` em HTTPS/produção. A expiração configurada é de sete dias com janela de atualização de um dia. O middleware de domínio lê a sessão sem cache de cookie e sem forçar renovação. Escolher frontend e API no mesmo site e validar no navegador, pois `credentials: 'include'` não contorna `SameSite`. O CORS exige origens permitidas e as escritas de domínio autenticadas exigem `Origin` autorizado. [Better Auth no Express](https://better-auth.com/docs/integrations/express)
+
+Exemplo para a futura adaptação de `auth-client.ts`, usando `better-auth@1.7.19` e uma origem definida em `NEXT_PUBLIC_SISCOTA_API_URL`:
+
+```ts
+import { createAuthClient } from 'better-auth/react'
+
+const apiOrigin = process.env.NEXT_PUBLIC_SISCOTA_API_URL
+if (!apiOrigin) throw new Error('URL da API do SISCOTA ausente')
+
+export const authClient = createAuthClient({
+  baseURL: apiOrigin,
+  basePath: '/api/auth',
+  fetchOptions: { credentials: 'include' },
+})
+
+export const getCurrentUser = () =>
+  fetch(`${apiOrigin}/api/me`, { credentials: 'include' })
+```
+
+| Método e caminho | Permissão e entrada |
+|---|---|
+| `POST /api/auth/sign-in/email` | Público. Usar `signIn.email({email, password})`. |
+| `POST /api/auth/sign-out` | Sessão por cookie. Usar `authClient.signOut()`. |
+| `GET /api/auth/get-session` | Sessão Better Auth. Retorna `200` com `null` quando não autenticado. |
+| `GET /api/me` | Sessão e vínculo interno ativo. Campos `id`, `nome`, `email`, `perfil`, `cotistaId`, `cotistaStatus`. Use o perfil interno para navegação funcional. |
+| `GET /api/escalas/:ano/:mes/calendario` | Público no código atual. Retorna `escala`, `dias`, `periodos` e `distribuicaoDiariaPadrao`. Cada dia inclui `plantoes`, `opcoesDisponibilidade` e `liberadoParaPreenchimento`. Revisar exposição antes da homologação. |
+| `POST /api/escalas` | Admin. Exemplo `{"nome":"Escala de teste","ano":2027,"mes":2,"quantidadeCotasPadrao":4}`. Observação opcional. |
+| `PATCH /api/escalas/:escalaId/status` | Admin. `{"status":"fechada"}`. Também aceita `aberta` e `encerrada`. |
+| `PUT /api/escalas/:escalaId/dias/:data/plantoes/:codigoPeriodo` | Admin. Data `AAAA-MM-DD`, turno físico ativo `D`, `N1` ou `N2`. Exemplo `{"quantidadeNecessaria":2}`. Observação opcional. Atualizar a oferta reabre o plantão. |
+| `PATCH /api/escalas/:escalaId/dias/:data/plantoes/:codigoPeriodo/status` | Admin. `{"status":"encerrado"}` ou `aberto`. Encerrar preserva o registro. |
+| `GET /api/escalas/:escalaId/disponibilidades?cotistaId=ID` | Admin. Filtro `cotistaId` opcional. |
+| `GET /api/disponibilidades?escalaId=ID` | Cotista ativo. Retorna somente as próprias escolhas. |
+| `PUT /api/disponibilidades/:diaId` | Cotista ativo. Exemplo `{"codigoPeriodo":"N1"}`. Observação opcional. Aceita `D`, `N1`, `N2` ou `I` conforme liberação. `I` é flexibilidade. |
+| `GET /api/usuarios` e `GET /api/usuarios/:id` | Admin. Lista ou detalha `id`, `nome`, `email`, `perfil`, `status` e `cotistaId`. |
+| `GET /api/cotistas` e `GET /api/cotistas/:id` | Admin. Lista ou detalha `id`, `usuarioId`, `nome`, `dataNascimento`, `telefone`, `email`, `status` e `observacao`. |
+
+Preservar identificadores `bigint` quando vierem como strings. Enviar cookies em rotas privadas. O domínio retorna erros como `{"error":"mensagem"}` e o cliente oficial interpreta o formato do Better Auth.
+
+| HTTP | Comportamento da interface |
+|---|---|
+| 400 | Corrigir entrada e preservar o formulário. |
+| 401 | Pedir login. |
+| 403 | Informar falta de vínculo, perfil, status ou origem permitida. |
+| 404 | Informar recurso ausente ou operação ainda indisponível. |
+| 409 | Recarregar os dados e mostrar o conflito. |
+| 429 | Aguardar antes de tentar novamente. O limite atual é em memória por instância. |
+| 503 | Mostrar indisponibilidade e permitir nova tentativa manual. |
+
+Para o corte, validar login, logout, sessão e `/api/me` contra o Express. Migrar as telas para o contrato de domínio e esconder as ações indisponíveis. Retirar `adminClient` e `jwtClient` dos fluxos migrados e desativar o handler `frontend/src/app/api/auth/[...all]/route.ts` e a instância Next.js no mesmo corte. Um proxy opcional encaminha requisições e cookies ao Express. Testar a origem, os cookies e a navegação após o corte.
+
+## Contratos pendentes
+
+- **Escritas administrativas, #46.** Confirmar primeiro o contrato de cadastro de cotista independente de login, depois cadastro administrativo e vínculo, edição, desativação e reativação. Nome, telefone, e-mail e nascimento são obrigatórios no cadastro de cotista. Nome e e-mail do cotista prevalecem no vínculo. Preservar histórico, evitar exclusão física, proteger o último administrador ativo e limitar alterações de perfil. A senha pertence ao Better Auth. Definir uma transação comum ou um provisionamento idempotente recuperável para impedir contas parcialmente vinculadas. Serializar as operações que possam desativar o último admin. [#46](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/46)
+- **Recuperação e primeiro acesso, #44 e #79.** Reaproveitar formulário e conteúdo de e-mail. Preparar `sendResetPassword` no Express com transporte injetável e testes sem envio externo. Definir token de uso único, expiração, URL de retorno permitida, resposta uniforme, limite de tentativas, tratamento de falha sem expor dados e revogação de sessões após redefinição. Usuário define a própria senha por link temporário. Aprovar domínio, remetente, destinatário fictício e privilégios pontuais antes de ativar envios reais. [Recuperação no Better Auth](https://better-auth.com/docs/authentication/email-password#reset-password)
+- **Distribuição e publicação.** A divisão diária entre dia e noite não atribui pessoas nem decide N1/N2. Exclusão de cota, distribuição, prioridade, simulação com confirmação e publicação com bloqueio geral seguem pendentes. Troca confirmada segue solicitação do cotista, enquete externa no WhatsApp e decisão do administrador. Definir estados e registro da decisão antes de automatizar. Remover disponibilidade não pode cancelar participação confirmada. [#54](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/54) · [#55](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/55) · [#63](https://github.com/Alvaro-Da-Silva/Projeto-Integrador/issues/63)
+
+## Evidências e homologação
+
+- **Suíte local:** `npm.cmd test`, 81 testes aprovados. Inclui testes unitários, Better Auth em memória e integração HTTP com PostgreSQL simulado.
+- **PostgreSQL real:** calendário de novembro de 2026 respondeu 200 com 30 dias e 60 plantões. `/api/auth/ok` respondeu 503 com configuração ausente. `/api/me` sem sessão e consulta de usuários com Bearer fictício responderam 401. Nenhum login, escrita ou envio real foi executado.
+- **Integração com frontend e aceitação:** pendentes. Hoje é demonstrável a consulta de calendário no ambiente de desenvolvimento.
+
+- [ ] Confirmar ambiente HTTPS, URLs, CORS e cookies no navegador.
+- [ ] Confirmar backup atual com restauração verificada em ambiente isolado.
+- [ ] Aprovar e provisionar contas fictícias de admin e cotista com vínculo explícito.
+- [ ] Validar login, sessão persistida, logout, recusa de sessão revogada e permissões dos dois perfis.
+- [ ] Validar cadastro e consultas administrativas, sem exposição de dados de demonstração.
+- [ ] Validar recuperação e primeiro acesso com destinatários aprovados.
+- [ ] Testar escala, plantões e disponibilidades ponta a ponta com dados fictícios.
+- [ ] Conferir logs e mensagens sem dados pessoais, chaves, senhas ou tokens e desabilitar ações incompletas.
+- [ ] Roteiro do cliente: entrar como admin, preparar a escala e as vagas, registrar escolha como cotista, conferir a disponibilidade como admin e sair. Testar recuperação de conta fictícia quando liberada.
+
+**Próxima entrega:** concluir a #80 com URL e origens do ambiente, segredo configurado privadamente, backup atual recuperável e aprovação do par de registros de teste. A partir desse vínculo, validar a autenticação real antes de avançar para as escritas administrativas e o Resend.
+
+# Histórico de integração até 09/11/2026
+
+As seções abaixo preservam a documentação anterior, incluindo orientações legadas e condições de banco já superadas. Para integração, consulte o contrato e as evidências de 10/11/2026 no início deste arquivo.
+
 # Estado real de ativação — conferência de 09/11/2026
 
 Banco principal siscota/public autorizado. Os efeitos estruturais da 004 e campos da 005 já estavam presentes antes desta sessão; nenhum arquivo foi aplicado/reaplicado pelo agente. Referência de identidade com FK/UNIQUE validadas e senha_hash nullable. Dois usuarios internos, quatro cotistas e zero associações Better Auth.
