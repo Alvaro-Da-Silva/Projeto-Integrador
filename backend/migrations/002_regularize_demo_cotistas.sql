@@ -1,7 +1,3 @@
--- PROPOSTA NAO EXECUTADA. Requer aprovacao dos valores e backup confirmado.
--- Somente registros ficticios 5-8; nao muda nome, status, vinculo ou IDs.
--- Ordem operacional proposta: 002, 001, 003 (numeracao nao e um runner automatico).
--- Executar com ON_ERROR_STOP. Em erro: ROLLBACK, nunca continuar ate COMMIT.
 BEGIN READ WRITE;
 DO $$
 BEGIN
@@ -24,7 +20,6 @@ BEGIN
     END IF;
 END $$;
 
--- Telefones sao marcadores nao discaveis; emails reservados; datas ficticias.
 UPDATE public.cotista AS c
 SET telefone=p.telefone,email=p.email,data_nascimento=p.nascimento
 FROM (VALUES

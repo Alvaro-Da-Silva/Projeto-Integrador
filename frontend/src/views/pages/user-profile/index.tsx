@@ -1,10 +1,7 @@
-// React Imports
 import { Suspense } from 'react'
 
-// Third-party Imports
 import { BriefcaseBusinessIcon, CalendarDaysIcon, MapPinIcon, UserRoundCheckIcon } from 'lucide-react'
 
-// Component Imports
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { BackgroundRippleEffect } from '@/components/ui/background-ripple'
 import { Button } from '@/components/ui/button'

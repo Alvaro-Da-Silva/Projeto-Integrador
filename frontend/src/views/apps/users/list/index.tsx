@@ -32,7 +32,6 @@ const UserListApp = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  // Inline edit state
   const [editingUserId, setEditingUserId] = useState<string | null>(null)
   const [editingState, setEditingState] = useState<EditingUserState | null>(null)
   const [isSaving, setIsSaving] = useState(false)

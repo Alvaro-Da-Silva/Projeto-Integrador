@@ -113,7 +113,7 @@ export interface AppUser {
   id: string
   name: string
   email: string
-  avatar?: string // URL string — if absent, show initials
+  avatar?: string
   patent?: string | null
   role: UserRole
   plan: UserPlan
@@ -122,7 +122,7 @@ export interface AppUser {
   company?: string
   country?: string
   contact?: string
-  joinedDate: string // ISO 8601
+  joinedDate: string
   coverImage?: string
   website?: string
   skype?: string
@@ -156,10 +156,8 @@ export type UserFormData = Pick<
   'name' | 'email' | 'contact' | 'company' | 'country' | 'patent' | 'role' | 'plan' | 'status'
 >
 
-// For add/edit sheet
 export type UserSheetMode = 'add' | 'edit'
 
-// For column visibility
 export type UserColumnId = 'select' | 'user' | 'patent' | 'role' | 'plan' | 'billing' | 'status' | 'joinedDate' | 'actions'
 
 export type UserSortColumn = Exclude<UserColumnId, 'select' | 'actions'>

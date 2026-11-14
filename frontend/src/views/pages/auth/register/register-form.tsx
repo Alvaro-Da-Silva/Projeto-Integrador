@@ -5,18 +5,17 @@ import { useRouter } from 'next/navigation'
 
 import { EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon, MedalIcon, ShieldCheckIcon, UserIcon } from 'lucide-react'
 
-// Zod Imports
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema, RegisterFormData } from "@/lib/schemas/login";
 
-// Auth Imports
 import { authClient } from "@/lib/auth-client";
 
-// Components Imports
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { PATENTES } from '@/lib/patentes'
 import { toast } from "sonner"
 import { Spinner } from '@/components/ui/spinner'
 
@@ -32,7 +31,7 @@ const RegisterForm = () => {
       name: "",
       email: "",
       password: "",
-      patent: "",
+      patent: undefined,
       confirmPassword: "",
     },
   })
@@ -77,7 +76,7 @@ const RegisterForm = () => {
                 <InputGroupInput
                   type='text'
                   id='username'
-                  placeholder='Digite seu nome'
+                  placeholder='Digite o nome'
                   {...field}
                   aria-invalid={!!fieldState.error} />
               </InputGroup>
@@ -102,7 +101,7 @@ const RegisterForm = () => {
                 <InputGroupInput
                   type='email'
                   id='userEmail'
-                  placeholder='Digite seu email'
+                  placeholder='Digite o email'
                   {...field}
                   aria-invalid={!!fieldState.error} />
               </InputGroup>
@@ -120,17 +119,29 @@ const RegisterForm = () => {
               <FieldLabel className='leading-5 font-semibold' htmlFor='userPatent'>
                 Patente
               </FieldLabel>
-              <InputGroup className='h-11 rounded-lg bg-background'>
-                <InputGroupAddon align='inline-start' className='pl-3'>
-                  <MedalIcon />
-                </InputGroupAddon>
-                <InputGroupInput
-                  type='text'
+              <Select
+                value={field.value ?? null}
+                onValueChange={(value: string | null) => value && field.onChange(value)}
+              >
+                <SelectTrigger
                   id='userPatent'
-                  placeholder='Digite sua patente'
-                  {...field}
-                  aria-invalid={!!fieldState.error} />
-              </InputGroup>
+                  className='h-11! w-full rounded-lg bg-background'
+                  aria-invalid={!!fieldState.error}
+                  onBlur={field.onBlur}
+                >
+                  <MedalIcon className='text-muted-foreground' />
+                  <SelectValue placeholder='Selecione a patente' />
+                </SelectTrigger>
+                <SelectContent alignItemWithTrigger={false}>
+                  <SelectGroup>
+                    {PATENTES.map(patente => (
+                      <SelectItem key={patente} value={patente}>
+                        {patente}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               {fieldState.error && (
                 <p className='text-sm text-destructive'>{fieldState.error.message}</p>
               )}
@@ -152,7 +163,7 @@ const RegisterForm = () => {
                 <InputGroupInput
                   id='password'
                   type={isPasswordVisible ? 'text' : 'password'}
-                  placeholder='Digite sua senha '
+                  placeholder='Digite a senha '
                   {...field}
                   aria-invalid={!!fieldState.error}
                 />
@@ -190,7 +201,7 @@ const RegisterForm = () => {
                 <InputGroupInput
               id='confirmPassword'
               type={isConfirmPasswordVisible ? 'text' : 'password'}
-              placeholder='Confirme sua senha '
+              placeholder='Confirme a senha '
               {...field}
               aria-invalid={!!fieldState.error}
             />

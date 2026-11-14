@@ -1,4 +1,3 @@
-// Component Imports
 import { Card } from '@/components/ui/card'
 import DataTableDemo, { type Payment } from '@/views/datatables/basic/basic-datatable'
 

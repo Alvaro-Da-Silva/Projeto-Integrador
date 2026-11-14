@@ -1,21 +1,14 @@
-// React Imports
 import type { CSSProperties, ReactNode } from 'react'
 
-// Next Imports
 import Image from 'next/image'
 import Link from 'next/link'
 
-// Icon Imports
 import { ShieldCheckIcon } from 'lucide-react'
 
-// Asset Imports
 import bombeiroComunitarioLogo from '@/assets/images/bombeiro-comunitario.png'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
-// Paleta institucional do CBMSC (Manual de Identidade Visual 1.1)
-// Vermelho Pantone 186 C #C8102E | Amarelo Pantone Yellow #FEDD02 | Preto Pantone Black #2D2926
 const brandBackground: CSSProperties = {
   backgroundImage:
     'radial-gradient(120% 80% at 50% 45%, #E5132F 0%, #C8102E 38%, #9E0C24 75%, #7A0A1C 100%)'
@@ -25,7 +18,6 @@ const stripeBackground: CSSProperties = {
   backgroundImage: 'linear-gradient(90deg, #F08A00 0%, #FEDD02 14%, #FFE81F 50%, #FEDD02 86%, #F08A00 100%)'
 }
 
-// Camadas definidas inline para não depender da geração de classes do Tailwind
 const backgroundLayer: CSSProperties = { zIndex: 0 }
 const textLayer: CSSProperties = { zIndex: 10 }
 
@@ -39,7 +31,6 @@ type BrandSealProps = {
   priority?: boolean
 }
 
-// Selo circular com a logomarca original do Bombeiro Comunitário (imagem com fundo branco)
 const BrandSeal = ({ className, href, priority }: BrandSealProps) => {
   const seal = (
     <span
@@ -67,7 +58,6 @@ const BrandSeal = ({ className, href, priority }: BrandSealProps) => {
   )
 }
 
-// Faixas amarelas da capa e dos templates de apresentação do manual
 const BrandStripes = ({ className }: { className?: string }) => {
   return (
     <div className={cn('pointer-events-none flex flex-col', className)} aria-hidden>
@@ -78,7 +68,6 @@ const BrandStripes = ({ className }: { className?: string }) => {
   )
 }
 
-// Marca d'água tom sobre tom: o multiply elimina o fundo branco da logomarca
 const Watermark = ({ className }: { className?: string }) => {
   return (
     <Image
@@ -110,7 +99,6 @@ const BrandPanel = ({ logoHref }: { logoHref?: string }) => {
         <div className='relative'>
           <BrandStripes />
 
-          {/* Logomarca na camada de fundo: os textos ficam sempre por cima dela */}
           <div className='absolute inset-y-0 left-10 flex items-center xl:left-14' style={backgroundLayer}>
             <BrandSeal href={logoHref} priority className='size-52 xl:size-60 2xl:size-68' />
           </div>
@@ -148,7 +136,6 @@ const BrandPanel = ({ logoHref }: { logoHref?: string }) => {
   )
 }
 
-// Versão compacta da área institucional para telas menores
 const MobileBrandHeader = ({ logoHref }: { logoHref?: string }) => {
   return (
     <header

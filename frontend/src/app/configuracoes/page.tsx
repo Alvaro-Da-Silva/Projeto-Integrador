@@ -1,4 +1,4 @@
-import UserSettings from "@/views/pages/user-settings"
+import UserSettings from "@/views/user-settings"
 
 const ConfiguracoesPage = () => {
     return <UserSettings />

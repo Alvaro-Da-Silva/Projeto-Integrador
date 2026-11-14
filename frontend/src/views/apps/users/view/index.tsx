@@ -1,9 +1,7 @@
 'use client'
 
-// React Imports
 import { useState } from 'react'
 
-// Component Imports
 import { AddEditUserSheet } from '@/views/apps/users/dialogs/add-edit-user-sheet'
 import { UserViewLeftPanel } from './user-view-left-panel'
 import { UserViewTabs } from './user-view-tabs'

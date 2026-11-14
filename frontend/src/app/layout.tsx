@@ -1,23 +1,17 @@
-// React Imports
 import type { ReactNode } from 'react'
 
-// Next Imports
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
-// Third-party Imports
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
-// Component Imports
 import Providers from '@/components/Providers'
 import AppLayout from '@/components/layout/AppLayout'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from '@/components/ui/sonner'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
-// Style Imports
 import './globals.css'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 

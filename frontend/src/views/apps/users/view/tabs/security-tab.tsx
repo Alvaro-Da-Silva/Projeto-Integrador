@@ -1,12 +1,9 @@
 'use client'
 
-// React Imports
 import { useState } from 'react'
 
-// Type Imports
 import type { AppUser } from '@/types/apps/user-types'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'

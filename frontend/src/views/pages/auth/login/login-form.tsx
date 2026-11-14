@@ -1,26 +1,19 @@
 'use client'
 
-// Rect Import
 import { useState } from 'react'
 
-// Next Imports
 import Link from 'next/link'
 
-// Router Imports
 import { useRouter } from 'next/navigation'
 
-// Icons Imports
 import { ArrowRightIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon } from 'lucide-react'
 
-//Zod Imports
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, LoginFormData } from "@/lib/schemas/login";
 
-//Auth Imports
 import { authClient } from '@/lib/auth-client'
 
-// Components Import
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'

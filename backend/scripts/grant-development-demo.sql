@@ -1,5 +1,3 @@
--- Preparado, NAO executado. Requer administrador; nao modifica o modelo fisico.
--- Destino exclusivo siscota. Nao concede acesso de escrita a tabelas de autenticacao.
 BEGIN READ WRITE;
 DO $$
 BEGIN
@@ -26,6 +24,3 @@ BEGIN
 END $$;
 COMMIT;
 
--- O seed usa BEGIN READ WRITE apenas em sua propria transacao.
--- Nao e necessario alterar o default_transaction_read_only do usuario.
--- Nao e necessario conceder CREATE/ALTER para esta carga.

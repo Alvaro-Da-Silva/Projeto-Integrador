@@ -1,9 +1,7 @@
 'use client'
 
-// React Imports
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
-// Third-party Imports
 import {
   addDays,
   addMonths,
@@ -18,10 +16,8 @@ import {
 import { ptBR } from 'date-fns/locale'
 import { CalendarCheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from 'lucide-react'
 
-// Type Imports
 import type { CalendarView, CalendarEvent } from '@/types/apps/calendar-types'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -34,26 +30,33 @@ import { DayView } from './day-view'
 import { MonthView } from './month-view'
 import { WeekView } from './week-view'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
-// Data Imports
 import { EventGap, EventHeight, WeekCellsHeight } from '@/assets/data/constants'
 
 export interface EventCalendarProps {
   className?: string
   initialView?: CalendarView
-}
+  events?: CalendarEvent[]
 
-const mockEvents: CalendarEvent[] = [
-  {
-    id: '1',
-    title: 'Evento 1',
-    start: new Date(),
-    end: new Date(new Date().getTime() + 60 * 60 * 1000),
-    allDay: false
-  }
-]
+  currentDate?: Date
+  onCurrentDateChange?: (date: Date) => void
+
+  onDayClick?: (date: Date) => void
+
+  onEventClick?: (event: CalendarEvent) => void
+  readOnly?: boolean
+
+  isDayEnabled?: (date: Date) => boolean
+
+  onCreateClick?: () => void
+
+  createLabel?: string
+
+  toolbar?: ReactNode
+
+  children?: ReactNode
+}
 
 const VIEW_LABELS: Record<CalendarView, string> = {
   month: 'Mês',
@@ -63,11 +66,45 @@ const VIEW_LABELS: Record<CalendarView, string> = {
 
 const capitalize = (str: string) => (str ? str.charAt(0).toUpperCase() + str.slice(1) : '')
 
-export function EventCalendar({ className, initialView = 'month' }: EventCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(() => new Date())
+const noop = () => {}
+
+export function EventCalendar({
+  className,
+  initialView = 'month',
+  events = [],
+  currentDate: controlledDate,
+  onCurrentDateChange,
+  onDayClick,
+  onEventClick,
+  readOnly = false,
+  isDayEnabled,
+  onCreateClick,
+  createLabel = 'Nova Escala',
+  toolbar,
+  children
+}: EventCalendarProps) {
+  const [internalDate, setInternalDate] = useState(() => new Date())
   const [view, setView] = useState<CalendarView>(initialView)
 
-  const goToToday = () => setCurrentDate(new Date())
+  const currentDate = controlledDate ?? internalDate
+  const canCreate = !readOnly && !!onDayClick
+
+  const setCurrentDate = (updater: (current: Date) => Date) => {
+    const next = updater(currentDate)
+
+    if (!controlledDate) setInternalDate(next)
+    onCurrentDateChange?.(next)
+  }
+
+  const handleDayClick = canCreate ? onDayClick : noop
+  const handleCreateClick = onCreateClick ?? (() => handleDayClick(currentDate))
+
+  const handleEventSelect = (event: CalendarEvent) => {
+    if (onEventClick) return onEventClick(event)
+    handleDayClick(new Date(event.start))
+  }
+
+  const goToToday = () => setCurrentDate(() => new Date())
 
   const goToPrevious = () => {
     setCurrentDate(current => {
@@ -164,13 +201,17 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
         <div className={cn('flex items-center justify-between gap-1 p-2 sm:p-4', className)}>
           <div className='flex items-center gap-1 max-sm:justify-between sm:gap-4'>
             <div className='flex items-center gap-1'>
-              <Button className='max-sm:hidden md:max-lg:h-8'>
-                <PlusIcon size={16} aria-hidden='true' />
-                <span>Novo evento</span>
-              </Button>
-              <Button size='icon-sm' className='sm:hidden'>
-                <PlusIcon size={16} aria-hidden='true' />
-              </Button>
+              {canCreate && (
+                <>
+                  <Button className='max-sm:hidden md:max-lg:h-8' onClick={handleCreateClick}>
+                    <PlusIcon size={16} aria-hidden='true' />
+                    <span>{createLabel}</span>
+                  </Button>
+                  <Button size='icon-sm' className='sm:hidden' onClick={handleCreateClick} aria-label={createLabel}>
+                    <PlusIcon size={16} aria-hidden='true' />
+                  </Button>
+                </>
+              )}
               <Button variant='outline' className='max-sm:hidden md:max-lg:h-8' onClick={goToToday}>
                 <CalendarCheckIcon size={16} aria-hidden='true' />
                 <span>Hoje</span>
@@ -190,6 +231,7 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
             </Button>
           </div>
           <div className='flex items-center gap-2'>
+            {toolbar}
             <DropdownMenu>
               <DropdownMenuTrigger render={<Button variant='outline' className='max-sm:h-8!' />}>
                 <span>
@@ -215,15 +257,33 @@ export function EventCalendar({ className, initialView = 'month' }: EventCalenda
           </div>
         </div>
 
+        {children}
+
         <div className='flex flex-1 flex-col'>
           {view === 'month' && (
-            <MonthView currentDate={currentDate} events={mockEvents} onEventSelect={() => { }} onEventCreate={() => { }} />
+            <MonthView
+              currentDate={currentDate}
+              events={events}
+              onEventSelect={handleEventSelect}
+              onEventCreate={handleDayClick}
+              isDayEnabled={isDayEnabled}
+            />
           )}
           {view === 'week' && (
-            <WeekView currentDate={currentDate} events={mockEvents} onEventSelect={() => { }} onEventCreate={() => { }} />
+            <WeekView
+              currentDate={currentDate}
+              events={events}
+              onEventSelect={handleEventSelect}
+              onEventCreate={handleDayClick}
+            />
           )}
           {view === 'day' && (
-            <DayView currentDate={currentDate} events={mockEvents} onEventSelect={() => { }} onEventCreate={() => { }} />
+            <DayView
+              currentDate={currentDate}
+              events={events}
+              onEventSelect={handleEventSelect}
+              onEventCreate={handleDayClick}
+            />
           )}
         </div>
       </div>

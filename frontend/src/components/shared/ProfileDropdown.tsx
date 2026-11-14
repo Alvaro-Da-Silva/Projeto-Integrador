@@ -1,10 +1,7 @@
-// Next Imports
 import Link from 'next/link'
 
-// Third-party Imports
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -56,7 +53,7 @@ const ProfileDropdown = () => {
         </DropdownMenuGroup>
 
         <DropdownMenuGroup>
-          <DropdownMenuItem render={<Link href='/pages/user-settings?setting=general' />}>
+          <DropdownMenuItem render={<Link href='/user-settings?setting=general' />}>
             <SettingsIcon />
             <span>Configurações</span>
           </DropdownMenuItem>

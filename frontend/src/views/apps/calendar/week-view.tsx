@@ -1,9 +1,7 @@
 'use client'
 
-// React Imports
 import React, { useMemo } from 'react'
 
-// Third-party Imports
 import {
   addHours,
   areIntervalsOverlapping,
@@ -22,21 +20,16 @@ import {
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-// Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
 
-// Hook Imports
 import { useCurrentTimeIndicator } from '@/hooks/use-current-time-indicator'
 
-// Component Imports
 import { CalendarCell } from './calendar-cell'
 import { EventItem } from './event-item'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 import { isMultiDayEvent } from '@/utils/calendar-utils'
 
-// Data Imports
 import { EndHour, StartHour, WeekCellsHeight } from '@/assets/data/constants'
 
 interface WeekViewProps {
@@ -74,11 +67,9 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     })
   }, [currentDate])
 
-  // Get all-day events and multi-day events for the week
   const allDayEvents = useMemo(() => {
     return events
       .filter(event => {
-        // Include explicitly marked all-day events or multi-day events
         return event.allDay || isMultiDayEvent(event)
       })
       .filter(event => {
@@ -91,65 +82,52 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       })
   }, [events, days])
 
-  // Process events for each day to calculate positions
   const processedDayEvents = useMemo(() => {
     const result = days.map(day => {
-      // Get events for this day that are not all-day events or multi-day events
       const dayEvents = events.filter(event => {
-        // Skip all-day events and multi-day events
         if (event.allDay || isMultiDayEvent(event)) return false
 
         const eventStart = new Date(event.start)
         const eventEnd = new Date(event.end)
 
-        // Check if event is on this day
         return isSameDay(day, eventStart) || isSameDay(day, eventEnd) || (eventStart < day && eventEnd > day)
       })
 
-      // Sort events by start time and duration
       const sortedEvents = [...dayEvents].sort((a, b) => {
         const aStart = new Date(a.start)
         const bStart = new Date(b.start)
         const aEnd = new Date(a.end)
         const bEnd = new Date(b.end)
 
-        // First sort by start time
         if (aStart < bStart) return -1
         if (aStart > bStart) return 1
 
-        // If start times are equal, sort by duration (longer events first)
         const aDuration = differenceInMinutes(aEnd, aStart)
         const bDuration = differenceInMinutes(bEnd, bStart)
 
         return bDuration - aDuration
       })
 
-      // Calculate positions for each event
       const positionedEvents: PositionedEvent[] = []
       const dayStart = startOfDay(day)
 
-      // Track columns for overlapping events
       const columns: { event: CalendarEvent; end: Date }[][] = []
 
       sortedEvents.forEach(event => {
         const eventStart = new Date(event.start)
         const eventEnd = new Date(event.end)
 
-        // Adjust start and end times if they're outside this day
         const adjustedStart = isSameDay(day, eventStart) ? eventStart : dayStart
 
         const adjustedEnd = isSameDay(day, eventEnd) ? eventEnd : addHours(dayStart, 24)
 
-        // Calculate top position and height
         const startHour = getHours(adjustedStart) + getMinutes(adjustedStart) / 60
 
         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60
 
-        // Adjust the top calculation to account for the new start time
         const top = (startHour - StartHour) * WeekCellsHeight
         const height = (endHour - startHour) * WeekCellsHeight
 
-        // Find a column for this event
         let columnIndex = 0
         let placed = false
 
@@ -178,13 +156,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
           }
         }
 
-        // Ensure column is initialized before pushing
         const currentColumn = columns[columnIndex] || []
 
         columns[columnIndex] = currentColumn
         currentColumn.push({ event, end: adjustedEnd })
 
-        // Calculate width and left position based on number of columns
         const width = columnIndex === 0 ? 1 : 1 - columnIndex * 0.1
         const left = columnIndex === 0 ? 0 : columnIndex * 0.1
 
@@ -194,7 +170,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
           height,
           left,
           width,
-          zIndex: 10 + columnIndex // Higher columns get higher z-index
+          zIndex: 10 + columnIndex
         })
       })
 
@@ -222,8 +198,9 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         {days.map(day => (
           <div
             key={day.toString()}
-            className='data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium'
+            className='data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium cursor-pointer hover:bg-muted/40 transition-colors'
             data-today={isToday(day) || undefined}
+            onClick={() => onEventCreate(day)}
           >
             <span className='sm:hidden uppercase' aria-hidden='true'>
               {format(day, 'E', { locale: ptBR })[0]} {format(day, 'd')}
@@ -263,7 +240,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                     const isFirstDay = isSameDay(day, eventStart)
                     const isLastDay = isSameDay(day, eventEnd)
 
-                    // Check if this is the first day in the current week view
                     const isFirstVisibleDay = dayIndex === 0 && isBefore(eventStart, weekStart)
 
                     const shouldShowTitle = isFirstDay || isFirstVisibleDay
@@ -277,7 +253,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                         isFirstDay={isFirstDay}
                         isLastDay={isLastDay}
                       >
-                        {/* Show title if it's the first day of the event or the first visible day in the week */}
                         <div className={cn('truncate', !shouldShowTitle && 'invisible')} aria-hidden={!shouldShowTitle}>
                           {event.title}
                         </div>
@@ -313,7 +288,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             className='border-border/70 relative grid auto-cols-fr border-r last:border-r-0'
             data-today={isToday(day) || undefined}
           >
-            {/* Positioned events */}
             {(processedDayEvents[dayIndex] ?? []).map(positionedEvent => (
               <div
                 key={positionedEvent.event.id}
@@ -338,7 +312,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               </div>
             ))}
 
-            {/* Current time indicator - only show for today's column */}
             {currentTimeVisible && isToday(day) && (
               <div
                 className='pointer-events-none absolute right-0 left-0 z-20'
@@ -358,7 +331,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                   key={hour.toString()}
                   className='border-border/70 relative min-h-[var(--week-cells-height)] border-b last:border-b-0'
                 >
-                  {/* Quarter-hour intervals */}
                   {[0, 1, 2, 3].map(quarter => {
                     const quarterHourTime = hourValue + quarter * 0.25
 

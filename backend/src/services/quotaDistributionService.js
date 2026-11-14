@@ -1,9 +1,5 @@
 const HOURS_PER_QUOTA = 12;
 
-/**
- * Expresses the approved daily quota split without assigning night quotas to
- * N1 or N2. That physical allocation remains a business-rule decision.
- */
 export function getDailyQuotaDistribution(totalQuotas) {
   const base = {
     totalQuotas,

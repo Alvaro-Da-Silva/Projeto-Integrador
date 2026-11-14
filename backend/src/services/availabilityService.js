@@ -6,8 +6,6 @@ import { HttpError, periodCode } from './workflowValidation.js';
 export async function saveAvailability(cotistaId,dayId,code,observation) {
   periodCode(code);
   return transaction(async client => {
-    // Serializar escolhas do mesmo cotista. A UNIQUE existente permite varias
-    // opcoes por dia; esta trava garante a regra aprovada de apenas uma opcao.
     const cotista = await availabilityRepository.findActiveCotistaForUpdate(client,cotistaId);
     if (!cotista.rowCount) throw new HttpError(403,'Cotista não encontrado ou inativo.');
     const day = await availabilityRepository.findDayById(client,dayId);
@@ -21,8 +19,6 @@ export async function saveAvailability(cotistaId,dayId,code,observation) {
     if (!period.rowCount) throw new HttpError(409,'Período não cadastrado ou inativo.');
     const released = await availabilityRepository.findReleasedShiftsForUpdate(client,dayId,code === 'I' ? ['D','N1','N2'] : [code]);
     if (!released.rowCount) throw new HttpError(409,'Dia/período não liberado pelo administrador.');
-    // Uma preferencia nao confirma participacao, nao consome vaga nem limita
-    // quantos cotistas podem candidatar-se. I e flexibilidade, nao plantao 24h.
     const current = await availabilityRepository.findCurrentAvailabilityForUpdate(client,cotistaId,dayId);
     if (current.rowCount > 1) throw new HttpError(409,'Há múltiplas escolhas antigas neste dia. Solicite revisão administrativa.');
     const result = current.rowCount

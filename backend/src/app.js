@@ -10,6 +10,7 @@ import { HttpError } from './services/workflowValidation.js';
 import availabilityRoutes from './routes/availabilityRoutes.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import cotistaRoutes from './routes/cotistaRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import { workflowErrors } from './middleware/workflowErrors.js';
 
 export function createApp({authProvider = getAuth,origins = trustedOrigins()} = {}) {
@@ -23,16 +24,15 @@ export function createApp({authProvider = getAuth,origins = trustedOrigins()} = 
     callback(new HttpError(403,'Origem não autorizada.'));
   },credentials:true,methods:['GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders:['Content-Type','Authorization']}));
-  // Express 5: wildcard nomeado, antes de qualquer leitura do body.
   app.all('/api/auth/*splat',betterAuthHandler);
   app.use(express.json());
   app.use('/api/escalas', escalaRoutes);
   app.use('/api',createDomainAuthRoutes());
   app.use('/api/disponibilidades', availabilityRoutes);
-  // O calendario continua publico; gestao e consulta de disponibilidades exigem admin.
   app.use('/api/escalas', escalaWriteRoutes);
   app.use('/api/usuarios', usuarioRoutes);
   app.use('/api/cotistas', cotistaRoutes);
+  app.use('/api/dashboard', dashboardRoutes);
   app.use(workflowErrors);
 
   return app;

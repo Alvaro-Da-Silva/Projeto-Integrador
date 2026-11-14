@@ -1,4 +1,3 @@
--- Somente leitura. Nao revela dados pessoais, credenciais ou tokens.
 SELECT
     current_database() AS banco,
     (SELECT count(*) FROM public.escala) AS escalas,
@@ -12,5 +11,3 @@ SELECT
     (SELECT count(*) FROM public.escala WHERE ano>9999) AS anos_inacessiveis_pela_api,
     (SELECT count(*) FROM public.escala WHERE quantidade_cotas_padrao NOT IN (3,4)) AS cotas_sem_regra_aprovada;
 
--- Indicadores de revisao nao equivalem a novas regras de negocio.
--- Ausencia de linhas nao comprova comportamento das constraints.

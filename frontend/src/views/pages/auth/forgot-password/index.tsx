@@ -1,10 +1,7 @@
-// Next Imports
 import Link from 'next/link'
 
-// Third-party Imports
 import { ChevronLeftIcon } from 'lucide-react'
 
-// Component Import
 import { Button } from '@/components/ui/button'
 import AuthLayout from '@/views/pages/auth/auth-layout'
 import ForgotPasswordForm from '@/views/pages/auth/forgot-password/forgot-password-form'

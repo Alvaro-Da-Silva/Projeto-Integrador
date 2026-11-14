@@ -2,7 +2,6 @@ import { betterAuth } from 'better-auth';
 import { pool } from './database.js';
 import { authSettings } from './authSettings.js';
 
-// Construção tardia: importar a aplicação não abre conexão nem provisiona schema.
 export function createBetterAuthOptions(settings,database = pool) {
   return {
     appName:'SISCOTA',database,baseURL:settings.baseURL,basePath:'/api/auth',
@@ -12,7 +11,6 @@ export function createBetterAuthOptions(settings,database = pool) {
     user:{changeEmail:{enabled:false},deleteUser:{enabled:false}},
     advanced:{useSecureCookies:settings.production || settings.baseURL.startsWith('https:'),
       defaultCookieAttributes:{httpOnly:true,sameSite:'lax',path:'/'},database:{validateSchema:true}},
-    // Sem plugins Admin/Bearer/JWT. Perfis funcionais pertencem ao SISCOTA.
     plugins:[],logger:{disabled:true},telemetry:{enabled:false},onAPIError:{throw:true},
     rateLimit:{enabled:true,storage:'memory',window:60,max:100,
       customRules:{'/sign-in/email':{window:60,max:10}}}

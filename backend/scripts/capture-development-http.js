@@ -33,8 +33,6 @@ for(const [name,path,expectedStatus,needsSeed] of cases) {
     results.push({name,method:'GET',url,headers,expectedStatus,resultado:'BLOQUEADO: HTTP indisponivel',code:error.cause?.code || error.name});
   }
 }
-// O importador Thunder Client pode ignorar URLs no formato string do Postman.
-// Usar o objeto estruturado, incluindo raw, em requests e exemplos salvos.
 function postmanUrl(raw) {
   const parsed=new URL(raw);
   return {raw,protocol:parsed.protocol.slice(0,-1),host:parsed.hostname.split('.'),

@@ -20,7 +20,8 @@
     "test:dev:real": "node --test test/development/*.test.js",
     "setup:periodos": "node scripts/setup-workflow-periods.js",
     "setup:conta": "node scripts/setup-workflow-account.js",
-    "test:auth": "node --test --test-isolation=none test/betterAuth.test.js"
+    "test:auth": "node --test --test-isolation=none test/betterAuth.test.js",
+    "setup:local": "node scripts/setup-local-database.js"
   },
   "keywords": [],
   "author": "",
@@ -31,7 +32,9 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.23.1"
+    "jose": "^6.2.17",
+    "pg": "^8.23.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

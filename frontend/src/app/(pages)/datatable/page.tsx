@@ -1,4 +1,3 @@
-// Component Imports
 import DataTable from '@/views/datatables'
 
 const DataTablePage = () => {

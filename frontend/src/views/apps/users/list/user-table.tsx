@@ -1,17 +1,13 @@
 'use client'
 
-// Third-party Imports
 import type { SortingState, Updater } from '@tanstack/react-table'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 
-// Type Imports
 import type { AppUser, UserSorting } from '@/types/apps/user-types'
 
-// Component Imports
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 import { userTableColumns, type UserTableColumnHandlers } from './user-table-columns'
 

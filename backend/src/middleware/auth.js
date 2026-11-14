@@ -1,11 +1,23 @@
 import { fromNodeHeaders } from 'better-auth/node';
-import { authenticatedUser } from '../services/authService.js';
+import { authenticatedUser, userFromFrontendToken } from '../services/authService.js';
+import { verifyFrontendToken } from '../config/frontendJwt.js';
 import { HttpError } from '../services/workflowValidation.js';
+
+function bearerToken(req) {
+  const match = /^Bearer\s+(\S+)$/i.exec(req.get('authorization') || '');
+  return match?.[1];
+}
 
 export async function authenticate(req,res,next) {
   try {
     res.set('Cache-Control','no-store');
-    // Nenhum Bearer legado ou plugin de conversão de token é aceito.
+
+    const token = bearerToken(req);
+    if (token) {
+      req.user = await userFromFrontendToken(await verifyFrontendToken(token));
+      return next();
+    }
+
     if (!req.get('cookie')) throw new HttpError(401,'Sessão não informada.');
     let identity;
     try {
@@ -20,7 +32,6 @@ export async function authenticate(req,res,next) {
     const expires = new Date(identity?.session?.expiresAt).getTime();
     if (!identity?.user?.id || !identity?.session || !Number.isFinite(expires) || expires <= Date.now()
         || identity.session.userId !== identity.user.id) throw new HttpError(401,'Sessão inválida ou expirada.');
-    // Better Auth protege /api/auth; as escritas de domínio também precisam de CSRF.
     if (!['GET','HEAD','OPTIONS'].includes(req.method)
         && !req.app.locals.trustedOrigins.includes(req.get('origin'))) {
       throw new HttpError(403,'Origem não autorizada para esta operação.');

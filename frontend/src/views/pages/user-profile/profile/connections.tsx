@@ -1,7 +1,5 @@
-// Third-party Imports
 import { EllipsisVerticalIcon, UserIcon, UserRoundCheckIcon } from 'lucide-react'
 
-// Components Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -13,7 +11,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 type ConnectionsProps = {

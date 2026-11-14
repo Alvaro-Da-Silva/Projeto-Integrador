@@ -1,10 +1,7 @@
-// React Imports
 import Link from 'next/link'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 
-// SVG Imports
 import Icon404 from '@/assets/svg/404'
 
 const NotFound = () => {

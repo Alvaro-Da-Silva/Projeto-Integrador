@@ -1,15 +1,11 @@
 'use client'
 
-// React Imports
 import { useState } from 'react'
 
-// Third-party Imports
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react'
 
-// Type Imports
 import type { UserProject } from '@/types/apps/user-types'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -26,7 +22,6 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem } fro
 import { Progress } from '@/components/ui/progress'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const PROJECT_PROGRESS_COLORS = [

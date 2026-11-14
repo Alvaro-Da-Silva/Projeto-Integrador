@@ -1,22 +1,19 @@
 'use client'
 
-// React Imports
 import { useEffect } from 'react'
 
-// Third-party Imports
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-// Type Imports
 import type { AppUser, UserFormData, UserPlan, UserRole, UserSheetMode, UserStatus } from '@/types/apps/user-types'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { PATENTES } from '@/lib/patentes'
 
 const ROLES: UserRole[] = ['admin', 'user']
 const PLANS: UserPlan[] = ['Basic', 'Team', 'Enterprise']
@@ -187,7 +184,20 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className='gap-2'>
                   <FieldLabel htmlFor={field.name}>Patente</FieldLabel>
-                  <Input {...field} id={field.name} placeholder='Patente do usuário' aria-invalid={fieldState.invalid} />
+                  <Select value={field.value || null} onValueChange={(value: string | null) => field.onChange(value ?? '')}>
+                    <SelectTrigger id={field.name} className='w-full' aria-invalid={fieldState.invalid}>
+                      <SelectValue placeholder='Selecione a patente' />
+                    </SelectTrigger>
+                    <SelectContent alignItemWithTrigger={false}>
+                      <SelectGroup>
+                        {PATENTES.map(patente => (
+                          <SelectItem key={patente} value={patente}>
+                            {patente}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : null}
                 </Field>
               )}

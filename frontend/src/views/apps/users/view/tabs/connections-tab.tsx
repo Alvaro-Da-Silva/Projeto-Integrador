@@ -1,15 +1,11 @@
 'use client'
 
-// React Imports
 import { useState, type ComponentType, type SVGAttributes } from 'react'
 
-// Third-party Imports
 import { LinkIcon, PaletteIcon, Trash2Icon } from 'lucide-react'
 
-// Type Imports
 import type { AppUser, SocialPlatform } from '@/types/apps/user-types'
 
-// Component Imports
 import FacebookIcon from '@/assets/svg/facebook-icon'
 import GithubIcon from '@/assets/svg/github-icon'
 import LinkedinIcon from '@/assets/svg/linkedin-icon'
@@ -19,7 +15,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 interface BrandItem {

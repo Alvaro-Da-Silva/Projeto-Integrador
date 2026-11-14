@@ -132,7 +132,6 @@ export default function ImageCropper({
                     </DialogTitle>
                 </DialogHeader>
 
-                {/* Cropper area */}
                 <div className='relative h-[400px] w-full overflow-hidden rounded-lg bg-black'>
                     <Cropper
                         image={imageSrc}

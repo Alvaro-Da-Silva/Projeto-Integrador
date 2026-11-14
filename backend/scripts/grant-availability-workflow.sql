@@ -1,5 +1,3 @@
--- Preparado, nao executado por Codex. Executar como administrador em siscota.
--- Nenhuma alteracao de tabelas/colunas ou escrita em user/account/session/jwks.
 BEGIN READ WRITE;
 DO $$ BEGIN
     IF current_database() <> 'siscota' THEN
@@ -8,7 +6,6 @@ DO $$ BEGIN
 END $$;
 
 GRANT SELECT, INSERT, UPDATE ON public.disponibilidade TO siscota_codex;
--- INSERT para provisionar contas pelo script administrativo, nao por cadastro publico.
 GRANT SELECT, INSERT ON public.usuario, public.perfil TO siscota_codex;
 
 DO $$

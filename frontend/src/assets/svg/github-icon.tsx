@@ -1,4 +1,3 @@
-// React Imports
 import type { SVGProps } from 'react'
 
 const GithubIcon = (props: SVGProps<SVGSVGElement>) => {

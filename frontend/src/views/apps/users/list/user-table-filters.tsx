@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const ROLES: UserRole[] = ['admin', 'user']
-const STATUSES: UserStatus[] = ['Ativo', 'Suspenso', 'Inativo']
+const STATUSES: UserStatus[] = ['Ativo', 'Suspenso']
 
 const ROLE_ITEMS = [{ label: 'Todas', value: 'all' }, ...ROLES.map(role => ({ label: role, value: role }))]
 const STATUS_ITEMS = [{ label: 'Todos', value: 'all' }, ...STATUSES.map(status => ({ label: status, value: status }))]

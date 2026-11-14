@@ -1,19 +1,15 @@
 'use client'
 
-// React Imports
 import { useMemo } from 'react'
 
-// Third-party Imports
 import { differenceInMinutes, format, getMinutes, isPast } from 'date-fns'
 
-// Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 import {
   getBorderRadiusClasses,
-  getEventColorClasses,
+  getEventClasses,
   getMonthViewBleedClasses,
   getMonthViewEventPaddingClasses
 } from '@/utils/calendar-utils'
@@ -51,7 +47,7 @@ function EventWrapper({
     <button
       className={cn(
         'focus-visible:border-ring focus-visible:ring-ring/50 flex h-full w-full text-left font-medium transition outline-none select-none focus-visible:ring-[3px] data-past-event:line-through',
-        getEventColorClasses(event.color),
+        getEventClasses(event),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
       )}

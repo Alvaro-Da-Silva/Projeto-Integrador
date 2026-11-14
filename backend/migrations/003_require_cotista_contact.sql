@@ -1,5 +1,3 @@
--- PREPARADA, NAO EXECUTADA. Apos regularizacao aprovada e remocao do CPF.
--- Sem CASCADE; altera somente public.cotista. Usar ON_ERROR_STOP.
 BEGIN READ WRITE;
 DO $$
 BEGIN
@@ -27,5 +25,4 @@ ALTER TABLE public.cotista
     ALTER COLUMN data_nascimento SET NOT NULL,
     ADD CONSTRAINT chk_cotista_telefone_nao_vazio CHECK (telefone ~ '[^[:space:]]'),
     ADD CONSTRAINT chk_cotista_email_nao_vazio CHECK (email ~ '[^[:space:]]');
--- Nomes fixos das constraints impedem reaplicacao silenciosa.
 COMMIT;

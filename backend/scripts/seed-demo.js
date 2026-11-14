@@ -8,7 +8,6 @@ const digest = createHash('sha256').update(text).digest('hex');
 const stamp = `${plan.marker} SHA256=${digest}`;
 const date = (year, month, day) => `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
 
-// Sem --apply: apenas apresentar o plano. Nenhuma conexao ou escrita.
 if (!process.argv.includes('--apply')) {
   console.log(JSON.stringify({estado:'PROPOSTA_NAO_INSERIDA',sha256:digest,...plan},null,2));
 } else if (!process.argv.includes(`--confirm-plan=${digest}`) || process.env.TEST_DB_WRITES !== 'authorized') {
@@ -31,7 +30,6 @@ if (!process.argv.includes('--apply')) {
       existing.push(...result.rows);
     }
     if (existing.length) {
-      // Nenhuma atualizacao automatica em demonstracao existente, inclusive modificacoes manuais.
       if (existing.length !== plan.escalas.length) throw new Error('Demonstracao parcial; revisar sem apagar registros');
       await client.query('ROLLBACK');
       console.log(JSON.stringify({estado:'JA_EXISTENTE_SEM_ALTERACOES',escalas:existing.map(r=>({id:r.id,nome:r.nome}))},null,2));
@@ -80,9 +78,7 @@ if (!process.argv.includes('--apply')) {
           }
         }
       }
-      // Conferir novamente o destino imediatamente antes de persistir a transacao.
       await run('COMMIT');
-      // IDs reais, sem credenciais; nao ha manifesto ficticio anterior ao COMMIT.
       console.log(JSON.stringify({estado:'PERSISTIDO',sha256:digest,...ids},null,2));
     }
   } catch (error) {

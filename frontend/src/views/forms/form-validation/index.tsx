@@ -1,4 +1,3 @@
-// Component Imports
 import RegistrationForm from './registration-demo-form'
 import ValidationModesDemo from './validation-demos'
 

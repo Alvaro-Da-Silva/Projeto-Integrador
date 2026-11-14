@@ -1,6 +1,5 @@
 'use client'
 
-// Third-party Imports
 import { Bar, BarChart, Label, Pie, PieChart } from 'recharts'
 import {
   TrendingUpIcon,
@@ -11,7 +10,6 @@ import {
   CirclePercentIcon
 } from 'lucide-react'
 
-// Component Imports
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
@@ -20,7 +18,6 @@ const salesPlanPercentage = 54
 const totalBars = 24
 const filledBars = Math.round((salesPlanPercentage * totalBars) / 100)
 
-// Sales chart data
 const salesChartData = Array.from({ length: totalBars }, (_, index) => {
   const date = new Date(2025, 5, 15)
 

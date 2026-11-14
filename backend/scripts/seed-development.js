@@ -63,7 +63,6 @@ if(!process.argv.includes('--apply-authorized')) {
         }
       }
       await run('COMMIT'); committed=true;
-      // Confirmar persistencia em nova transacao/consulta apos COMMIT.
       const confirmation=await client.query('SELECT id FROM public.escala WHERE id=$1 AND observacao=$2',[scaleId,marker]);
       if(confirmation.rowCount!==1) throw new Error('Persistencia nao confirmada apos COMMIT.');
       result.estado='PERSISTIDO';

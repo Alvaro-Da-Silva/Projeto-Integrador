@@ -33,7 +33,6 @@ export async function developmentWrite(client,sql,values=[]) {
   return client.query(sql,values);
 }
 
-// Somente campos de erros PostgreSQL; nunca serializar configuracao de conexao.
 export function databaseError(error) {
   return {code:error.code || 'CONFIGURATION',message:error.message,
     table:error.table,constraint:error.constraint};

@@ -1,4 +1,3 @@
-// Components Import
 import AuthLayout from '@/views/pages/auth/auth-layout'
 import LoginForm from '@/views/pages/auth/login/login-form'
 

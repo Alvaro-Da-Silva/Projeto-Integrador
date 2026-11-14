@@ -1,10 +1,7 @@
-// Config Imports
 import themeConfig from '@/configs/themeConfig'
 
-// SVG Imports
 import LogoSvg from '@/assets/svg/logo'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const Logo = ({ className }: { className?: string }) => {

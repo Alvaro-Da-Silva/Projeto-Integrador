@@ -1,22 +1,17 @@
 'use client'
 
-// React Imports
 import { type ComponentType } from 'react'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-// Next Imports
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-// Third-party Imports
 import * as Icon from 'lucide-react'
 import { ChevronRightIcon, SquareArrowOutUpRightIcon } from 'lucide-react'
 
-// Type Imports
 import type { MenuGroupSubItem, MenuItem, MenuLeafSubItem, MenuSubItem, NavItem } from '@/configs/navConfig'
 
-// Component Imports
 import LogoSvg from '@/assets/svg/logo'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
@@ -48,11 +43,9 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 
-// Config Imports
 import { navItems, filtrarMenu } from '@/configs/navConfig'
 import themeConfig from '@/configs/themeConfig'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 import { authClient } from '@/lib/auth-client'
 
@@ -60,8 +53,6 @@ const isSubGroup = (item: MenuSubItem): item is MenuGroupSubItem => 'childItems'
 
 const isExternalLink = (href: string) => href.startsWith('http://') || href.startsWith('https://')
 
-// Key used to track the open state of a nested sub-group, namespaced by its parent
-// so two sub-groups sharing a label in different parents never collide.
 const subGroupKey = (itemLabel: string, subItemLabel: string) => `${itemLabel}::${subItemLabel}`
 
 function isLinkActive(

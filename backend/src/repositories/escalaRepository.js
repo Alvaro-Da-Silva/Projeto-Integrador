@@ -1,7 +1,6 @@
-// Operacoes transacionais usam exclusivamente o client recebido do service.
 export function findScaleForUpdate(client, id) {
   return client.query(`SELECT id,ano,mes,status,data_inicio::text AS "dataInicio",
-    data_fim::text AS "dataFim" FROM escala WHERE id=$1 FOR UPDATE`,[id]);
+    data_fim::text AS "dataFim",publicada_em AS "publicadaEm" FROM escala WHERE id=$1 FOR UPDATE`,[id]);
 }
 
 export function insertScale(client,nome,ano,mes,start,end,quantidadeCotasPadrao,observacao) {
@@ -10,6 +9,21 @@ export function insertScale(client,nome,ano,mes,start,end,quantidadeCotasPadrao,
       VALUES ($1,$2,$3,$4,$5,$6,$7)
       RETURNING id,nome,ano,mes,status,quantidade_cotas_padrao AS "quantidadeCotasPadrao"`,
       [nome,ano,mes,start,end,quantidadeCotasPadrao,observacao]);
+}
+
+export function insertAllDays(client,scaleId,start,end) {
+  return client.query(`INSERT INTO dia (escala_id,data)
+      SELECT $1,d::date FROM generate_series($2::date,$3::date,interval '1 day') d
+      ON CONFLICT (escala_id,data) DO NOTHING`,[scaleId,start,end]);
+}
+
+export function insertAllShifts(client,scaleId,dayQuantity,nightQuantity) {
+  return client.query(`INSERT INTO plantao (dia_id,periodo_id,quantidade_necessaria)
+      SELECT d.id,p.id,q.qtd FROM dia d
+      CROSS JOIN (VALUES ('D',$2::int),('N1',$3::int),('N2',$3::int)) AS q(codigo,qtd)
+      JOIN periodo p ON p.codigo=q.codigo AND p.status='ativo'
+      WHERE d.escala_id=$1
+      ON CONFLICT (dia_id,periodo_id) DO NOTHING`,[scaleId,dayQuantity,nightQuantity]);
 }
 
 export function updateScaleStatus(client,id,status) {

@@ -19,6 +19,8 @@ export type GetUsersResult = {
 
 const VALID_ROLES: UserRole[] = ['user', 'admin']
 
+const MAX_USERS_STATUS_FILTER = 1000
+
 const SORT_FIELDS: Record<UserSorting['id'], string> = {
     user: 'name',
     patent: 'patent',
@@ -64,10 +66,13 @@ export async function getUsers(
     page: number,
     pageSize: number
 ): Promise<GetUsersResult> {
+    const filtrarStatus = filters.status !== 'all'
+
     const { data, error } = await authClient.admin.listUsers({
         query: {
-            limit: pageSize,
-            offset: (page - 1) * pageSize,
+            ...(filtrarStatus
+                ? { limit: MAX_USERS_STATUS_FILTER }
+                : { limit: pageSize, offset: (page - 1) * pageSize }),
             sortBy: sorting ? SORT_FIELDS[sorting.id] : 'name',
             sortDirection: sorting?.desc ? 'desc' : 'asc',
             ...(filters.search && {
@@ -88,9 +93,15 @@ export async function getUsers(
     }
 
     const users = (data?.users ?? []).map(u => mapApiUserToAppUser(u as User))
-    const total = data?.total ?? 0
 
-    return { users, total }
+    if (filtrarStatus) {
+        const filtrados = users.filter(u => u.status === filters.status)
+        const inicio = (page - 1) * pageSize
+
+        return { users: filtrados.slice(inicio, inicio + pageSize), total: filtrados.length }
+    }
+
+    return { users, total: data?.total ?? 0 }
 }
 
 export async function banUser(userId: string): Promise<AppUser> {
@@ -120,7 +131,6 @@ export type UpdateUserPayload = {
 }
 
 export async function updateUser(userId: string, payload: UpdateUserPayload): Promise<AppUser> {
-    // Update role via better-auth admin plugin if provided
     if (payload.role) {
         const { error: roleError } = await authClient.admin.setRole({ userId, role: payload.role })
         if (roleError) {
@@ -128,7 +138,6 @@ export async function updateUser(userId: string, payload: UpdateUserPayload): Pr
         }
     }
 
-    // Update name and/or patent via better-auth admin updateUser
     const fieldsToUpdate: Record<string, unknown> = {}
     if (payload.name !== undefined) fieldsToUpdate.name = payload.name
     if (payload.patent !== undefined) fieldsToUpdate.patent = payload.patent
@@ -144,7 +153,6 @@ export async function updateUser(userId: string, payload: UpdateUserPayload): Pr
         }
     }
 
-    // Fetch updated user list to return the updated record
     const result = await authClient.admin.listUsers({ query: { limit: 100 } })
     const updatedRaw = result.data?.users?.find(u => u.id === userId)
 

@@ -6,12 +6,13 @@ const scaleQuery = `
     nome,
     mes,
     ano,
-    data_inicio AS "dataInicio",
-    data_fim AS "dataFim",
+    data_inicio::text AS "dataInicio",
+    data_fim::text AS "dataFim",
     status,
     observacao,
     criada_em AS "criadaEm",
-    quantidade_cotas_padrao AS "quantidadeCotasPadrao"
+    quantidade_cotas_padrao AS "quantidadeCotasPadrao",
+    publicada_em AS "publicadaEm"
   FROM escala
   WHERE ano = $1 AND mes = $2
 `;
@@ -20,7 +21,7 @@ const daysQuery = `
   SELECT
     id,
     escala_id AS "escalaId",
-    data
+    data::text AS data
   FROM dia
   WHERE escala_id = $1
   ORDER BY data, id

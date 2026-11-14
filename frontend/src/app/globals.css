@@ -151,7 +151,6 @@ a[data-slot='button'].h-9:not(.px-6) {
   @apply px-3;
 }
 
-/* For native button elements and elements with role="button", e.g., button, checkbox, radio, switch etc. */
 button:not(:disabled),
 [role='checkbox']:not(:disabled),
 [role='radio']:not(:disabled),
@@ -160,7 +159,6 @@ button:not(:disabled),
   cursor: pointer;
 }
 
-/* For labels associated with form controls */
 label[for],
 label:has([role='checkbox']):not(:disabled),
 label:has([role='radio']):not(:disabled),
@@ -168,27 +166,23 @@ label:has([role='switch']):not(:disabled) {
   cursor: pointer;
 }
 
-/* For slider component */
 [role='slider']:not([data-disabled]),
 [data-slot='slider-track']:not([data-disabled]),
 [data-slot='slider-thumb']:not([data-disabled]) {
   cursor: pointer;
 }
 
-/* For components with menuitems, e.g., dropdown, context menu, etc. */
 [role='menuitem']:not(:disabled),
 [role='menuitemcheckbox']:not(:disabled),
 [role='menuitemradio']:not(:disabled) {
   cursor: pointer !important;
 }
 
-/* For components with options, e.g., combobox, command, select etc. */
 [role='option']:not(:disabled),
 select[data-slot='native-select']:not(:disabled) {
   cursor: pointer !important;
 }
 
-/* For number input spin buttons */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   cursor: pointer;

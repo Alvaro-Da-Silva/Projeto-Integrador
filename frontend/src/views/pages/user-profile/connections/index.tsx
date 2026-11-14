@@ -1,7 +1,5 @@
-// Third-party Imports
 import { EllipsisVerticalIcon, MailIcon, UserPlus2Icon, UserRoundCheckIcon } from 'lucide-react'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

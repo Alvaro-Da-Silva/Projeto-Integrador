@@ -41,7 +41,7 @@ export function findScaleById(scaleId) {
 export function findAvailabilityByScale(scaleId,cotistaId) {
   return pool.query(`SELECT a.id,a.dia_id AS "diaId",d.data::text AS data,
     r.codigo AS "codigoPeriodo",a.periodo_id AS "periodoId",a.observacao,
-    a.registrada_em AS "registradaEm",c.nome AS "cotistaNome"
+    a.registrada_em AS "registradaEm",a.cotista_id AS "cotistaId",c.nome AS "cotistaNome"
     FROM disponibilidade a JOIN dia d ON d.id=a.dia_id
     JOIN periodo r ON r.id=a.periodo_id JOIN cotista c ON c.id=a.cotista_id
     WHERE d.escala_id=$1${cotistaId === undefined ? '' : ' AND a.cotista_id=$2'}
@@ -49,7 +49,7 @@ export function findAvailabilityByScale(scaleId,cotistaId) {
 }
 
 export function findAvailabilityByCotistaAndScale(cotistaId,scaleId) {
-  return pool.query(`SELECT a.id,a.dia_id AS "diaId",d.data,r.codigo AS "codigoPeriodo",
+  return pool.query(`SELECT a.id,a.dia_id AS "diaId",d.data::text AS data,r.codigo AS "codigoPeriodo",
     a.periodo_id AS "periodoId",a.observacao,a.registrada_em AS "registradaEm"
     FROM disponibilidade a JOIN dia d ON d.id=a.dia_id JOIN periodo r ON r.id=a.periodo_id
     WHERE a.cotista_id=$1 AND d.escala_id=$2 ORDER BY d.data,a.id`,[cotistaId,scaleId]);

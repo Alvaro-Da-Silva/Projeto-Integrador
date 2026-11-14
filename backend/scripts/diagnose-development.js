@@ -48,7 +48,6 @@ try {
   for(const [table,column] of [['escala','nome'],['periodo','nome'],['cotista','nome'],['dia','data'],['plantao','quantidade_necessaria']]) {
     operations.push([table,'UPDATE',`UPDATE public.${table} SET ${column}=${column} WHERE id=$1`,[id]]);
   }
-  // Ordem reversa das FKs. Todas as operacoes permanecem em ROLLBACK.
   for(const table of ['plantao','dia','cotista','periodo','escala']) {
     operations.push([table,'DELETE',`DELETE FROM public.${table} WHERE id=$1`,[id]]);
   }

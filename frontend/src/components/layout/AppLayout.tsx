@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 
 import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
-import Sidebar from '@/components/layout/Sidebar'
+import Sidebar from '@/components/layout/Sidebar' 
 import { SidebarInset } from '@/components/ui/sidebar'
 
 const AUTH_ROUTES = ['/login', '/register', '/forgot_password', '/reset_password']

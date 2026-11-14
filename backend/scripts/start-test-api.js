@@ -6,7 +6,6 @@ try {
   await client.end();
   const port = Number(process.env.TEST_API_PORT || 8081);
   if (!Number.isInteger(port) || port<1024 || port>65535) throw new Error('Porta invalida');
-  // Variaveis definidas ANTES dos imports: nao depende de dotenv em server.js.
   process.env.DATABASE_URL=process.env.TEST_DATABASE_URL;
   const { createApp } = await import('../src/app.js');
   const { pool } = await import('../src/config/database.js');

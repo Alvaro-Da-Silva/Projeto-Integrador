@@ -9,9 +9,9 @@ export interface CalendarEvent {
   allDay?: boolean
   color?: events
   location?: string
+  turno?: 'N1' | 'N2' | 'I' | 'D'
 }
 
 export type events = 'family' | 'business' | 'personal' | 'holiday' | 'etc'
 
-/** @deprecated Use `events` — kept for existing imports */
 export type EventColor = events

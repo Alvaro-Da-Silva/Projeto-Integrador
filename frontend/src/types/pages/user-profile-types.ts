@@ -1,4 +1,3 @@
-// Activity Timeline - Profile Section Types
 export type ActivityFileType = 'pdf' | 'image' | 'doc' | 'excel'
 
 export type ActivityAttachment = {
@@ -30,7 +29,6 @@ export type UserActivityItem = {
   teamExtraCount?: number
 }
 
-// About Section - Profile Section Types
 export type UserProfileInfoIconKey =
   | 'UserIcon'
   | 'CheckCheckIcon'
@@ -54,7 +52,6 @@ export type UserProfileSection = {
   items: UserProfileSectionItem[]
 }
 
-// Connections - Profile Section Types
 export type UserConnectionItem = {
   id: string | number
   name: string
@@ -64,7 +61,6 @@ export type UserConnectionItem = {
   isConnected: boolean
 }
 
-// Connections Card - Connection Section Types
 export type ConnectionCardTag = {
   label: string
 }
@@ -81,7 +77,6 @@ export type ConnectionCardItem = UserConnectionItem & {
   stats: ConnectionCardStats
 }
 
-// Team - Profile Section Types
 export type UserTeamItem = {
   id: string | number
   teams: string
@@ -93,7 +88,6 @@ export type UserTeamItem = {
   }
 }
 
-// Project - Profile Section
 export type UserProjectTeamMember = {
   avatar?: string
   initials: string
@@ -133,7 +127,6 @@ export interface ProjectDatatable {
   updatedAt?: string
 }
 
-// All User Profile Page Data Types
 export type UserProfilePageData = {
   profileSections: UserProfileSection[]
   overviewSections: UserProfileSection[]

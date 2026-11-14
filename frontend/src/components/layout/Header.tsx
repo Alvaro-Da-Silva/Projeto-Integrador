@@ -1,11 +1,9 @@
 'use client'
 
-// Next Imports
 import { Fragment } from 'react'
 
 import { usePathname } from 'next/navigation'
 
-// Component Imports
 import ModeToggle from '@/components/layout/ModeToggle'
 import ProfileDropdown from '@/components/shared/ProfileDropdown'
 import {

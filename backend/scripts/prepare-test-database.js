@@ -4,8 +4,6 @@ import { join } from 'node:path';
 import fs from 'node:fs';
 import { connectTestDatabase } from '../test/support/testDatabase.js';
 
-// Nao e executado por npm test nem por test:integration.
-// Requer aprovacao do usuario e ferramentas PostgreSQL no PATH.
 if (!process.argv.includes('--authorize-create') && !process.argv.includes('--export-only')) {
   console.error('Nao executado. Requer autorizacao para criar siscota_test e restaurar SOMENTE o esquema real.');
   process.exitCode = 1;
@@ -27,8 +25,6 @@ async function prepare() {
   const source = new URL(process.env.TEST_SCHEMA_SOURCE_URL);
   if (!['postgres:','postgresql:'].includes(source.protocol) || source.pathname !== '/siscota'
       || [...source.searchParams.keys()].some(key => key !== 'sslmode')) throw new Error('Fonte recusada');
-  // Exportacao oficial: mantem identity, sequences, indices e FKs reais.
-  // Nao copia registros nem usa o banco principal como template fisico.
   for (const tool of ['pg_dump','psql']) {
     if (spawnSync(executable(tool),['--version'],{stdio:'ignore',windowsHide:true}).status !== 0) throw new Error('Ferramenta ausente');
   }
@@ -62,10 +58,7 @@ async function prepare() {
   const target = new URL(source); target.pathname='/siscota_test';
   const client = await connectTestDatabase(target.href);
   await client.end();
-  // Destino fixo conferido no servidor; sem credenciais na linha de comando.
   const guard = "DO $$ BEGIN IF current_database() <> 'siscota_test' THEN RAISE EXCEPTION 'Destino recusado'; END IF; END $$;\n";
-  // template0 ja contem public. Preservar esse schema vazio, sem DROP;
-  // esta adaptacao nao altera tabelas, colunas ou constraints exportadas.
   const restoreSql = dump.stdout.replace(/^CREATE SCHEMA public;\r?$/m, 'CREATE SCHEMA IF NOT EXISTS public;');
   const restored = spawnSync(executable('psql'),['--no-psqlrc','--single-transaction','--set=ON_ERROR_STOP=1'], {
     env:toolEnvironment(target),input:guard+restoreSql,encoding:'utf8',windowsHide:true,maxBuffer:20*1024*1024

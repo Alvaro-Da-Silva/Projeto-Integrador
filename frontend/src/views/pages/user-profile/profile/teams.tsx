@@ -1,7 +1,5 @@
-// Third-party Imports
 import { EllipsisVerticalIcon } from 'lucide-react'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -14,7 +12,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 type TeamsProps = {

@@ -1,10 +1,8 @@
 'use client'
 
-// Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-// Component Import
 import AuthLayout from '@/views/pages/auth/auth-layout'
 import RegisterForm from '@/views/pages/auth/register/register-form'
 import { ArrowLeft } from 'lucide-react'
@@ -45,12 +43,6 @@ const Register = () => {
     >
       <div className='space-y-6'>
         <RegisterForm />
-        <p className='text-center text-muted-foreground'>
-          Já tem uma conta?{' '}
-          <Link href='/login' className='font-semibold text-(--auth-accent) hover:underline'>
-            Faça login
-          </Link>
-        </p>
       </div>
     </AuthLayout>
   )

@@ -1,6 +1,5 @@
 'use client'
 
-// Third-party Imports
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import {
@@ -12,10 +11,8 @@ import {
   XIcon
 } from 'lucide-react'
 
-// Type Imports
 import type { AppUser, UserRole, UserStatus } from '@/types/apps/user-types'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -36,11 +33,10 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { isPatente, PATENTES } from '@/lib/patentes'
 
-// Config Imports
 import { getInitialsFromName } from '@/configs/mailConfig'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const STATUS_STYLES: Record<UserStatus, string> = {
@@ -266,27 +262,34 @@ export const userTableColumns: ColumnDef<AppUser>[] = [
 
       if (isEditing && editingState) {
         return (
-          <Input
-            className='h-7 text-sm py-0 px-2 w-28'
-            value={editingState.patent}
-            onChange={e => meta?.onEditingStateChange?.({ ...editingState, patent: e.target.value })}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                meta?.onSave?.(row.original.id, editingState)
-              } else if (e.key === 'Escape') {
-                e.preventDefault()
-                meta?.onCancelEdit?.(row.original.id)
-              }
-            }}
-            placeholder='Patente'
-          />
+          <Select
+            value={editingState.patent || null}
+            onValueChange={(value: string | null) => meta?.onEditingStateChange?.({ ...editingState, patent: value ?? '' })}
+          >
+            <SelectTrigger className='h-7 w-40 text-sm'>
+              <SelectValue placeholder='Patente' />
+            </SelectTrigger>
+            <SelectContent>
+              {PATENTES.map(item => (
+                <SelectItem key={item} value={item}>
+                  {item}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         )
       }
 
       return (
         <div className='flex items-center gap-2'>
-          <span className='capitalize'>{patent}</span>
+          {patent && !isPatente(patent) ? (
+            <Tooltip>
+              <TooltipTrigger render={<Badge variant='destructive' />}>{patent}</TooltipTrigger>
+              <TooltipContent>Patente fora da lista: não vale no desempate da distribuição. Edite e selecione o grau.</TooltipContent>
+            </Tooltip>
+          ) : (
+            <span>{patent}</span>
+          )}
         </div>
       )
     },

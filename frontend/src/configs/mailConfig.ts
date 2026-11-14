@@ -1,7 +1,5 @@
-// Third-party Imports
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns'
 
-// Type Imports
 import type { EmailLabel, EmailStatus } from '@/types/apps/mail-types'
 
 export const MAIL_CURRENT_USER = {

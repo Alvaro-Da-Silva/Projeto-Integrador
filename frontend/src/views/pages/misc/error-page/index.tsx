@@ -1,7 +1,5 @@
-// React Imports
 import Link from 'next/link'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 
 const NotFound = () => {

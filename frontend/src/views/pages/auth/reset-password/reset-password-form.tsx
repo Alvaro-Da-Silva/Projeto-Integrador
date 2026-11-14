@@ -1,21 +1,16 @@
 'use client'
 
-// React imports
 import { useState } from 'react'
 import { useRouter,useSearchParams } from "next/navigation";
 
-// Icon Imports
 import { EyeIcon, EyeOffIcon, LockKeyholeIcon, ShieldCheckIcon } from 'lucide-react'
 
-// Zod Imports
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/lib/schemas/login";
 
-// Lib Imports
 import { authClient } from "@/lib/auth-client";
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'

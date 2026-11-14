@@ -1,19 +1,14 @@
 'use client'
 
-// React Imports
 import { useEffect, useState } from 'react'
 
-// Third-party Imports
 import { ArrowUpIcon } from 'lucide-react'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const ScrollToTop = () => {
-  // States
   const [showScrollButton, setShowScrollButton] = useState(false)
 
   const scrollToTop = () => {
@@ -25,7 +20,6 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show button when scrolled down 320px or more
       setShowScrollButton(window.scrollY > 320)
     }
 

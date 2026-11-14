@@ -1,9 +1,7 @@
 'use client'
 
-// React Imports
 import React, { useMemo } from 'react'
 
-// Third-party Imports
 import {
   addHours,
   areIntervalsOverlapping,
@@ -16,21 +14,16 @@ import {
   startOfDay
 } from 'date-fns'
 
-// Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
 
-// Component Imports
 import { CalendarCell } from './calendar-cell'
 import { EventItem } from './event-item'
 
-// Hook Imports
 import { useCurrentTimeIndicator } from '@/hooks/use-current-time-indicator'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 import { isMultiDayEvent } from '@/utils/calendar-utils'
 
-// Data Imports
 import { EndHour, StartHour, WeekCellsHeight } from '@/assets/data/constants'
 
 interface DayViewProps {
@@ -74,46 +67,37 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
   }, [currentDate, events])
 
-  // Filter all-day events
   const allDayEvents = useMemo(() => {
     return dayEvents.filter(event => {
-      // Include explicitly marked all-day events or multi-day events
       return event.allDay || isMultiDayEvent(event)
     })
   }, [dayEvents])
 
-  // Get only single-day time-based events
   const timeEvents = useMemo(() => {
     return dayEvents.filter(event => {
-      // Exclude all-day events and multi-day events
       return !event.allDay && !isMultiDayEvent(event)
     })
   }, [dayEvents])
 
-  // Process events to calculate positions
   const positionedEvents = useMemo(() => {
     const result: PositionedEvent[] = []
     const dayStart = startOfDay(currentDate)
 
-    // Sort events by start time and duration
     const sortedEvents = [...timeEvents].sort((a, b) => {
       const aStart = new Date(a.start)
       const bStart = new Date(b.start)
       const aEnd = new Date(a.end)
       const bEnd = new Date(b.end)
 
-      // First sort by start time
       if (aStart < bStart) return -1
       if (aStart > bStart) return 1
 
-      // If start times are equal, sort by duration (longer events first)
       const aDuration = differenceInMinutes(aEnd, aStart)
       const bDuration = differenceInMinutes(bEnd, bStart)
 
       return bDuration - aDuration
     })
 
-    // Track columns for overlapping events
     const columns: { event: CalendarEvent; end: Date }[][] = []
 
     sortedEvents.forEach(event => {
@@ -128,7 +112,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       const top = (startHour - StartHour) * WeekCellsHeight
       const height = (endHour - startHour) * WeekCellsHeight
 
-      // Find a column for this event
       let columnIndex = 0
       let placed = false
 
@@ -154,13 +137,11 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         }
       }
 
-      // Ensure column is initialized before pushing
       const currentColumn = columns[columnIndex] || []
 
       columns[columnIndex] = currentColumn
       currentColumn.push({ event, end: adjustedEnd })
 
-      // First column takes full width, others are indented by 10% and take 90% width
       const width = columnIndex === 0 ? 1 : 1 - columnIndex * 0.1
       const left = columnIndex === 0 ? 0 : columnIndex * 0.1
 
@@ -170,7 +151,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         height,
         left,
         width,
-        zIndex: 10 + columnIndex // Higher columns get higher z-index
+        zIndex: 10 + columnIndex
       })
     })
 
@@ -238,7 +219,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
 
         <div className='relative'>
-          {/* Positioned events */}
           {positionedEvents.map(positionedEvent => (
             <div
               key={positionedEvent.event.id}
@@ -262,7 +242,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
             </div>
           ))}
 
-          {/* Current time indicator */}
           {currentTimeVisible && (
             <div
               className='pointer-events-none absolute right-0 left-0 z-20'
@@ -275,7 +254,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
             </div>
           )}
 
-          {/* Time grid */}
           {hours.map(hour => {
             const hourValue = getHours(hour)
 
@@ -284,7 +262,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                 key={hour.toString()}
                 className='border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0'
               >
-                {/* Quarter-hour intervals */}
                 {[0, 1, 2, 3].map(quarter => {
                   const quarterHourTime = hourValue + quarter * 0.25
 

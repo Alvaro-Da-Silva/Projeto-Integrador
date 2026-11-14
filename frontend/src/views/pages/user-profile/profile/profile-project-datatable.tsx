@@ -1,15 +1,11 @@
 'use client'
 
-// React Imports
 import { useMemo, useState } from 'react'
 
-// Third-party Imports
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react'
 
-// Type Imports
 import type { ProfileProjectDatatableProps, ProjectDatatable } from '@/types/pages/user-profile-types'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -29,10 +25,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 
 
-// Hook Imports
 import { usePagination } from '@/hooks/use-pagination'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const PAGE_SIZE = 5

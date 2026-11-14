@@ -1,7 +1,5 @@
-// Third-party Imports
 import { Building2Icon, MailIcon, MessageSquareIcon, PhoneIcon, UserIcon } from 'lucide-react'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'

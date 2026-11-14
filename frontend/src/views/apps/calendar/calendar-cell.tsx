@@ -1,17 +1,15 @@
 'use client'
 
-// Utils Imports
 import { cn } from '@/lib/utils'
 
 interface CalendarCellProps {
-  time?: number // For week/day views, represents hours (e.g., 9.25 for 9:15)
+  time?: number
   children?: React.ReactNode
   className?: string
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
 }
 
 export function CalendarCell({ time, children, className, onClick }: CalendarCellProps) {
-  // Format time for display in tooltip (only for debugging)
   const formattedTime =
     time !== undefined
       ? `${Math.floor(time)}:${Math.round((time - Math.floor(time)) * 60)

@@ -1,13 +1,10 @@
 'use client'
 
-// Third-party Imports
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem } from '@/components/ui/pagination'
 
-// Hook Imports
 import { usePagination } from '@/hooks/use-pagination'
 
 export interface UserPaginationProps {

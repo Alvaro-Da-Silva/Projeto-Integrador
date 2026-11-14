@@ -1,4 +1,3 @@
-// Third-party Imports
 import {
   CheckCheckIcon,
   CheckIcon,
@@ -13,7 +12,6 @@ import {
   UserIcon
 } from 'lucide-react'
 
-// Components Imports
 import { Card, CardContent } from '@/components/ui/card'
 
 type AboutItem = {
