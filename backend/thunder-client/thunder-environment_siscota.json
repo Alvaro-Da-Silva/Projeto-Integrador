@@ -1,0 +1,60 @@
+{
+  "client": "Thunder Client",
+  "environmentName": "SISCOTA - Local (preencher períodos confirmados)",
+  "dateExported": "2026-11-04T00:00:00.000Z",
+  "version": "1.0",
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "name": "anoExistente",
+      "value": ""
+    },
+    {
+      "name": "mesExistente",
+      "value": ""
+    },
+    {
+      "name": "anoInexistente",
+      "value": ""
+    },
+    {
+      "name": "mesInexistente",
+      "value": ""
+    },
+    {
+      "name": "anoCotas4",
+      "value": ""
+    },
+    {
+      "name": "mesCotas4",
+      "value": ""
+    },
+    {
+      "name": "anoCotas3",
+      "value": ""
+    },
+    {
+      "name": "mesCotas3",
+      "value": ""
+    },
+    {
+      "name": "anoCotas5",
+      "value": ""
+    },
+    {
+      "name": "mesCotas5",
+      "value": ""
+    },
+    {
+      "name": "anoSemDias",
+      "value": ""
+    },
+    {
+      "name": "mesSemDias",
+      "value": ""
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 // Third-party Imports
 import { DownloadIcon, FileSpreadsheetIcon, FileTextIcon, PlusIcon, SearchIcon, UploadIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 // Component Imports
 import { Button } from '@/components/ui/button'
@@ -29,11 +30,13 @@ export interface UserTableToolbarProps {
 }
 
 export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageChange }: UserTableToolbarProps) {
+  const router = useRouter()
+
   return (
     <div className='flex gap-4 p-6 max-sm:flex-col sm:items-center sm:justify-between'>
       <div className='w-full max-w-2xs'>
         <Label htmlFor='search-user' className='sr-only'>
-          Search User
+          Pesquisar usuário
         </Label>
         <InputGroup>
           <InputGroupAddon>
@@ -43,7 +46,7 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
             id='search-user'
             value={search}
             onChange={event => onSearch(event.target.value)}
-            placeholder='Search user'
+            placeholder='Pesquisar usuário'
             type='text'
           />
         </InputGroup>
@@ -52,7 +55,7 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
       <div className='flex flex-wrap items-center gap-2 sm:justify-between'>
         <div className='flex items-center gap-2'>
           <Label htmlFor='rows-per-page' className='sr-only'>
-            Show
+            Mostrar
           </Label>
           <Select
             items={ROWS_PER_PAGE_ITEMS}
@@ -85,33 +88,33 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
             }
           >
             <UploadIcon />
-            <span className='max-lg:hidden'>Export</span>
+            <span className='max-lg:hidden'>Exportar</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end' className='w-auto'>
             <DropdownMenuItem>
               <FileTextIcon className='size-4' />
-              Export as CSV
+              Exportar as CSV
             </DropdownMenuItem>
             <DropdownMenuItem>
               <FileSpreadsheetIcon className='size-4' />
-              Export as Excel
+              Exportar as Excel
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <FileTextIcon className='size-4' />
-              Export as JSON
+              Exportar as JSON
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-
+            
         <Button variant='outline'>
           <DownloadIcon className='size-4' />
-          <span className='max-lg:hidden'>Import</span>
+          <span className='max-lg:hidden'>Importar</span>
         </Button>
 
-        <Button>
+        <Button onClick={() => router.push('/register')}>
           <PlusIcon />
-          <span className='max-lg:hidden'>Add New User</span>
+          <span className='max-lg:hidden'>Adicionar Novo Usuário</span>
         </Button>
       </div>
     </div>

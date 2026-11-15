@@ -1,0 +1,16 @@
+
+.AGENTS.md
+.siscota.session.sql
+
+# Dependencias geradas, em qualquer pacote do repositorio.
+node_modules/
+
+# Configuracao privada; exemplos podem ser compartilhados sem segredos reais.
+.env
+.env.*
+!.env.example
+!.env.*.example
+.workflow-demo-credentials.json
+
+# Conexoes e preferencias locais da raiz; preservar configuracoes do frontend.
+/.vscode/

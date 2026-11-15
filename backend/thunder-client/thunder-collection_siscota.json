@@ -1,0 +1,878 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "SISCOTA - Backend implementado",
+  "dateExported": "2026-11-04T00:00:00.000Z",
+  "version": "1.1",
+  "folders": [
+    {
+      "containerId": "",
+      "sortNum": 10000,
+      "name": "Escalas - validações sem banco",
+      "_id": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "created": "2026-11-04T00:00:00.000Z"
+    },
+    {
+      "containerId": "",
+      "sortNum": 20000,
+      "name": "Escalas - consultas com dados confirmados",
+      "_id": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "created": "2026-11-04T00:00:00.000Z"
+    },
+    {
+      "containerId": "",
+      "sortNum": 30000,
+      "name": "Cotas e distribuição - via calendário",
+      "_id": "64444ead-a9e6-4bc2-a742-408133133ab7",
+      "created": "2026-11-04T00:00:00.000Z"
+    },
+    {
+      "containerId": "",
+      "sortNum": 40000,
+      "name": "Escalas - parâmetros ausentes",
+      "_id": "9675026b-284a-419d-a5e6-e0a65416f73a",
+      "created": "2026-11-04T00:00:00.000Z"
+    }
+  ],
+  "requests": [
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 10000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: 1999",
+      "url": "{{baseUrl}}/api/escalas/1999/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "c96126ff-4205-442c-888a-c9b711dc7b94",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/1999/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 20000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: 10000",
+      "url": "{{baseUrl}}/api/escalas/10000/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "0e3060c7-f69f-465d-99b6-55ad9927b82e",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/10000/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 30000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: 2026.5",
+      "url": "{{baseUrl}}/api/escalas/2026.5/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "51abac4b-718f-4cab-9d62-56b58bf07603",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026.5/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 40000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: abc",
+      "url": "{{baseUrl}}/api/escalas/abc/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "3d747d07-6177-4b6d-9cff-2c4ea2f9a5aa",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/abc/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 50000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: 0",
+      "url": "{{baseUrl}}/api/escalas/0/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "641764de-22a5-4521-802a-44f231cb09f5",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/0/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 60000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: -1",
+      "url": "{{baseUrl}}/api/escalas/-1/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "a0124bdf-bd4c-4a6a-a58f-d9cb55583d93",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/-1/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 70000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano inválido: Infinity",
+      "url": "{{baseUrl}}/api/escalas/Infinity/11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "49b7ecd3-f6e5-4086-a377-ed72aecee1b8",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar ano não inteiro ou fora de 2000–9999.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/Infinity/11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 80000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês inválido: 0",
+      "url": "{{baseUrl}}/api/escalas/2026/0/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "e626abd6-1c99-4956-b7d6-64f12281eae0",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar mês não inteiro ou fora de 1–12.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/0/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Mês inválido. Informe um mês entre 1 e 12.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 90000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês inválido: 13",
+      "url": "{{baseUrl}}/api/escalas/2026/13/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "847dcb85-321d-4164-9e4c-3e5e35c99f22",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar mês não inteiro ou fora de 1–12.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/13/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Mês inválido. Informe um mês entre 1 e 12.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 100000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês inválido: 1.5",
+      "url": "{{baseUrl}}/api/escalas/2026/1.5/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "3632f6a1-4208-4475-8d36-f822ba6a400d",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar mês não inteiro ou fora de 1–12.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/1.5/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Mês inválido. Informe um mês entre 1 e 12.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 110000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês inválido: abc",
+      "url": "{{baseUrl}}/api/escalas/2026/abc/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "f52fcc36-5bf5-4b4d-8918-2da69edb1416",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar mês não inteiro ou fora de 1–12.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/abc/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Mês inválido. Informe um mês entre 1 e 12.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 120000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês inválido: -1",
+      "url": "{{baseUrl}}/api/escalas/2026/-1/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "1a1ff771-a801-4c9d-b348-4a9eb397c5e0",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar mês não inteiro ou fora de 1–12.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/-1/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Mês inválido. Informe um mês entre 1 e 12.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 130000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês inválido: Infinity",
+      "url": "{{baseUrl}}/api/escalas/2026/Infinity/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "c86b4ef8-4d52-451a-a8a4-d583b3e0d18c",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Rejeitar mês não inteiro ou fora de 1–12.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/Infinity/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Mês inválido. Informe um mês entre 1 e 12.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "571eff1c-e1a0-452b-825a-04ffc875b170",
+      "sortNum": 140000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano tem prioridade sobre mês",
+      "url": "{{baseUrl}}/api/escalas/abc/abc/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "d6a2b3b1-fd35-40db-8647-f8c1e561f493",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Confirmar ordem das validações.\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/abc/abc/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 400\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Ano inválido. Informe um ano entre 2000 e 9999.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "sortNum": 150000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Calendário existente",
+      "url": "{{baseUrl}}/api/escalas/{{anoExistente}}/{{mesExistente}}/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "b8e63ff6-f430-4bbb-8a1e-ace1fd637602",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Consultar escala, dias, períodos e plantões associados.\nPré-condição: Confirmar escala existente e preencher anoExistente/mesExistente. Listas podem estar vazias. Exemplo de distribuição requer quantidade_cotas_padrao = 4; adaptar ao registro real.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/{{anoExistente}}/{{mesExistente}}/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 200\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"escala\": {\n    \"id\": \"<valor retornado do banco>\",\n    \"nome\": \"<valor retornado do banco>\",\n    \"mes\": \"<valor retornado do banco>\",\n    \"ano\": \"<valor retornado do banco>\",\n    \"dataInicio\": \"<valor retornado do banco>\",\n    \"dataFim\": \"<valor retornado do banco>\",\n    \"status\": \"<valor retornado do banco>\",\n    \"observacao\": \"<valor retornado do banco>\",\n    \"criadaEm\": \"<valor retornado do banco>\",\n    \"quantidadeCotasPadrao\": \"<valor retornado do banco>\"\n  },\n  \"dias\": [\n    {\n      \"id\": \"<dia.id>\",\n      \"escalaId\": \"<escala.id>\",\n      \"data\": \"<dia.data>\",\n      \"plantoes\": [\n        {\n          \"id\": \"<valor retornado do banco>\",\n          \"diaId\": \"<valor retornado do banco>\",\n          \"periodoId\": \"<valor retornado do banco>\",\n          \"quantidadeNecessaria\": \"<valor retornado do banco>\",\n          \"status\": \"<valor retornado do banco>\",\n          \"observacao\": \"<valor retornado do banco>\",\n          \"criadoEm\": \"<valor retornado do banco>\"\n        }\n      ]\n    }\n  ],\n  \"periodos\": [\n    {\n      \"id\": \"<valor retornado do banco>\",\n      \"codigo\": \"<valor retornado do banco>\",\n      \"nome\": \"<valor retornado do banco>\",\n      \"descricao\": \"<valor retornado do banco>\",\n      \"horaInicio\": \"<valor retornado do banco>\",\n      \"horaFim\": \"<valor retornado do banco>\",\n      \"status\": \"<valor retornado do banco>\"\n    }\n  ],\n  \"distribuicaoDiariaPadrao\": {\n    \"totalQuotas\": 4,\n    \"hoursPerQuota\": 12,\n    \"nightPeriodAllocation\": \"pending\",\n    \"supported\": true,\n    \"diurnalQuotas\": 2,\n    \"nightQuotas\": 2\n  }\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "sortNum": 160000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Escala inexistente",
+      "url": "{{baseUrl}}/api/escalas/{{anoInexistente}}/{{mesInexistente}}/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "f48b3993-b295-4d4c-9759-6ade4da1abf2",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Distinguir período válido sem escala de parâmetro inválido.\nPré-condição: Confirmar ausência de escala no período e preencher anoInexistente/mesInexistente válidos.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/{{anoInexistente}}/{{mesInexistente}}/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Escala não encontrada para o período informado.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "sortNum": 170000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Período válido - limite inferior",
+      "url": "{{baseUrl}}/api/escalas/2000/1/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "c3507af1-42bd-4f61-bcf0-2364ded07ab4",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Confirmar que passa pela validação e consulta o banco.\nPré-condição: Confirmar que o período não possui escala. Se existir, esperar 200 e estrutura do calendário; nunca 400. Banco deve estar acessível.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2000/1/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Escala não encontrada para o período informado.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "sortNum": 180000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Período válido - limite superior",
+      "url": "{{baseUrl}}/api/escalas/9999/12/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "2e2c39e5-f9c2-4d24-8e66-f9f90380c532",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Confirmar que passa pela validação e consulta o banco.\nPré-condição: Confirmar que o período não possui escala. Se existir, esperar 200 e estrutura do calendário; nunca 400. Banco deve estar acessível.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/9999/12/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Escala não encontrada para o período informado.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "sortNum": 190000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Período válido - notação numérica aceita por Number",
+      "url": "{{baseUrl}}/api/escalas/2e3/01/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "03535c15-0b50-445e-9cfc-5be19821a709",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Confirmar que passa pela validação e consulta o banco.\nPré-condição: Confirmar que o período não possui escala. Se existir, esperar 200 e estrutura do calendário; nunca 400. Banco deve estar acessível.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2e3/01/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"error\": \"Escala não encontrada para o período informado.\"\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "64444ead-a9e6-4bc2-a742-408133133ab7",
+      "sortNum": 200000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Distribuição de 4 cotas",
+      "url": "{{baseUrl}}/api/escalas/{{anoCotas4}}/{{mesCotas4}}/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "b200748b-268a-4296-b5fe-8703fa7faa72",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Conferir distribuição padrão e alocação noturna pendente, sem atribuir N1/N2.\nPré-condição: Confirmar escala com quantidade_cotas_padrao inteiro igual a 4; preencher anoCotas4/mesCotas4. Não cadastrar automaticamente.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/{{anoCotas4}}/{{mesCotas4}}/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 200\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"escala\": {\n    \"id\": \"<valor retornado do banco>\",\n    \"nome\": \"<valor retornado do banco>\",\n    \"mes\": \"<valor retornado do banco>\",\n    \"ano\": \"<valor retornado do banco>\",\n    \"dataInicio\": \"<valor retornado do banco>\",\n    \"dataFim\": \"<valor retornado do banco>\",\n    \"status\": \"<valor retornado do banco>\",\n    \"observacao\": \"<valor retornado do banco>\",\n    \"criadaEm\": \"<valor retornado do banco>\",\n    \"quantidadeCotasPadrao\": 4\n  },\n  \"dias\": [\n    {\n      \"id\": \"<dia.id>\",\n      \"escalaId\": \"<escala.id>\",\n      \"data\": \"<dia.data>\",\n      \"plantoes\": [\n        {\n          \"id\": \"<valor retornado do banco>\",\n          \"diaId\": \"<valor retornado do banco>\",\n          \"periodoId\": \"<valor retornado do banco>\",\n          \"quantidadeNecessaria\": \"<valor retornado do banco>\",\n          \"status\": \"<valor retornado do banco>\",\n          \"observacao\": \"<valor retornado do banco>\",\n          \"criadoEm\": \"<valor retornado do banco>\"\n        }\n      ]\n    }\n  ],\n  \"periodos\": [\n    {\n      \"id\": \"<valor retornado do banco>\",\n      \"codigo\": \"<valor retornado do banco>\",\n      \"nome\": \"<valor retornado do banco>\",\n      \"descricao\": \"<valor retornado do banco>\",\n      \"horaInicio\": \"<valor retornado do banco>\",\n      \"horaFim\": \"<valor retornado do banco>\",\n      \"status\": \"<valor retornado do banco>\"\n    }\n  ],\n  \"distribuicaoDiariaPadrao\": {\n    \"totalQuotas\": 4,\n    \"hoursPerQuota\": 12,\n    \"nightPeriodAllocation\": \"pending\",\n    \"supported\": true,\n    \"diurnalQuotas\": 2,\n    \"nightQuotas\": 2\n  }\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "64444ead-a9e6-4bc2-a742-408133133ab7",
+      "sortNum": 210000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Distribuição de 3 cotas",
+      "url": "{{baseUrl}}/api/escalas/{{anoCotas3}}/{{mesCotas3}}/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "e5c31c79-45ed-405d-a1ad-c87ede94ce6c",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Conferir distribuição padrão e alocação noturna pendente, sem atribuir N1/N2.\nPré-condição: Confirmar escala com quantidade_cotas_padrao inteiro igual a 3; preencher anoCotas3/mesCotas3. Não cadastrar automaticamente.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/{{anoCotas3}}/{{mesCotas3}}/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 200\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"escala\": {\n    \"id\": \"<valor retornado do banco>\",\n    \"nome\": \"<valor retornado do banco>\",\n    \"mes\": \"<valor retornado do banco>\",\n    \"ano\": \"<valor retornado do banco>\",\n    \"dataInicio\": \"<valor retornado do banco>\",\n    \"dataFim\": \"<valor retornado do banco>\",\n    \"status\": \"<valor retornado do banco>\",\n    \"observacao\": \"<valor retornado do banco>\",\n    \"criadaEm\": \"<valor retornado do banco>\",\n    \"quantidadeCotasPadrao\": 3\n  },\n  \"dias\": [\n    {\n      \"id\": \"<dia.id>\",\n      \"escalaId\": \"<escala.id>\",\n      \"data\": \"<dia.data>\",\n      \"plantoes\": [\n        {\n          \"id\": \"<valor retornado do banco>\",\n          \"diaId\": \"<valor retornado do banco>\",\n          \"periodoId\": \"<valor retornado do banco>\",\n          \"quantidadeNecessaria\": \"<valor retornado do banco>\",\n          \"status\": \"<valor retornado do banco>\",\n          \"observacao\": \"<valor retornado do banco>\",\n          \"criadoEm\": \"<valor retornado do banco>\"\n        }\n      ]\n    }\n  ],\n  \"periodos\": [\n    {\n      \"id\": \"<valor retornado do banco>\",\n      \"codigo\": \"<valor retornado do banco>\",\n      \"nome\": \"<valor retornado do banco>\",\n      \"descricao\": \"<valor retornado do banco>\",\n      \"horaInicio\": \"<valor retornado do banco>\",\n      \"horaFim\": \"<valor retornado do banco>\",\n      \"status\": \"<valor retornado do banco>\"\n    }\n  ],\n  \"distribuicaoDiariaPadrao\": {\n    \"totalQuotas\": 3,\n    \"hoursPerQuota\": 12,\n    \"nightPeriodAllocation\": \"pending\",\n    \"supported\": true,\n    \"diurnalQuotas\": 1,\n    \"nightQuotas\": 2\n  }\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "64444ead-a9e6-4bc2-a742-408133133ab7",
+      "sortNum": 220000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Distribuição de 5 cotas",
+      "url": "{{baseUrl}}/api/escalas/{{anoCotas5}}/{{mesCotas5}}/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "80e5db37-e237-4875-b283-186c8beec5fc",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Conferir distribuição padrão e alocação noturna pendente, sem atribuir N1/N2.\nPré-condição: Confirmar escala com quantidade_cotas_padrao inteiro igual a 5; preencher anoCotas5/mesCotas5. Não cadastrar automaticamente.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/{{anoCotas5}}/{{mesCotas5}}/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 200\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"escala\": {\n    \"id\": \"<valor retornado do banco>\",\n    \"nome\": \"<valor retornado do banco>\",\n    \"mes\": \"<valor retornado do banco>\",\n    \"ano\": \"<valor retornado do banco>\",\n    \"dataInicio\": \"<valor retornado do banco>\",\n    \"dataFim\": \"<valor retornado do banco>\",\n    \"status\": \"<valor retornado do banco>\",\n    \"observacao\": \"<valor retornado do banco>\",\n    \"criadaEm\": \"<valor retornado do banco>\",\n    \"quantidadeCotasPadrao\": 5\n  },\n  \"dias\": [\n    {\n      \"id\": \"<dia.id>\",\n      \"escalaId\": \"<escala.id>\",\n      \"data\": \"<dia.data>\",\n      \"plantoes\": [\n        {\n          \"id\": \"<valor retornado do banco>\",\n          \"diaId\": \"<valor retornado do banco>\",\n          \"periodoId\": \"<valor retornado do banco>\",\n          \"quantidadeNecessaria\": \"<valor retornado do banco>\",\n          \"status\": \"<valor retornado do banco>\",\n          \"observacao\": \"<valor retornado do banco>\",\n          \"criadoEm\": \"<valor retornado do banco>\"\n        }\n      ]\n    }\n  ],\n  \"periodos\": [\n    {\n      \"id\": \"<valor retornado do banco>\",\n      \"codigo\": \"<valor retornado do banco>\",\n      \"nome\": \"<valor retornado do banco>\",\n      \"descricao\": \"<valor retornado do banco>\",\n      \"horaInicio\": \"<valor retornado do banco>\",\n      \"horaFim\": \"<valor retornado do banco>\",\n      \"status\": \"<valor retornado do banco>\"\n    }\n  ],\n  \"distribuicaoDiariaPadrao\": {\n    \"totalQuotas\": 5,\n    \"hoursPerQuota\": 12,\n    \"nightPeriodAllocation\": \"pending\",\n    \"supported\": false,\n    \"diurnalQuotas\": null,\n    \"nightQuotas\": null,\n    \"reason\": \"Quantidade de cotas sem regra de distribuição aprovada.\"\n  }\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "f51ff199-b0c4-4ede-a231-3a436883cf68",
+      "sortNum": 230000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Escala sem dias",
+      "url": "{{baseUrl}}/api/escalas/{{anoSemDias}}/{{mesSemDias}}/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "7c723ede-fc9e-499c-a061-df3ca903c5e8",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "Content-Type",
+          "custom": "",
+          "action": "equal",
+          "value": "application/json; charset=utf-8"
+        }
+      ],
+      "description": "Objetivo: Confirmar retorno de dias vazio, mantendo períodos e distribuição.\nPré-condição: Confirmar escala existente sem registros em dia; preencher anoSemDias/mesSemDias. Distribuição depende da quantidade real.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/{{anoSemDias}}/{{mesSemDias}}/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 200\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n{\n  \"escala\": {\n    \"id\": \"<valor retornado do banco>\",\n    \"nome\": \"<valor retornado do banco>\",\n    \"mes\": \"<valor retornado do banco>\",\n    \"ano\": \"<valor retornado do banco>\",\n    \"dataInicio\": \"<valor retornado do banco>\",\n    \"dataFim\": \"<valor retornado do banco>\",\n    \"status\": \"<valor retornado do banco>\",\n    \"observacao\": \"<valor retornado do banco>\",\n    \"criadaEm\": \"<valor retornado do banco>\",\n    \"quantidadeCotasPadrao\": \"<valor retornado do banco>\"\n  },\n  \"dias\": [],\n  \"periodos\": [\n    {\n      \"id\": \"<valor retornado do banco>\",\n      \"codigo\": \"<valor retornado do banco>\",\n      \"nome\": \"<valor retornado do banco>\",\n      \"descricao\": \"<valor retornado do banco>\",\n      \"horaInicio\": \"<valor retornado do banco>\",\n      \"horaFim\": \"<valor retornado do banco>\",\n      \"status\": \"<valor retornado do banco>\"\n    }\n  ],\n  \"distribuicaoDiariaPadrao\": {\n    \"totalQuotas\": 4,\n    \"hoursPerQuota\": 12,\n    \"nightPeriodAllocation\": \"pending\",\n    \"supported\": true,\n    \"diurnalQuotas\": 2,\n    \"nightQuotas\": 2\n  }\n}\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "9675026b-284a-419d-a5e6-e0a65416f73a",
+      "sortNum": 240000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Mês ausente",
+      "url": "{{baseUrl}}/api/escalas/2026/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "bcee6df9-06eb-4a83-a1e0-26567f65be11",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ],
+      "description": "Objetivo: Confirmar que rota incompleta não corresponde ao endpoint (404 HTML, não erro JSON de validação).\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/2026/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n<!DOCTYPE html> ... <pre>Cannot GET /api/escalas/2026/calendario</pre> ...\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "9675026b-284a-419d-a5e6-e0a65416f73a",
+      "sortNum": 250000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano ausente",
+      "url": "{{baseUrl}}/api/escalas//11/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "2bcffa56-b0eb-4158-a68a-0c64bf9db5b1",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ],
+      "description": "Objetivo: Confirmar que rota incompleta não corresponde ao endpoint (404 HTML, não erro JSON de validação).\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas//11/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n<!DOCTYPE html> ... <pre>Cannot GET /api/escalas//11/calendario</pre> ...\nResultado real: não executado; servidor indisponível na verificação inicial."
+    },
+    {
+      "containerId": "9675026b-284a-419d-a5e6-e0a65416f73a",
+      "sortNum": 260000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "colId": "81aed38a-a4a8-47da-bacd-f2a78cfb59d7",
+      "name": "Ano e mês ausentes",
+      "url": "{{baseUrl}}/api/escalas/calendario",
+      "method": "GET",
+      "modified": "2026-11-04T00:00:00.000Z",
+      "created": "2026-11-04T00:00:00.000Z",
+      "_id": "d40f4513-4479-434b-8117-37293a246ba8",
+      "params": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ],
+      "description": "Objetivo: Confirmar que rota incompleta não corresponde ao endpoint (404 HTML, não erro JSON de validação).\nPré-condição: Nenhum registro necessário.\nMétodo: GET\nURL: {{baseUrl}}/api/escalas/calendario\nbaseUrl = http://localhost:8080\nHeaders obrigatórios: nenhum. Accept: application/json incluído por conveniência. Sem autenticação, query ou body.\nParâmetros de rota: ano e mes nos segmentos da URL, quando presentes.\nHTTP esperado: 404\nResposta esperada (exemplo estrutural; marcadores não são registros reais):\n<!DOCTYPE html> ... <pre>Cannot GET /api/escalas/calendario</pre> ...\nResultado real: não executado; servidor indisponível na verificação inicial."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Verificar releases aprovadas do SISCOTA a cada cinco minutos
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=5min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,972 @@
+[
+  {
+    "name": "Calendario novembro 2026 (depende do seed)",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026/11/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 200,
+    "actualStatus": 200,
+    "body": {
+      "escala": {
+        "id": "2",
+        "nome": "TESTE Novembro 2026 - 4 cotas",
+        "mes": 11,
+        "ano": 2026,
+        "dataInicio": "2026-11-01T03:00:00.000Z",
+        "dataFim": "2026-11-30T03:00:00.000Z",
+        "status": "aberta",
+        "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+        "criadaEm": "2026-11-04T19:27:34.894Z",
+        "quantidadeCotasPadrao": 4
+      },
+      "dias": [
+        {
+          "id": "2",
+          "escalaId": "2",
+          "data": "2026-11-01T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "2",
+              "diaId": "2",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "3",
+              "diaId": "2",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "escalaId": "2",
+          "data": "2026-11-02T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "4",
+              "diaId": "3",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "5",
+              "diaId": "3",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "escalaId": "2",
+          "data": "2026-11-03T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "6",
+              "diaId": "4",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "7",
+              "diaId": "4",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "escalaId": "2",
+          "data": "2026-11-04T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "8",
+              "diaId": "5",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "9",
+              "diaId": "5",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "escalaId": "2",
+          "data": "2026-11-05T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "10",
+              "diaId": "6",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "11",
+              "diaId": "6",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "7",
+          "escalaId": "2",
+          "data": "2026-11-06T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "12",
+              "diaId": "7",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "13",
+              "diaId": "7",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "8",
+          "escalaId": "2",
+          "data": "2026-11-07T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "14",
+              "diaId": "8",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "15",
+              "diaId": "8",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "9",
+          "escalaId": "2",
+          "data": "2026-11-08T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "16",
+              "diaId": "9",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "17",
+              "diaId": "9",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "10",
+          "escalaId": "2",
+          "data": "2026-11-09T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "18",
+              "diaId": "10",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "19",
+              "diaId": "10",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "11",
+          "escalaId": "2",
+          "data": "2026-11-10T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "20",
+              "diaId": "11",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "21",
+              "diaId": "11",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "12",
+          "escalaId": "2",
+          "data": "2026-11-11T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "22",
+              "diaId": "12",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "23",
+              "diaId": "12",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "13",
+          "escalaId": "2",
+          "data": "2026-11-12T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "24",
+              "diaId": "13",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "25",
+              "diaId": "13",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "14",
+          "escalaId": "2",
+          "data": "2026-11-13T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "26",
+              "diaId": "14",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "27",
+              "diaId": "14",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "15",
+          "escalaId": "2",
+          "data": "2026-11-14T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "28",
+              "diaId": "15",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "29",
+              "diaId": "15",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "16",
+          "escalaId": "2",
+          "data": "2026-11-15T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "30",
+              "diaId": "16",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "31",
+              "diaId": "16",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "17",
+          "escalaId": "2",
+          "data": "2026-11-16T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "32",
+              "diaId": "17",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "33",
+              "diaId": "17",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "18",
+          "escalaId": "2",
+          "data": "2026-11-17T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "34",
+              "diaId": "18",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "35",
+              "diaId": "18",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "19",
+          "escalaId": "2",
+          "data": "2026-11-18T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "36",
+              "diaId": "19",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "37",
+              "diaId": "19",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "20",
+          "escalaId": "2",
+          "data": "2026-11-19T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "38",
+              "diaId": "20",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "39",
+              "diaId": "20",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "21",
+          "escalaId": "2",
+          "data": "2026-11-20T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "40",
+              "diaId": "21",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "41",
+              "diaId": "21",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "22",
+          "escalaId": "2",
+          "data": "2026-11-21T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "42",
+              "diaId": "22",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "43",
+              "diaId": "22",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "23",
+          "escalaId": "2",
+          "data": "2026-11-22T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "44",
+              "diaId": "23",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "45",
+              "diaId": "23",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "24",
+          "escalaId": "2",
+          "data": "2026-11-23T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "46",
+              "diaId": "24",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "47",
+              "diaId": "24",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "25",
+          "escalaId": "2",
+          "data": "2026-11-24T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "48",
+              "diaId": "25",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "49",
+              "diaId": "25",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "26",
+          "escalaId": "2",
+          "data": "2026-11-25T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "50",
+              "diaId": "26",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "51",
+              "diaId": "26",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "27",
+          "escalaId": "2",
+          "data": "2026-11-26T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "52",
+              "diaId": "27",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "53",
+              "diaId": "27",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "28",
+          "escalaId": "2",
+          "data": "2026-11-27T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "54",
+              "diaId": "28",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "55",
+              "diaId": "28",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "29",
+          "escalaId": "2",
+          "data": "2026-11-28T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "56",
+              "diaId": "29",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "57",
+              "diaId": "29",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "30",
+          "escalaId": "2",
+          "data": "2026-11-29T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "58",
+              "diaId": "30",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "59",
+              "diaId": "30",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        },
+        {
+          "id": "31",
+          "escalaId": "2",
+          "data": "2026-11-30T03:00:00.000Z",
+          "plantoes": [
+            {
+              "id": "60",
+              "diaId": "31",
+              "periodoId": "3",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            },
+            {
+              "id": "61",
+              "diaId": "31",
+              "periodoId": "4",
+              "quantidadeNecessaria": 2,
+              "status": "aberto",
+              "observacao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+              "criadoEm": "2026-11-04T19:27:34.894Z"
+            }
+          ]
+        }
+      ],
+      "periodos": [
+        {
+          "id": "3",
+          "codigo": "TESTE_D",
+          "nome": "TESTE Diurno",
+          "descricao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+          "horaInicio": "08:00:00",
+          "horaFim": "20:00:00",
+          "status": "ativo"
+        },
+        {
+          "id": "4",
+          "codigo": "TESTE_N",
+          "nome": "TESTE Noturno agregado",
+          "descricao": "TESTE SISCOTA NOVEMBRO 2026 V1",
+          "horaInicio": "20:00:00",
+          "horaFim": "08:00:00",
+          "status": "ativo"
+        }
+      ],
+      "distribuicaoDiariaPadrao": {
+        "totalQuotas": 4,
+        "hoursPerQuota": 12,
+        "nightPeriodAllocation": "pending",
+        "supported": true,
+        "diurnalQuotas": 2,
+        "nightQuotas": 2
+      }
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Escala ausente confirmada no banco",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2000/1/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 404,
+    "actualStatus": 404,
+    "body": {
+      "error": "Escala não encontrada para o período informado."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 1999/11",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/1999/11/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Ano inválido. Informe um ano entre 2000 e 9999."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 10000/11",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/10000/11/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Ano inválido. Informe um ano entre 2000 e 9999."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 2026.5/11",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026.5/11/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Ano inválido. Informe um ano entre 2000 e 9999."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos abc/11",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/abc/11/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Ano inválido. Informe um ano entre 2000 e 9999."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 2026/0",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026/0/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Mês inválido. Informe um mês entre 1 e 12."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 2026/13",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026/13/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Mês inválido. Informe um mês entre 1 e 12."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 2026/1.5",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026/1.5/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Mês inválido. Informe um mês entre 1 e 12."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Parametros invalidos 2026/abc",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026/abc/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Mês inválido. Informe um mês entre 1 e 12."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "Mes ausente (rota incompleta)",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/2026/calendario",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "expectedStatus": 404,
+    "actualStatus": 404,
+    "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/escalas/2026/calendario</pre>\n</body>\n</html>\n",
+    "cors": "*",
+    "resultado": "APROVADO"
+  },
+  {
+    "name": "CORS com origem frontend",
+    "method": "GET",
+    "url": "http://localhost:8080/api/escalas/1999/11/calendario",
+    "headers": {
+      "Accept": "application/json",
+      "Origin": "http://localhost:3000"
+    },
+    "expectedStatus": 400,
+    "actualStatus": 400,
+    "body": {
+      "error": "Ano inválido. Informe um ano entre 2000 e 9999."
+    },
+    "cors": "*",
+    "resultado": "APROVADO"
+  }
+]

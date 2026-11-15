@@ -16,6 +16,7 @@ import {
   startOfMonth,
   startOfWeek
 } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 // Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
@@ -53,9 +54,10 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
   const weekdays = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => {
-      const date = addDays(startOfWeek(new Date()), i)
+      const date = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), i)
+      const dayName = format(date, 'EEE', { locale: ptBR }).replace('.', '')
 
-      return format(date, 'EEE')
+      return dayName.charAt(0).toUpperCase() + dayName.slice(1)
     })
   }, [])
 
@@ -251,7 +253,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             }
                           >
                             <span>
-                              + {remainingCount} <span className='max-sm:sr-only'>more</span>
+                              + {remainingCount} <span className='max-sm:sr-only'>mais</span>
                             </span>
                           </PopoverTrigger>
                           <PopoverContent
@@ -264,7 +266,9 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             }
                           >
                             <div className='space-y-2'>
-                              <div className='text-sm font-medium'>{format(day, 'EEE d')}</div>
+                              <div className='text-sm font-medium capitalize'>
+                                {format(day, "EEE, d 'de' MMM", { locale: ptBR })}
+                              </div>
                               <div className='space-y-1'>
                                 {sortEvents(allEvents).map(event => {
                                   const eventStart = new Date(event.start)

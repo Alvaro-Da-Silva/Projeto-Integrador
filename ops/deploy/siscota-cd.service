@@ -1,0 +1,9 @@
+[Unit]
+Description=Verificação e implantação de release aprovada do SISCOTA
+Wants=network-online.target
+After=network-online.target postgresql@18-main.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/siscota-cd/poll.sh
+TimeoutStartSec=30min

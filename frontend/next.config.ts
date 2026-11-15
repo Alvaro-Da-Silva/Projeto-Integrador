@@ -3,21 +3,11 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   basePath: process.env.BASEPATH ?? '',
   reactStrictMode: true,
+  experimental: { cpus: 2 },
+  async rewrites() {
+    return [{ source: '/api/:path*', destination: 'http://127.0.0.1:8080/api/:path*' }]
+  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  redirects: async () => {
-    return [
-      {
-        source: '/',
-        destination: '/dashboard/orders',
-        permanent: true
-      },
-      {
-        source: '/apps/users',
-        destination: '/apps/users/list',
-        permanent: true
-      }
-    ]
-  }
 }
 
 export default nextConfig

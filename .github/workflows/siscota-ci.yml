@@ -1,0 +1,44 @@
+name: SISCOTA CI
+on:
+  pull_request:
+    branches: [deploy]
+  push:
+    branches: [deploy, cicd/bootstrap]
+permissions:
+  contents: read
+jobs:
+  validate:
+    name: siscota-validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Require the approved Alvaro source baseline
+        run: git merge-base --is-ancestor b88ed23bb3ed7ac103eb4fa2cbf03a33440f4fa9 HEAD
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.3'
+      - name: Install PostgreSQL 18 for isolated integration
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y -h apt.postgresql.org noble
+          sudo apt-get install -y postgresql-18 postgresql-client-18
+      - name: Backend and PostgreSQL integration
+        run: |
+          npm ci --prefix backend --no-audit --no-fund
+          npm --prefix backend test
+          bash ops/deploy/check-db.sh /tmp/siscota-expected.ddl
+      - name: Frontend
+        run: |
+          npm install --global pnpm@10.30.3
+          cd frontend
+          pnpm install --frozen-lockfile
+          pnpm exec next typegen
+          pnpm check-types
+          pnpm exec eslint --format json --output-file "${RUNNER_TEMP}/siscota-eslint.json" || test "$?" -eq 1
+          node ../ops/deploy/check-lint.mjs "${RUNNER_TEMP}/siscota-eslint.json"
+          NEXT_TELEMETRY_DISABLED=1 pnpm build

@@ -1,0 +1,60 @@
+{
+  "database": "siscota",
+  "periods": [
+    {
+      "id": "5",
+      "codigo": "D",
+      "hora_inicio": "07:00:00",
+      "hora_fim": "19:00:00",
+      "status": "ativo"
+    },
+    {
+      "id": "6",
+      "codigo": "N1",
+      "hora_inicio": "19:00:00",
+      "hora_fim": "07:00:00",
+      "status": "ativo"
+    },
+    {
+      "id": "7",
+      "codigo": "N2",
+      "hora_inicio": "18:00:00",
+      "hora_fim": "06:00:00",
+      "status": "ativo"
+    },
+    {
+      "id": "8",
+      "codigo": "I",
+      "hora_inicio": "07:00:00",
+      "hora_fim": "07:00:00",
+      "status": "ativo"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "perfil": "admin",
+      "cotistaId": null
+    },
+    {
+      "id": "2",
+      "perfil": "cotista",
+      "cotistaId": "5"
+    }
+  ],
+  "counts": {
+    "escala": 1,
+    "dia": 30,
+    "plantao": 60,
+    "cotista": 4,
+    "disponibilidade": 0,
+    "usuario": 2,
+    "perfil": 2,
+    "user": 1,
+    "account": 1,
+    "session": 10,
+    "verification": 0,
+    "jwks": 1
+  },
+  "existingSchemaUnchanged": true
+}

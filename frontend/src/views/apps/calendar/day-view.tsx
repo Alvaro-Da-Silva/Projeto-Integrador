@@ -120,12 +120,9 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       const eventStart = new Date(event.start)
       const eventEnd = new Date(event.end)
 
-      // Adjust start and end times if they're outside this day
       const adjustedStart = isSameDay(currentDate, eventStart) ? eventStart : dayStart
 
       const adjustedEnd = isSameDay(currentDate, eventEnd) ? eventEnd : addHours(dayStart, 24)
-
-      // Calculate top position and height
       const startHour = getHours(adjustedStart) + getMinutes(adjustedStart) / 60
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60
       const top = (startHour - StartHour) * WeekCellsHeight
@@ -196,7 +193,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
           <div className='grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]'>
             <div className='relative'>
               <span className='text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs'>
-                All day
+                O dia todo
               </span>
             </div>
             <div className='border-border/70 relative border-r p-1 last:border-r-0'>
@@ -215,7 +212,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                     isFirstDay={isFirstDay}
                     isLastDay={isLastDay}
                   >
-                    {/* Always show the title in day view for better usability */}
                     <div>{event.title}</div>
                   </EventItem>
                 )
@@ -234,7 +230,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
             >
               {index > 0 && (
                 <span className='bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs'>
-                  {format(hour, 'h a')}
+                  {format(hour, 'HH:mm')}
                 </span>
               )}
             </div>

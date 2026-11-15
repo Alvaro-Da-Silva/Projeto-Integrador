@@ -10,7 +10,9 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 // Component Imports
 import Providers from '@/components/Providers'
+import AppLayout from '@/components/layout/AppLayout'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { Toaster } from '@/components/ui/sonner'
 
 // Util Imports
 import { cn } from '@/lib/utils'
@@ -19,7 +21,6 @@ import { cn } from '@/lib/utils'
 import './globals.css'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 
-import DownloadButton from '@/components/layout/Download'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,33 +33,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'AdminCN - Free Shadcn Admin Dashboard Template',
-  description:
-    'Build modern admin dashboards faster with AdminCN Free. A free shadcn admin dashboard template built with Tailwind CSS, featuring responsive layouts and essential pages.',
-  metadataBase: new URL(`${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}`),
-  openGraph: {
-    title: 'AdminCN - Free Shadcn Admin Dashboard Template',
-    description:
-      'Build modern admin dashboards faster with AdminCN Free. A free shadcn admin dashboard template built with Tailwind CSS, featuring responsive layouts and essential pages.',
-    type: 'website',
-    siteName: 'AdminCN',
-    url: process.env.NEXT_PUBLIC_APP_URL,
-    images: [
-      {
-        url: '/images/og-image.png',
-        type: 'image/png',
-        width: 1200,
-        height: 630,
-        alt: 'AdminCN - Free Shadcn Admin Dashboard Template'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'AdminCN - Free Shadcn Admin Dashboard Template',
-    description:
-      'Build modern admin dashboards faster with AdminCN Free. A free shadcn admin dashboard template built with Tailwind CSS, featuring responsive layouts and essential pages.'
-  }
+  title: 'SISCOTA',
 }
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
@@ -72,13 +47,15 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
       <body className='flex min-h-full w-full flex-auto flex-col'>
         <NuqsAdapter>
           <Providers sidebarDefaultOpen={true}>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider>
+              <AppLayout>{children}</AppLayout>
+            </TooltipProvider>
+            <Toaster richColors position='top-center' />
           </Providers>
         </NuqsAdapter>
 
         <ScrollToTop />
 
-        <DownloadButton />
       </body>
     </html>
   )

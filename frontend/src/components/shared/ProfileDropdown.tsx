@@ -2,7 +2,7 @@
 import Link from 'next/link'
 
 // Third-party Imports
-import { LogOutIcon, SettingsIcon, UserIcon } from 'lucide-react'
+import { LogOutIcon, SettingsIcon } from 'lucide-react'
 
 // Component Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -16,23 +16,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-
-const STATIC_USER = {
-  fullName: 'John Doe',
-  email: 'john.doe@example.com',
-  imageUrl: '/images/avatars/avatar-1.webp',
-  initials: 'JD'
-}
+import { useState } from 'react'
+import LogoutModal from '../modals/LogoutModal'
+import { authClient } from '@/lib/auth-client'
+import { getInitialsFromName } from '@/configs/mailConfig'
 
 const ProfileDropdown = () => {
+  const [showModalLogout, setShowModalLogout] = useState(false)
+  const { data:session } = authClient.useSession()
+
+  const Initials = getInitialsFromName(session?.user?.name || '')
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={<Button variant='ghost' size='icon' className='relative rounded-full hover:bg-transparent' />}
       >
         <Avatar>
-          <AvatarImage src={STATIC_USER.imageUrl} alt={STATIC_USER.fullName} />
-          <AvatarFallback>{STATIC_USER.initials}</AvatarFallback>
+          {session?.user?.image ? <AvatarImage src={session.user.image} alt={session?.user?.name} /> : null}
+          <AvatarFallback>{Initials}</AvatarFallback>
         </Avatar>
         <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2' />
       </DropdownMenuTrigger>
@@ -41,40 +43,35 @@ const ProfileDropdown = () => {
           <DropdownMenuLabel className='flex items-center gap-4 px-2 py-2.5 font-normal'>
             <div className='relative'>
               <Avatar className='size-10'>
-                <AvatarImage src={STATIC_USER.imageUrl} alt={STATIC_USER.fullName} />
-                <AvatarFallback>{STATIC_USER.initials}</AvatarFallback>
+                {session?.user?.image ? <AvatarImage src={session.user.image} alt={session?.user?.name} /> : null}
+                <AvatarFallback>{Initials}</AvatarFallback>
               </Avatar>
               <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2' />
             </div>
             <div className='flex flex-1 flex-col items-start'>
-              <span className='text-foreground text-base font-semibold'>{STATIC_USER.fullName}</span>
-              <span className='text-muted-foreground text-sm'>{STATIC_USER.email}</span>
+              <span className='text-foreground text-base font-semibold'>{session?.user?.name || 'Usuário'}</span>
+              <span className='text-muted-foreground text-xs'>{session?.user?.email || ''}</span>
             </div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator />
-
         <DropdownMenuGroup>
-          <DropdownMenuItem render={<Link href='/pages/user-profile?view=profile' />}>
-            <UserIcon />
-            <span>My Account</span>
-          </DropdownMenuItem>
           <DropdownMenuItem render={<Link href='/pages/user-settings?setting=general' />}>
             <SettingsIcon />
-            <span>Settings</span>
+            <span>Configurações</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem variant='destructive' render={<Link href='/pages/auth/login' />}>
+          <DropdownMenuItem variant='destructive' onClick={() => setShowModalLogout(true)}>
             <LogOutIcon />
-            <span>Sign out</span>
+            <span>Logout</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
+      <LogoutModal open={showModalLogout} openChange={setShowModalLogout} />
     </DropdownMenu>
   )
 }

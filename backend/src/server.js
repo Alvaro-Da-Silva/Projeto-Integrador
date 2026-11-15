@@ -1,15 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import 'dotenv/config';
+import { createApp } from './app.js';
 
-dotenv.config();
+const PORT = Number(process.env.PORT || 8080);
+const app = createApp();
 
-const app = express();
-const PORT = process.env.PORT || 8080;
-
-app.use(cors());
-app.use(express.json());
-
-app.listen(PORT, () => {
+app.listen(PORT, process.env.HOST, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
