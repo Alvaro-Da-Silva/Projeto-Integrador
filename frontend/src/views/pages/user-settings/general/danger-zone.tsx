@@ -9,26 +9,24 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTr
 const DangerZone = () => {
   return (
     <div className='grid grid-cols-1 gap-10 lg:grid-cols-3'>
-      {/* Vertical Tabs List */}
       <div className='flex flex-col space-y-1'>
-        <h3 className='text-base font-semibold'>Danger Zone</h3>
+        <h3 className='text-base font-semibold'>Zona de Perigo</h3>
         <p className='text-muted-foreground text-sm'>
-          Delete your account permanently. This action will remove all your data and cannot be undone{' '}
+          Exclua sua conta permanentemente. Esta ação removerá todos os seus dados e não pode ser desfeita{' '}
           <a href='#' className='text-card-foreground font-medium hover:underline'>
-            Learn more
+            Saiba mais
           </a>
         </p>
       </div>
 
-      {/* Content */}
       <div className='space-y-6 lg:col-span-2'>
         <Card>
           <CardContent>
             <div className='flex justify-between gap-4 max-lg:flex-col lg:items-center'>
               <div className='space-y-1'>
-                <h3 className='text-sm font-medium'>Delete account</h3>
+                <h3 className='text-sm font-medium'>Excluir conta</h3>
                 <p className='text-muted-foreground text-sm'>
-                  Delete your account permanently. This action will remove all your data and cannot be undone.
+                  Exclua sua conta permanentemente. Esta ação removerá todos os seus dados e não pode ser desfeita.
                 </p>
               </div>
               <Dialog>
@@ -41,18 +39,18 @@ const DangerZone = () => {
                   }
                 >
                   <Trash2Icon />
-                  Delete
+                  Excluir
                 </DialogTrigger>
                 <DialogContent className='sm:max-w-md'>
                   <DialogHeader className='space-y-2'>
-                    <DialogTitle>Delete account</DialogTitle>
+                    <DialogTitle>Excluir conta</DialogTitle>
                     <div className='text-muted-foreground text-sm'>
-                      Delete your account permanently. This action will remove all your data and cannot be undone.
+                      Exclua sua conta permanentemente. Esta ação removerá todos os seus dados e não pode ser desfeita.
                     </div>
                   </DialogHeader>
                   <div className='flex flex-col-reverse gap-4 sm:flex-row sm:justify-end'>
-                    <DialogClose render={<Button variant='outline' />}>Cancel</DialogClose>
-                    <DialogClose render={<Button variant='destructive' />}>Delete</DialogClose>
+                    <DialogClose render={<Button variant='outline' />}>Cancelar</DialogClose>
+                    <DialogClose render={<Button variant='destructive' />}>Excluir</DialogClose>
                   </div>
                 </DialogContent>
               </Dialog>

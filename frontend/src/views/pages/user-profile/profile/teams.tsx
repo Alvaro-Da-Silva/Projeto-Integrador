@@ -14,9 +14,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
-
 // Util Imports
 import { cn } from '@/lib/utils'
 
@@ -24,7 +21,12 @@ type TeamsProps = {
   className?: string
 }
 
-const { teamActions, teams } = db
+const teamActions = ['View Details', 'Settings', 'Leave Team']
+
+const teams = [
+  { id: '1', avatar: '', initials: 'UI', teams: 'UI Designers', totalMembers: '120 Members', teamBadge: { label: 'Design' } },
+  { id: '2', avatar: '', initials: 'DV', teams: 'Developers', totalMembers: '300 Members', teamBadge: { label: 'Tech' } }
+]
 
 function Teams({ className }: TeamsProps) {
   return (

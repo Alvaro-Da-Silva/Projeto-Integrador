@@ -20,6 +20,7 @@ import {
   startOfDay,
   startOfWeek
 } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 // Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
@@ -224,10 +225,12 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             className='data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium'
             data-today={isToday(day) || undefined}
           >
-            <span className='sm:hidden' aria-hidden='true'>
-              {format(day, 'E')[0]} {format(day, 'd')}
+            <span className='sm:hidden uppercase' aria-hidden='true'>
+              {format(day, 'E', { locale: ptBR })[0]} {format(day, 'd')}
             </span>
-            <span className='max-sm:hidden'>{format(day, 'EEE dd')}</span>
+            <span className='max-sm:hidden capitalize'>
+              {format(day, 'EEE dd', { locale: ptBR }).replace('.', '')}
+            </span>
           </div>
         ))}
       </div>
@@ -237,7 +240,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
           <div className='grid grid-cols-8'>
             <div className='border-border/70 relative border-r'>
               <span className='text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs'>
-                All day
+                O dia todo
               </span>
             </div>
             {days.map((day, dayIndex) => {
@@ -297,7 +300,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             >
               {index > 0 && (
                 <span className='bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs'>
-                  {format(hour, 'h a')}
+                  {format(hour, 'HH:mm')}
                 </span>
               )}
             </div>

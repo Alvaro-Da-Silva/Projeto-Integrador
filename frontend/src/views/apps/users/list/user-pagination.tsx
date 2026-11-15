@@ -36,7 +36,7 @@ export function UserPagination({
   return (
     <div className='flex items-center justify-between gap-3 px-6 py-4 max-sm:flex-col md:max-lg:flex-col'>
       <p className='text-muted-foreground text-sm whitespace-nowrap' aria-live='polite'>
-        Showing <span>{showingFrom}</span> to <span>{showingTo}</span> of <span>{total}</span> entries
+        Mostrando <span>{showingFrom}</span> de <span>{showingTo}</span> de <span>{total}</span> entradas
       </p>
 
       <div>
@@ -51,7 +51,7 @@ export function UserPagination({
                 aria-label='Go to previous page'
               >
                 <ChevronLeftIcon aria-hidden='true' />
-                <span className='max-sm:hidden'>Previous</span>
+                <span className='max-sm:hidden'>Anterior</span>
               </Button>
             </PaginationItem>
 
@@ -92,7 +92,7 @@ export function UserPagination({
                 disabled={currentPage >= totalPages}
                 aria-label='Go to next page'
               >
-                <span className='max-sm:hidden'>Next</span>
+                <span className='max-sm:hidden'>Próximo</span>
                 <ChevronRightIcon aria-hidden='true' />
               </Button>
             </PaginationItem>
