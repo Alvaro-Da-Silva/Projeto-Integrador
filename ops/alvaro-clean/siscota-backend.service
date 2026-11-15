@@ -1,0 +1,18 @@
+[Unit]
+Description=SISCOTA Express - arquitetura Next JWT
+Wants=postgresql@18-main.service
+After=postgresql@18-main.service
+
+[Service]
+User=siscota
+Group=siscota
+WorkingDirectory=/home/siscota/siscota-deploy/alvaro-current/backend
+EnvironmentFile=/home/siscota/siscota-deploy/config/alvaro-release/backend.env
+Environment=HOST=127.0.0.1 PORT=8080
+ExecStart=/home/siscota/.local/siscota-tools/node/bin/node src/server.js
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

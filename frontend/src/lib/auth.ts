@@ -3,7 +3,7 @@ import { Pool } from "pg";
 import { jwt,admin } from "better-auth/plugins";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.KEY_RESEND);
+const resend = process.env.KEY_RESEND ? new Resend(process.env.KEY_RESEND) : undefined;
 
 export const auth = betterAuth({
   database: new Pool({
@@ -17,6 +17,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async (data) => {
+      if (!resend) throw new Error("Serviço de e-mail indisponível");
       await resend.emails.send({
         to: data.user.email,
         subject: "Alteração de senha",
@@ -28,6 +29,7 @@ export const auth = betterAuth({
 
   emailVerification: {
     sendVerificationEmail: async (data) => {
+      if (!resend) throw new Error("Serviço de e-mail indisponível");
       await resend.emails.send({
         to: data.user.email,
         subject: "Confirmação de Alteração de E-mail",

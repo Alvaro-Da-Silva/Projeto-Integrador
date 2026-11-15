@@ -1,0 +1,17 @@
+[Unit]
+Description=SISCOTA Next.js e Better Auth
+Wants=postgresql@18-main.service
+After=postgresql@18-main.service
+
+[Service]
+User=siscota
+Group=siscota
+WorkingDirectory=/home/siscota/siscota-deploy/alvaro-current/frontend
+EnvironmentFile=/home/siscota/siscota-deploy/config/alvaro-release/frontend.env
+ExecStart=/home/siscota/.local/siscota-tools/node/bin/node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3001
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
