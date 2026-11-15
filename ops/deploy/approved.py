@@ -7,6 +7,7 @@ import urllib.parse
 REPO = 'Alvaro-Da-Silva/Projeto-Integrador'
 BASE = 'https://api.github.com/repos/' + REPO
 BRANCH = 'deploy'
+MINIMUM_SOURCE = 'b88ed23bb3ed7ac103eb4fa2cbf03a33440f4fa9'
 CONFIG = '/etc/siscota-cd/github.curl'
 
 def request(path):
@@ -31,6 +32,8 @@ reviews = [
 ]
 if not branch['protected'] or not reviews or not any(r['type'] == 'non_fast_forward' for r in rules):
     sys.exit('Deploy exige ruleset ativo com revisão, invalidação de aprovações antigas e bloqueio de force-push')
+if request('/compare/' + MINIMUM_SOURCE + '...' + sha + '?per_page=1')['status'] not in {'ahead', 'identical'}:
+    sys.exit('Revisão anterior ou divergente da origem aprovada do Álvaro')
 prs = request('/commits/' + sha + '/pulls')
 if not any(p.get('merged_at') and p.get('merge_commit_sha') == sha and p['base']['ref'] == BRANCH for p in prs):
     sys.exit('Commit sem PR aprovado e mesclado na branch deploy')
