@@ -25,6 +25,7 @@ GRANT USAGE ON SEQUENCE public.participacao_id_seq,public.escala_ajuste_id_seq T
 GRANT SELECT,INSERT ON public.jwks TO siscota;
 GRANT INSERT,UPDATE ON public.usuario TO siscota;
 GRANT INSERT ON public.cotista TO siscota;
+GRANT UPDATE (id) ON public.periodo TO siscota;
 GRANT USAGE ON SEQUENCE public.usuario_id_seq,public.cotista_id_seq TO siscota;
 GRANT INSERT ON public."user",public.account TO siscota;
 SQL
