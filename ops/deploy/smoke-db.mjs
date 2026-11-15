@@ -39,7 +39,7 @@ try {
   const login = await request('/api/auth/sign-in/email',{method:'POST',body:{email,password}})
   assert.equal(login.status,200,'login')
   const raw = login.headers.getSetCookie().find(c=>c.includes('session_token='))
-  assert.match(raw,/HttpOnly/i)
+  assert(raw && /HttpOnly/i.test(raw), 'cookie de sessão sem HttpOnly')
   const cookie = raw.split(';')[0]
   const session = await request('/api/auth/get-session',{cookie})
   assert.equal(session.status,200,'sessão')
