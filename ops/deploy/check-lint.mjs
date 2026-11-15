@@ -7,7 +7,7 @@ const current = new Map()
 for (const file of eslint) {
   const name = path.relative(process.cwd(), file.filePath).split(path.sep).join('/')
   for (const message of file.messages) {
-    const key = JSON.stringify([name, message.ruleId, message.severity, message.message])
+    const key = JSON.stringify([name, message.ruleId, message.severity, message.message.split(String.fromCharCode(10))[0]])
     current.set(key, (current.get(key) ?? 0) + 1)
   }
 }
