@@ -21,7 +21,7 @@ export async function verifyFrontendToken(token) {
     if (decodeProtectedHeader(token).alg !== 'EdDSA') {
       throw new HttpError(401, 'Sessão inválida ou expirada.');
     }
-    const { payload } = await jwtVerify(token, jwks(), { issuer: base, audience: base, algorithms: ['EdDSA'] });
+    const { payload } = await jwtVerify(token, jwks(), { issuer: base, audience: base, algorithms: ['EdDSA'], requiredClaims: ['exp'] });
     return payload;
   } catch (error) {
     if (error instanceof HttpError) throw error;

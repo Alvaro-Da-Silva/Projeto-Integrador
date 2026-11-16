@@ -106,6 +106,14 @@ try {
     try { if((await req('/api/me')).status===401) break } catch {}
     await new Promise(r=>setTimeout(r,500))
   }
+  const grantCheck = (await db.query(`SELECT
+    has_table_privilege('siscota','public.usuario','INSERT') AS create_user,
+    has_table_privilege('siscota','public.usuario','UPDATE') AS update_user,
+    has_table_privilege('siscota','public.cotista','INSERT') AS create_cotista,
+    has_table_privilege('siscota','public.perfil','UPDATE') AS update_profile,
+    has_column_privilege('siscota','public.periodo','id','UPDATE') AS period_lock
+  `)).rows[0]
+  assert.deepEqual(grantCheck,{create_user:false,update_user:false,create_cotista:false,update_profile:false,period_lock:true})
   await result('/login',200)
   await result('/api/auth/get-session',200)
   await result('/api/me',401)
