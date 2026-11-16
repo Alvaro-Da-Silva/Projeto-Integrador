@@ -1,5 +1,4 @@
 import * as authRepository from '../repositories/authRepository.js';
-import { transaction } from '../config/transaction.js';
 import { HttpError } from './workflowValidation.js';
 
 function toDomainUser(row) {
@@ -29,37 +28,14 @@ export async function authenticatedUser(authUserId) {
   return toDomainUser(result.rows[0]);
 }
 
-export function perfilFromRole(role) {
-  return String(role ?? '').split(',').map(r => r.trim()).includes('admin') ? 'admin' : 'cotista';
-}
-
 export async function userFromFrontendToken(payload) {
   const authUserId = payload?.id ?? payload?.sub;
-  const email = typeof payload?.email === 'string' ? payload.email.trim() : '';
-  if (typeof authUserId !== 'string' || !authUserId || !email) throw new HttpError(401,'Sessão inválida.');
-  const data = {
-    authUserId, email: email.slice(0,200),
-    nome: (typeof payload.name === 'string' && payload.name.trim() ? payload.name.trim() : email).slice(0,200),
-    perfil: perfilFromRole(payload.role)
-  };
-  try {
-    return await transaction(async client => {
-      const existing = await authRepository.findUserIdByAuthIdForUpdate(client,authUserId);
-      let usuarioId;
-      if (existing.rowCount) {
-        usuarioId = existing.rows[0].id;
-        await authRepository.updateUserProfile(client,usuarioId,data);
-      } else {
-        const inserted = await authRepository.insertUser(client,data);
-        if (!inserted.rowCount) throw new HttpError(503,'Perfis SISCOTA não cadastrados. Execute npm run setup:local.');
-        usuarioId = inserted.rows[0].id;
-      }
-      if (data.perfil === 'cotista') await authRepository.ensureCotista(client,usuarioId,data);
-      const result = await authRepository.findUserByAuthId(authUserId,client);
-      return toDomainUser(result.rows[0]);
-    });
-  } catch (error) {
-    if (error instanceof HttpError) throw error;
-    return databaseUnavailable(error);
+  if (typeof authUserId !== 'string' || typeof payload?.sid !== 'string') {
+    throw new HttpError(401,'Sessão inválida.');
   }
+  let session;
+  try { session = await authRepository.findActiveAuthSession(payload.sid, authUserId); }
+  catch (error) { databaseUnavailable(error); }
+  if (session.rowCount !== 1) throw new HttpError(401,'Sessão inválida ou expirada.');
+  return authenticatedUser(authUserId);
 }
