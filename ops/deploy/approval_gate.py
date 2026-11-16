@@ -24,12 +24,28 @@ def matches(pr, sha, repo):
 
 
 def sensitive(path):
-    # Arquivos desconhecidos também exigem revisão de compatibilidade.
     path = path.lower()
-    documentation = path.startswith("docs/") and path.endswith(".md")
-    static_image = path.startswith("frontend/public/") and path.endswith((".png", ".jpg", ".jpeg", ".webp", ".avif", ".ico"))
+    parts = path.split("/")
+    reserved = {
+        "auth", "api", "config", "db", "database", "middleware", "migrations",
+        "migration", "schema", "sql", "infra", "ops", "scripts", "secrets",
+    }
+    if any(part.startswith(".") or part in reserved for part in parts):
+        return True
+    if re.search(r"auth|credential|secret|token|jwt|password|database|migration|schema|config|server|email|mailconfig",
+                 parts[-1].rsplit(".", 1)[0]):
+        return True
+    documentation = (path == "readme.md" or
+                     path.startswith(("docs/", "backend/docs/", "frontend/docs/")) and path.endswith(".md"))
+    image = path.startswith(("frontend/public/", "frontend/src/assets/")) and path.endswith(
+        (".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".ico"))
     stylesheet = path.startswith("frontend/src/") and path.endswith(".css")
-    return not (documentation or static_image or stylesheet)
+    frontend_code = path.startswith((
+        "frontend/src/app/", "frontend/src/assets/", "frontend/src/components/",
+        "frontend/src/controllers/", "frontend/src/hooks/", "frontend/src/types/", "frontend/src/views/",
+    )) and path.endswith((".js", ".jsx", ".ts", ".tsx"))
+    backend_code = path.startswith(("backend/src/controllers/", "backend/src/services/")) and path.endswith(".js")
+    return not (documentation or image or stylesheet or frontend_code or backend_code)
 
 
 def check_protection(p):

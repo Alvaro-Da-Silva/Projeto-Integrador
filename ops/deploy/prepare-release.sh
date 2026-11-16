@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 umask 077
+[[ $# == 1 || ( $# == 2 && $2 == --preflight ) ]]
 cd -- "$(dirname -- "$0")"
 source ./release-paths.sh
 sha=${1:?SHA requerido}
@@ -37,4 +38,6 @@ chown -hR root:root "$quarantine/tree"
 chmod -R a+rX,go-w,a-s "$quarantine/tree"
 [[ -f $quarantine/tree/backend/src/server.js && -f $quarantine/tree/frontend/.next/BUILD_ID ]]
 install -d -o siscota -g siscota -m 0755 "$quarantine/tree/frontend/.next/cache"
-mv -T "$quarantine/tree" "$releases/$sha"
+if [[ $# == 1 ]]; then
+  mv -T "$quarantine/tree" "$releases/$sha"
+fi

@@ -7,7 +7,7 @@ source ./release-paths.sh
 assert_control
 [[ ! -e $state/pending && ! -e $state/failed ]]
 [[ $(systemctl is-enabled siscota-cd.timer || true) == disabled ]]
-! systemctl is-active --quiet siscota-cd.timer
+if systemctl is-active --quiet siscota-cd.timer; then exit 1; fi
 getent passwd siscota-build >/dev/null
 [[ -x $PWD/tools/bin/node && -x $PWD/tools/bin/pnpm ]]
 [[ -d /var/lib/siscota-build/cache/npm && -d /var/lib/siscota-build/cache/pnpm ]]

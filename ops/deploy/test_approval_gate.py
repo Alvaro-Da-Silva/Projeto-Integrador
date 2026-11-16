@@ -1,7 +1,7 @@
 from copy import deepcopy
 import unittest
 
-from approval_gate import Blocked, CI, MANUAL, MANUAL_BASE, MANUAL_FRONTEND, evaluate
+from approval_gate import sensitive, Blocked, CI, MANUAL, MANUAL_BASE, MANUAL_FRONTEND, evaluate
 
 CURRENT = "a" * 40
 TIP = "b" * 40
@@ -52,6 +52,29 @@ class ApprovalTest(unittest.TestCase):
         e["compare"]["files"] = [{"filename": "frontend/src/app/globals.css"},
                                  {"filename": "frontend/public/logo.webp"}]
         self.assertEqual(evaluate(e, CURRENT, REPO), TIP)
+
+    def test_ordinary_changes_use_pr_approval(self):
+        for path in (
+            "backend/src/services/dashboardService.js", "frontend/src/views/dashboards/panel.tsx",
+            "frontend/src/hooks/use-calendar.ts", "frontend/src/app/globals.css",
+            "frontend/public/calendar.webp", "frontend/src/assets/images/calendar.png",
+            "backend/docs/API_FRONTEND.md", "README.md",
+        ):
+            with self.subTest(path=path):
+                proof = evidence()
+                proof["compare"]["files"] = [{"filename": path}]
+                self.assertEqual(evaluate(proof, CURRENT, REPO), TIP)
+
+    def test_sensitive_paths_require_administrative_review(self):
+        for path in (
+            "backend/migrations/008.sql", "backend/src/config/database.js",
+            "backend/src/repositories/calendarRepository.js", "backend/src/services/authService.js",
+            "frontend/src/app/api/auth/index.ts", "frontend/src/components/secret.tsx",
+            "frontend/src/components/.env", "frontend/next.config.ts", "frontend/pnpm-lock.yaml",
+            "ops/deploy/poll.sh", ".github/workflows/siscota-ci.yml",
+        ):
+            with self.subTest(path=path):
+                self.assertTrue(sensitive(path))
 
     def test_noop(self):
         self.assertEqual(evaluate({"branch": {"commit": {"sha": CURRENT}}}, CURRENT, REPO), "")
