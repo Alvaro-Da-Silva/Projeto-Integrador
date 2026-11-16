@@ -29,7 +29,7 @@ export const formatarNumero = (valor: number) => numero.format(valor)
 export const formatarHoras = (valor: number) => `${numero.format(valor)} h`
 
 export const IconeCard = ({ children }: { children: ReactNode }) => (
-  <div className='bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-sm'>{children}</div>
+  <div className='bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-md'>{children}</div>
 )
 
 type DashboardErroProps = {

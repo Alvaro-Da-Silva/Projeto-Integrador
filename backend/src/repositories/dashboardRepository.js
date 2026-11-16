@@ -41,3 +41,19 @@ export function findDropouts({ ano, mes }) {
     ORDER BY a.realizado_em DESC,a.id DESC`,
   [ano, mes]);
 }
+
+export function findManualAssignments({ ano, mes, comMotivo = true }) {
+  const filtro = comMotivo
+    ? `(a.acao='atribuicao_manual' OR (a.acao='substituicao' AND a.motivo IS DISTINCT FROM 'desistencia'))`
+    : `a.acao IN ('atribuicao_manual','substituicao')`;
+  return pool.query(`SELECT a.id,a.acao,a.justificativa,a.realizado_em AS "realizadoEm",
+      d.data::text AS data,r.codigo,c.nome AS "cotistaNome",ca.nome AS "anteriorNome",u.nome AS "registradoPor"
+    FROM escala_ajuste a JOIN escala e ON e.id=a.escala_id
+    LEFT JOIN plantao p ON p.id=a.plantao_id LEFT JOIN dia d ON d.id=p.dia_id
+    LEFT JOIN periodo r ON r.id=p.periodo_id
+    LEFT JOIN cotista c ON c.id=a.cotista_id LEFT JOIN cotista ca ON ca.id=a.cotista_anterior_id
+    LEFT JOIN usuario u ON u.id=a.usuario_id
+    WHERE e.ano=$1 AND e.mes=$2 AND ${filtro}
+    ORDER BY a.realizado_em DESC,a.id DESC`,
+  [ano, mes]);
+}

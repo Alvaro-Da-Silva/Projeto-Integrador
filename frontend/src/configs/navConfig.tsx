@@ -45,7 +45,6 @@ export type NavItem = {
 
 export const navItems: NavItem[] = [
   {
-    groupLabel: 'Dashboard & Layouts',
     items: [
       {
         icon: 'LayoutDashboardIcon',

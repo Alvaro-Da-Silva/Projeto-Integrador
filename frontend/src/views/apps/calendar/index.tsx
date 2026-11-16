@@ -187,7 +187,7 @@ export function EventCalendar({
   }, [currentDate, view])
 
   return (
-    <div className='bg-card flex flex-col rounded-lg border'>
+    <div className='bg-card flex flex-col rounded-lg border shadow-xs'>
       <div
         className='flex flex-col has-data-[slot=month-view]:flex-1'
         style={
@@ -225,7 +225,7 @@ export function EventCalendar({
             <Button variant='ghost' size='icon-sm' onClick={goToPrevious} aria-label='Anterior'>
               <ChevronLeftIcon size={16} aria-hidden='true' />
             </Button>
-            <h2 className='text-sm font-semibold sm:text-lg md:text-xl'>{viewTitle}</h2>
+            <h2 className='cbmsc-titulo text-sm sm:text-lg md:text-xl'>{viewTitle}</h2>
             <Button variant='ghost' size='icon-sm' onClick={goToNext} aria-label='Próximo'>
               <ChevronRightIcon size={16} aria-hidden='true' />
             </Button>

@@ -6,7 +6,7 @@ const UserSettings = () => {
   return (
     <div>
       <div className='mb-4 md:mb-6 lg:mb-10'>
-        <h1 className='text-xl font-bold'>Configurações da Conta</h1>
+        <h1 className='cbmsc-titulo text-xl'>Configurações da Conta</h1>
         <p className='text-muted-foreground'>Gerencie as configurações da sua conta.</p>
       </div>
       <Suspense

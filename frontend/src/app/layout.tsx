@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Roboto, Roboto_Mono } from 'next/font/google'
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
@@ -16,13 +16,13 @@ import './globals.css'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const roboto = Roboto({
+  variable: '--font-roboto',
   subsets: ['latin']
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const robotoMono = Roboto_Mono({
+  variable: '--font-roboto-mono',
   subsets: ['latin']
 })
 
@@ -34,7 +34,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html
       lang='en'
-      className={cn(geistSans.variable, geistMono.variable, 'flex min-h-full w-full antialiased')}
+      className={cn(roboto.variable, robotoMono.variable, 'flex min-h-full w-full antialiased')}
       data-scroll-behavior='smooth'
       suppressHydrationWarning
     >

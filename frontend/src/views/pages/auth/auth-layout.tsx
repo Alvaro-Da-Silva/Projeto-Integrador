@@ -9,21 +9,8 @@ import bombeiroComunitarioLogo from '@/assets/images/bombeiro-comunitario.png'
 
 import { cn } from '@/lib/utils'
 
-const brandBackground: CSSProperties = {
-  backgroundImage:
-    'radial-gradient(120% 80% at 50% 45%, #E5132F 0%, #C8102E 38%, #9E0C24 75%, #7A0A1C 100%)'
-}
-
-const stripeBackground: CSSProperties = {
-  backgroundImage: 'linear-gradient(90deg, #F08A00 0%, #FEDD02 14%, #FFE81F 50%, #FEDD02 86%, #F08A00 100%)'
-}
-
 const backgroundLayer: CSSProperties = { zIndex: 0 }
 const textLayer: CSSProperties = { zIndex: 10 }
-
-const emergencyFont: CSSProperties = {
-  fontFamily: "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
-}
 
 type BrandSealProps = {
   className?: string
@@ -61,9 +48,9 @@ const BrandSeal = ({ className, href, priority }: BrandSealProps) => {
 const BrandStripes = ({ className }: { className?: string }) => {
   return (
     <div className={cn('pointer-events-none flex flex-col', className)} aria-hidden>
-      <div className='h-(--stripe-lg) shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)]' style={stripeBackground} />
+      <div className='cbmsc-faixa h-(--stripe-lg) shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)]' />
       <div className='h-(--stripe-gap)' />
-      <div className='h-(--stripe-sm) shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)]' style={stripeBackground} />
+      <div className='cbmsc-faixa h-(--stripe-sm) shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)]' />
     </div>
   )
 }
@@ -83,13 +70,12 @@ const Watermark = ({ className }: { className?: string }) => {
 const BrandPanel = ({ logoHref }: { logoHref?: string }) => {
   return (
     <aside
-      className='relative hidden overflow-hidden text-white lg:flex lg:flex-col lg:justify-between [--stripe-gap:1.25rem] [--stripe-lg:6rem] [--stripe-sm:2.75rem] xl:[--stripe-lg:6.75rem] xl:[--stripe-sm:3rem]'
-      style={brandBackground}
+      className='cbmsc-fundo relative hidden overflow-hidden text-white lg:flex lg:flex-col lg:justify-between [--stripe-gap:1.25rem] [--stripe-lg:6rem] [--stripe-sm:2.75rem] xl:[--stripe-lg:6.75rem] xl:[--stripe-sm:3rem]'
     >
       <Watermark className='-right-40 -bottom-40 size-[46rem] opacity-25' />
 
       <div className='relative z-1 flex items-center gap-2 px-10 pt-10 xl:px-14 xl:pt-12'>
-        <ShieldCheckIcon className='size-4 text-[#FEDD02]' />
+        <ShieldCheckIcon className='size-4 text-cbmsc-amarelo' />
         <span className='text-xs font-semibold tracking-[0.2em] text-white/85 uppercase'>
           Acesso restrito · Uso institucional
         </span>
@@ -104,11 +90,11 @@ const BrandPanel = ({ logoHref }: { logoHref?: string }) => {
           </div>
 
           <div className='pointer-events-none absolute inset-0 flex flex-col pl-68 xl:pl-82 2xl:pl-90' style={textLayer}>
-            <p className='flex h-(--stripe-lg) items-center text-5xl font-black tracking-wide text-[#2D2926] xl:text-6xl'>
+            <p className='flex h-(--stripe-lg) items-center text-5xl font-black tracking-wide text-cbmsc-preto xl:text-6xl'>
               SISCOTA
             </p>
             <div className='h-(--stripe-gap)' />
-            <p className='flex h-(--stripe-sm) items-center pr-6 text-[0.625rem] leading-tight font-extrabold tracking-[0.08em] text-[#2D2926] uppercase xl:text-xs'>
+            <p className='flex h-(--stripe-sm) items-center pr-6 text-[0.625rem] leading-tight font-extrabold tracking-[0.08em] text-cbmsc-preto uppercase xl:text-xs'>
               Corpo de Bombeiros Militar de Santa Catarina
             </p>
           </div>
@@ -127,7 +113,7 @@ const BrandPanel = ({ logoHref }: { logoHref?: string }) => {
         <p className='max-w-56 text-xs leading-relaxed text-white/70'>
           Gestão das escalas e cotas operacionais com organização, transparência e segurança.
         </p>
-        <div className='text-right leading-none text-[#FEDD02] drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]' style={emergencyFont}>
+        <div className='text-right leading-none text-cbmsc-amarelo font-emergencia drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]'>
           <span className='block text-lg tracking-wide'>EMERGÊNCIA</span>
           <span className='block text-6xl'>193</span>
         </div>
@@ -139,8 +125,7 @@ const BrandPanel = ({ logoHref }: { logoHref?: string }) => {
 const MobileBrandHeader = ({ logoHref }: { logoHref?: string }) => {
   return (
     <header
-      className='relative overflow-hidden px-4 pt-6 pb-8 text-white lg:hidden [--stripe-gap:0.625rem] [--stripe-lg:2.75rem] [--stripe-sm:1.25rem]'
-      style={brandBackground}
+      className='cbmsc-fundo relative overflow-hidden px-4 pt-6 pb-8 text-white lg:hidden [--stripe-gap:0.625rem] [--stripe-lg:2.75rem] [--stripe-sm:1.25rem]'
     >
       <Watermark className='-right-24 -bottom-28 size-80 opacity-25' />
 
@@ -174,7 +159,7 @@ type AuthLayoutProps = {
 
 const AuthLayout = ({ eyebrow, title, description, children, topSlot, logoHref }: AuthLayoutProps) => {
   return (
-    <div className='flex min-h-screen w-full flex-1 flex-col bg-background [--auth-accent:#C8102E] [--primary-foreground:#FFFFFF] [--primary:#C8102E] [--ring:#C8102E] lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] dark:[--auth-accent:#FF6B7A]'>
+    <div className='flex min-h-screen w-full flex-1 flex-col bg-background [--auth-accent:var(--cbmsc-vermelho)] lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] dark:[--auth-accent:#FF6B7A]'>
       <BrandPanel logoHref={logoHref} />
       <MobileBrandHeader logoHref={logoHref} />
 
@@ -205,7 +190,7 @@ const AuthLayout = ({ eyebrow, title, description, children, topSlot, logoHref }
           </div>
         </main>
 
-        <footer className='relative z-1 bg-[#C8102E] px-6 py-2.5 text-right text-[0.6875rem] font-bold tracking-wider text-white uppercase'>
+        <footer className='relative z-1 bg-cbmsc-vermelho px-6 py-2.5 text-right text-[0.6875rem] font-bold tracking-wider text-white uppercase'>
           Corpo de Bombeiros Militar de Santa Catarina
         </footer>
       </div>

@@ -54,11 +54,21 @@ async function desistenciasDoMes(ano, mes) {
   }
 }
 
+async function atribuicoesManuaisDoMes(ano, mes) {
+  try {
+    return (await repo.findManualAssignments({ ano, mes })).rows;
+  } catch (error) {
+    if (error.code !== '42703') throw error;
+    return (await repo.findManualAssignments({ ano, mes, comMotivo: false })).rows;
+  }
+}
+
 export async function getCoordenadorDashboard({ ano, mes }) {
-  const [{ rows: [mesAtual] }, desistencias] = await Promise.all([
+  const [{ rows: [mesAtual] }, desistencias, atribuicoes] = await Promise.all([
     repo.findMonthIndicators({ ano, mes, statusEscala: STATUS_ESCALA_DEFINITIVA,
       statusParticipacao: STATUS_PARTICIPACAO_DEFINITIVA }),
-    desistenciasDoMes(ano, mes)
+    desistenciasDoMes(ano, mes),
+    atribuicoesManuaisDoMes(ano, mes)
   ]);
   const temEscala = Boolean(mesAtual.escalaId);
   return {
@@ -70,6 +80,8 @@ export async function getCoordenadorDashboard({ ano, mes }) {
     distribuidas: temEscala ? mesAtual.distribuidas : 0,
     desistencias: desistencias.total,
     desistenciasLista: desistencias.lista,
-    desistenciasDisponivel: desistencias.disponivel
+    desistenciasDisponivel: desistencias.disponivel,
+    atribuicoesManuais: atribuicoes.length,
+    atribuicoesManuaisLista: atribuicoes
   };
 }
