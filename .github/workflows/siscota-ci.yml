@@ -1,0 +1,35 @@
+name: SISCOTA CI
+on:
+  pull_request:
+    branches: [deploy]
+  push:
+    branches: [deploy]
+permissions:
+  contents: read
+jobs:
+  validate:
+    name: siscota-validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.3'
+      - name: Gate e recuperacao simulada
+        run: |
+          python3 -B -m unittest discover -s ops/deploy -p "test_*.py"
+          bash ops/deploy/test-rollback.sh
+      - name: Build
+        run: |
+          npm install --global pnpm@10.30.3
+          bash ops/deploy/build-release.sh "$PWD" --ci
+      - name: PostgreSQL 18 isolado
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y -h apt.postgresql.org noble
+          sudo apt-get install -y postgresql-18 postgresql-client-18
+          bash ops/deploy/check-db.sh

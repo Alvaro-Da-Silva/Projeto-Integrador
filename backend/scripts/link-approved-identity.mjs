@@ -11,7 +11,7 @@ async function run() {
     throw new Error('Destino ou autorização inválida.');
   }
   if (process.argv[2] === '--isolated' &&
-      !(PGDATABASE.startsWith('siscota_alvaro_') && PGPORT === '55433' && PGHOST.endsWith('/socket'))) {
+      !(PGDATABASE.startsWith('siscota_isolated_') && PGPORT === '55433' && PGHOST.endsWith('/socket'))) {
     throw new Error('O modo isolado exige o socket e o banco de ensaio.');
   }
   if (process.argv[2] === '--apply-approved' &&

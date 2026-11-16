@@ -4,6 +4,7 @@ import { type ComponentType } from 'react'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
@@ -12,7 +13,7 @@ import { ChevronRightIcon, SquareArrowOutUpRightIcon } from 'lucide-react'
 
 import type { MenuGroupSubItem, MenuItem, MenuLeafSubItem, MenuSubItem, NavItem } from '@/configs/navConfig'
 
-import LogoSvg from '@/assets/svg/logo'
+import bombeiroComunitarioLogo from '@/assets/images/bombeiro-comunitario.png'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
   DropdownMenu,
@@ -217,7 +218,7 @@ const SidebarGroupedMenuItems = ({
   return (
     <SidebarGroup>
       {groupLabel && (
-        <SidebarGroupLabel className='text-sidebar-foreground/50 tracking-wider uppercase'>
+        <SidebarGroupLabel className='text-sidebar-foreground/60 text-[0.6875rem] font-bold tracking-[0.12em] uppercase'>
           {groupLabel}
         </SidebarGroupLabel>
       )}
@@ -387,7 +388,7 @@ const SidebarGroupedMenuItems = ({
                   tooltip={item.label}
                   render={<Link href={item.href} target={item.target} />}
                   isActive={pathname === item.href}
-                  className='data-active:bg-primary/10!'
+                  className='data-active:bg-primary/10! data-active:font-semibold data-active:shadow-[inset_3px_0_0_var(--primary)] group-data-[collapsible=icon]:data-active:shadow-none'
                 >
                   {Tag && <Tag />}
                   <span
@@ -465,22 +466,35 @@ const SidebarLayout = () => {
 
   return (
     <Sidebar collapsible='icon' variant='sidebar'>
-      <SidebarHeader>
-        <SidebarMenu>
+      <SidebarHeader className='cbmsc-fundo gap-0 p-0 text-white'>
+        <SidebarMenu className='p-2'>
           <SidebarMenuItem>
             <SidebarMenuButton
               size='lg'
-              className='gap-2.5 bg-transparent! [&>svg]:size-8'
+              className='gap-2.5 bg-transparent! text-white! focus-visible:ring-white/70'
               render={<Link href={`${themeConfig.homePageUrl}`} />}
             >
-              <LogoSvg className='[&_rect]:fill-sidebar [&_rect:first-child]:fill-primary' />
-              <div className='flex flex-col items-start'>
-                <span className='text-lg font-semibold text-nowrap'>{themeConfig.templateName}</span>
-                <span className='text-xs font-light text-nowrap'>Dashboard Template</span>
+              <span className='grid size-9 shrink-0 place-items-center rounded-full bg-white shadow-md ring-1 ring-black/10 group-data-[collapsible=icon]:size-8'>
+                <Image
+                  src={bombeiroComunitarioLogo}
+                  alt='Logomarca do Bombeiro Comunitário'
+                  sizes='36px'
+                  className='size-[86%] object-contain'
+                />
+              </span>
+              <div className='flex flex-col items-start leading-tight'>
+                <span className='text-lg font-black tracking-wide text-nowrap'>{themeConfig.templateName}</span>
+                <span className='text-[0.6875rem] font-medium tracking-wide text-nowrap text-white/85 uppercase'>
+                  Bombeiro Comunitário
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <div className='flex flex-col gap-0.5 pb-1' aria-hidden='true'>
+          <div className='cbmsc-faixa h-1.5' />
+          <div className='cbmsc-faixa h-0.5' />
+        </div>
       </SidebarHeader>
       <SidebarContent className='group-data-[collapsible=icon]:overflow-y-auto'>
         {navGroups.map((navItem, index) => {

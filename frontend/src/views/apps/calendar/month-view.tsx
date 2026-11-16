@@ -143,9 +143,9 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate, i
 
   return (
     <div data-slot='month-view' className='contents'>
-      <div className='border-border/70 grid grid-cols-7 border-b'>
+      <div className='border-border/70 bg-muted/60 grid grid-cols-7 border-y'>
         {weekdays.map(day => (
-          <div key={day} className='text-muted-foreground/70 py-2 text-center text-sm'>
+          <div key={day} className='text-muted-foreground py-2 text-center text-xs font-bold tracking-wider uppercase'>
             {day}
           </div>
         ))}
@@ -182,7 +182,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate, i
                     className='group-data-disabled-cell:text-muted-foreground/50 group-data-disabled-cell:hover:bg-transparent cursor-pointer overflow-visible transition-colors hover:bg-muted/20'
                     onClick={event => handleCellClick(day, event)}
                   >
-                    <div className='group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm'>
+                    <div className='group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex group-data-today:font-bold size-6 items-center justify-center rounded-full text-sm'>
                       {format(day, 'd')}
                     </div>
                     <div

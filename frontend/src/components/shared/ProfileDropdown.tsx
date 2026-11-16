@@ -33,7 +33,6 @@ const ProfileDropdown = () => {
           {session?.user?.image ? <AvatarImage src={session.user.image} alt={session?.user?.name} /> : null}
           <AvatarFallback>{Initials}</AvatarFallback>
         </Avatar>
-        <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2' />
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-60'>
         <DropdownMenuGroup>
@@ -43,7 +42,7 @@ const ProfileDropdown = () => {
                 {session?.user?.image ? <AvatarImage src={session.user.image} alt={session?.user?.name} /> : null}
                 <AvatarFallback>{Initials}</AvatarFallback>
               </Avatar>
-              <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2' />
+    
             </div>
             <div className='flex flex-1 flex-col items-start'>
               <span className='text-foreground text-base font-semibold'>{session?.user?.name || 'Usuário'}</span>

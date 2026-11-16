@@ -66,7 +66,7 @@ export function CotistaDashboard() {
 
   return (
     <div className='grid gap-6 md:grid-cols-2'>
-      <Card>
+      <Card className='border-t-primary border-t-[3px]'>
         <CardHeader className='flex items-center gap-3'>
           <IconeCard>
             <ClockIcon className='size-4' />
@@ -77,7 +77,7 @@ export function CotistaDashboard() {
           </div>
         </CardHeader>
         <CardContent className='flex flex-col gap-1'>
-          <span className='text-4xl font-semibold tabular-nums'>{formatarHoras(horasConquistadas)}</span>
+          <span className='text-4xl font-bold tabular-nums'>{formatarHoras(horasConquistadas)}</span>
           <span className='text-muted-foreground text-sm'>
             {horasConquistadas > 0
               ? 'Soma das cotas definitivas publicadas neste semestre.'
@@ -86,7 +86,7 @@ export function CotistaDashboard() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className='border-t-primary border-t-[3px]'>
         <CardHeader className='flex items-center gap-3'>
           <IconeCard>
             <TargetIcon className='size-4' />
@@ -97,7 +97,7 @@ export function CotistaDashboard() {
           </div>
         </CardHeader>
         <CardContent className='flex flex-col gap-3'>
-          <span className='text-4xl font-semibold tabular-nums'>{formatarHoras(horasFaltantes)}</span>
+          <span className='text-4xl font-bold tabular-nums'>{formatarHoras(horasFaltantes)}</span>
           <Progress value={percentual} aria-label='Progresso da meta de horas' />
           <span className='text-muted-foreground text-sm'>
             {horasFaltantes === 0

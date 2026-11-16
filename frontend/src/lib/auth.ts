@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { Pool } from "pg";
 import { jwt,admin } from "better-auth/plugins";
 import { Resend } from "resend";
+import { authPath } from "./app-paths";
 
 const resend = process.env.KEY_RESEND ? new Resend(process.env.KEY_RESEND) : undefined;
 
@@ -16,6 +17,8 @@ const pool = new Pool({
 function createAuth() {
   return betterAuth({
     database: pool,
+    baseURL: process.env.BETTER_AUTH_URL || undefined,
+    basePath: authPath,
 
     emailAndPassword: {
       enabled: true,

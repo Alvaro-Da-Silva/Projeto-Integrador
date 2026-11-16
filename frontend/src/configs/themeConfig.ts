@@ -1,5 +1,5 @@
 const themeConfig = {
-  templateName: 'AdminCN',
+  templateName: 'SISCOTA',
   homePageUrl: '/'
 } as const
 

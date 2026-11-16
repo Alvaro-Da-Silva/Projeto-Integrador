@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'
 
 import { authClient } from '@/lib/auth-client'
+import { appBasePath } from '@/lib/app-paths'
 import type { Turno } from '@/components/modals/SelectDate'
 import type {
     AjusteEscala,
@@ -16,7 +17,9 @@ import type {
     ResultadoDistribuicao
 } from '@/types/apps/cotas-types'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'
+const API_URL = process.env.NODE_ENV === 'development'
+    ? (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080')
+    : appBasePath
 
 const TURNOS_VALIDOS: Turno[] = ['D', 'N1', 'N2', 'I']
 

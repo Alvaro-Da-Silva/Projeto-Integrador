@@ -28,6 +28,24 @@ export interface DashboardCoordenador {
   desistenciasLista: DesistenciaRegistro[]
 
   desistenciasDisponivel: boolean
+
+  atribuicoesManuais?: number
+
+  atribuicoesManuaisLista?: AtribuicaoManualRegistro[]
+}
+
+export interface AtribuicaoManualRegistro {
+  id: string
+  acao: 'atribuicao_manual' | 'substituicao'
+  justificativa: string | null
+  realizadoEm: string
+  data: string | null
+  codigo: string | null
+
+  cotistaNome: string | null
+
+  anteriorNome: string | null
+  registradoPor: string | null
 }
 
 export interface DesistenciaRegistro {

@@ -4,10 +4,10 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { addMonths, format, parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { CalendarCheckIcon, CalendarRangeIcon, InfoIcon, InboxIcon, UserMinusIcon } from 'lucide-react'
+import { CalendarCheckIcon, CalendarRangeIcon, InfoIcon, InboxIcon, UserMinusIcon, UserPlusIcon } from 'lucide-react'
 
 import type { ApiError } from '@/controllers/CotasController'
-import type { DashboardCoordenador, DesistenciaRegistro } from '@/types/apps/dashboard-types'
+import type { AtribuicaoManualRegistro, DashboardCoordenador, DesistenciaRegistro } from '@/types/apps/dashboard-types'
 import type { EscalaStatus } from '@/types/apps/cotas-types'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -58,13 +58,13 @@ type IndicadorProps = {
 
 function Indicador({ icone, titulo, valor, descricao }: IndicadorProps) {
   return (
-    <Card>
+    <Card className='border-t-primary border-t-[3px]'>
       <CardHeader className='flex items-center gap-3'>
         <IconeCard>{icone}</IconeCard>
         <CardTitle className='text-base font-semibold'>{titulo}</CardTitle>
       </CardHeader>
       <CardContent className='flex flex-col gap-1'>
-        <span className='text-4xl font-semibold tabular-nums'>{formatarNumero(valor)}</span>
+        <span className='text-4xl font-bold tabular-nums'>{formatarNumero(valor)}</span>
         <CardDescription>{descricao}</CardDescription>
       </CardContent>
     </Card>
@@ -106,6 +106,57 @@ function ListaDesistencias({ mes, itens }: { mes: string; itens: DesistenciaRegi
                 <span>
                   <span className='text-muted-foreground'>Motivo: </span>
                   {item.justificativa ? `“${item.justificativa}”` : 'não informado'}
+                </span>
+                <span className='text-muted-foreground text-xs'>
+                  {format(new Date(item.realizadoEm), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                  {item.registradoPor && ` · registrado por ${item.registradoPor}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function ListaAtribuicoes({ mes, itens }: { mes: string; itens: AtribuicaoManualRegistro[] }) {
+  return (
+    <Card>
+      <CardHeader className='flex items-center gap-3'>
+        <IconeCard>
+          <UserPlusIcon className='size-4' />
+        </IconeCard>
+        <div className='flex flex-col gap-0.5'>
+          <CardTitle className='flex flex-wrap items-center gap-2 text-base font-semibold'>
+            Atribuições manuais de {nomeDoMes(mes)}
+          </CardTitle>
+          <CardDescription>Justificativa registrada pelo coordenador ao atribuir ou substituir um cotista.</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {itens.length === 0 ? (
+          <p className='text-muted-foreground text-sm'>Nenhuma atribuição manual registrada neste mês.</p>
+        ) : (
+          <ul className='flex flex-col divide-y rounded-md border text-sm'>
+            {itens.map(item => (
+              <li key={item.id} className='flex flex-col gap-1 px-3 py-2.5'>
+                <div className='flex flex-wrap items-center gap-x-2 gap-y-1'>
+                  <span className='font-medium'>{item.cotistaNome ?? 'Cotista removido'}</span>
+                  {item.codigo && item.data && (
+                    <Badge variant='outline'>
+                      {item.codigo} · {formatDateKey(item.data)}
+                    </Badge>
+                  )}
+                  <span className='text-muted-foreground'>
+                    {item.acao === 'substituicao'
+                      ? `no lugar de ${item.anteriorNome ?? '?'}`
+                      : 'atribuído manualmente'}
+                  </span>
+                </div>
+                <span>
+                  <span className='text-muted-foreground'>Justificativa: </span>
+                  {item.justificativa ? `“${item.justificativa}”` : 'não informada'}
                 </span>
                 <span className='text-muted-foreground text-xs'>
                   {format(new Date(item.realizadoEm), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
@@ -167,7 +218,7 @@ export function CoordenadorDashboard() {
     <div className='flex flex-col gap-6'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div className='flex flex-col gap-0.5'>
-          <h1 className='text-xl font-semibold'>Indicadores do mês</h1>
+          <h1 className='cbmsc-titulo text-xl'>Indicadores do mês</h1>
           <span className='text-muted-foreground text-sm'>Cotas, solicitações, distribuição e desistências.</span>
         </div>
         <Select items={meses} value={mes} onValueChange={(value: string | null) => value && setMes(value)}>
@@ -240,6 +291,8 @@ export function CoordenadorDashboard() {
           </div>
 
           {dados.desistenciasDisponivel && <ListaDesistencias mes={dados.mes} itens={dados.desistenciasLista ?? []} />}
+
+          <ListaAtribuicoes mes={dados.mes} itens={dados.atribuicoesManuaisLista ?? []} />
         </>
       )}
     </div>

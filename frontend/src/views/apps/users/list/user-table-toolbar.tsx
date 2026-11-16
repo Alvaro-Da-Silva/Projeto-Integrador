@@ -79,37 +79,6 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
           </Select>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button className='bg-primary/10 text-primary hover:bg-primary/20 focus-visible:ring-primary/20 dark:focus-visible:ring-primary/40' />
-            }
-          >
-            <UploadIcon />
-            <span className='max-lg:hidden'>Exportar</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end' className='w-auto'>
-            <DropdownMenuItem>
-              <FileTextIcon className='size-4' />
-              Exportar as CSV
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <FileSpreadsheetIcon className='size-4' />
-              Exportar as Excel
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <FileTextIcon className='size-4' />
-              Exportar as JSON
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-            
-        <Button variant='outline'>
-          <DownloadIcon className='size-4' />
-          <span className='max-lg:hidden'>Importar</span>
-        </Button>
-
         <Button onClick={() => router.push('/register')}>
           <PlusIcon />
           <span className='max-lg:hidden'>Adicionar Novo Usuário</span>
