@@ -1,7 +1,5 @@
-// Third-party Imports
 import { EllipsisVerticalIcon, UserIcon, UserRoundCheckIcon } from 'lucide-react'
 
-// Components Imports
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -13,17 +11,17 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
-
-// Util Imports
 import { cn } from '@/lib/utils'
 
 type ConnectionsProps = {
   className?: string
 }
 
-const { connectionActions, connections } = db
+const connectionActions = ['Share', 'Block']
+const connections = [
+  { id: '1', avatar: '', initials: 'MD', name: 'Mark Doe', totalConnections: '45 Connections', isConnected: true },
+  { id: '2', avatar: '', initials: 'JS', name: 'Jane Smith', totalConnections: '12 Connections', isConnected: false }
+]
 
 function Connections({ className }: ConnectionsProps) {
   return (

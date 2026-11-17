@@ -14,7 +14,6 @@ type IconElementProps = {
   'aria-hidden'?: string | boolean
 }
 
-// Variants
 const ratingVariants = cva('transition-colors', {
   variants: {
     variant: {
@@ -30,7 +29,6 @@ const ratingVariants = cva('transition-colors', {
   }
 })
 
-// Constants
 const RATING_DEFAULTS = {
   precision: 1,
   maxStars: 5,
@@ -39,7 +37,6 @@ const RATING_DEFAULTS = {
   icon: <StarIcon />
 } as const
 
-// Types
 interface RatingItemProps extends React.ComponentProps<'label'> {
   variant?: VariantProps<typeof ratingVariants>['variant']
   size: number
@@ -71,7 +68,6 @@ interface RatingProps extends React.ComponentProps<'div'> {
   onValueHover?: (value: number) => void
 }
 
-// Rating Item Component
 function RatingItem({
   size,
   variant = 'default',
@@ -148,7 +144,6 @@ function RatingItem({
       onValueHover(0)
       onValueChange?.(newPoint === value ? 0 : newPoint)
 
-      // Prevent focus on click by blurring the element
       event.currentTarget.blur()
     },
     [isInteractive, value, onValueChange, onValueHover, getRatingPoint]
@@ -194,7 +189,6 @@ function RatingItem({
   )
 }
 
-// Rating Component
 function Rating({
   value: controlledValue,
   defaultValue = 0,
@@ -269,7 +263,6 @@ function Rating({
         case 'Enter':
           event.preventDefault()
 
-          // If no rating is set, set to first step, otherwise clear rating
           if (value === 0) {
             handleValueChange(precision)
           } else {
@@ -295,7 +288,6 @@ function Rating({
   )
 
   const handleMouseDown = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    // Prevent focus on mouse click
     event.preventDefault()
   }, [])
 

@@ -1,10 +1,8 @@
 'use client'
 
-// Third-party Imports
 import { useTheme } from 'next-themes'
 import { MoonStarIcon, SunIcon } from 'lucide-react'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 
 const ModeToggle = () => {

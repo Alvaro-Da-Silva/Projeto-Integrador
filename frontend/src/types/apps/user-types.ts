@@ -1,6 +1,6 @@
-export type UserRole = 'Admin' | 'Editor' | 'Subscriber' | 'Maintainer' | 'Guest'
+export type UserRole = 'admin' | 'user'
 export type UserPlan = 'Basic' | 'Team' | 'Enterprise'
-export type UserStatus = 'Active' | 'Pending' | 'Suspended' | 'Inactive'
+export type UserStatus = 'Ativo' | 'Inativo' | 'Suspenso'
 export type UserBilling = 'Auto Debit' | 'Manual' | 'Credit Card'
 
 export interface UserProject {
@@ -113,7 +113,8 @@ export interface AppUser {
   id: string
   name: string
   email: string
-  avatar?: string // URL string — if absent, show initials
+  avatar?: string
+  patent?: string | null
   role: UserRole
   plan: UserPlan
   status: UserStatus
@@ -121,7 +122,7 @@ export interface AppUser {
   company?: string
   country?: string
   contact?: string
-  joinedDate: string // ISO 8601
+  joinedDate: string
   coverImage?: string
   website?: string
   skype?: string
@@ -152,14 +153,12 @@ export interface UserFilters {
 
 export type UserFormData = Pick<
   AppUser,
-  'name' | 'email' | 'contact' | 'company' | 'country' | 'role' | 'plan' | 'status'
+  'name' | 'email' | 'contact' | 'company' | 'country' | 'patent' | 'role' | 'plan' | 'status'
 >
 
-// For add/edit sheet
 export type UserSheetMode = 'add' | 'edit'
 
-// For column visibility
-export type UserColumnId = 'select' | 'user' | 'role' | 'plan' | 'billing' | 'status' | 'joinedDate' | 'actions'
+export type UserColumnId = 'select' | 'user' | 'patent' | 'role' | 'plan' | 'billing' | 'status' | 'joinedDate' | 'actions'
 
 export type UserSortColumn = Exclude<UserColumnId, 'select' | 'actions'>
 

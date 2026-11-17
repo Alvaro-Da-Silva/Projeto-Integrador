@@ -1,20 +1,16 @@
 'use client'
 
-// Third-party Imports
 import { format } from 'date-fns'
 import { CheckIcon, DownloadIcon } from 'lucide-react'
 
-// Type Imports
 import type { AppUser, InvoiceStatus } from '@/types/apps/user-types'
 
-// Component Imports
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const INVOICE_STATUS_STYLES: Record<InvoiceStatus, string> = {

@@ -1,23 +1,13 @@
 import type { NextConfig } from 'next'
 
+const basePath = process.env.BASEPATH ?? ''
+
 const nextConfig: NextConfig = {
-  basePath: process.env.BASEPATH ?? '',
+  basePath,
+  env: { NEXT_PUBLIC_SISCOTA_BASE_PATH: basePath },
   reactStrictMode: true,
+  experimental: { cpus: 2 },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  redirects: async () => {
-    return [
-      {
-        source: '/',
-        destination: '/dashboard/orders',
-        permanent: true
-      },
-      {
-        source: '/apps/users',
-        destination: '/apps/users/list',
-        permanent: true
-      }
-    ]
-  }
 }
 
 export default nextConfig

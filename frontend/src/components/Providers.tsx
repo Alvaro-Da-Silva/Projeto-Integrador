@@ -1,7 +1,5 @@
-// React Imports
 import type { ReactNode } from 'react'
 
-// Component Imports
 import { ThemeProvider } from './ThemeProvider'
 import { SidebarProvider } from './ui/sidebar'
 import { TooltipProvider } from './ui/tooltip'

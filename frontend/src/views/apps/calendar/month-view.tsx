@@ -1,9 +1,7 @@
 'use client'
 
-// React Imports
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
-// Third-party Imports
 import {
   addDays,
   eachDayOfInterval,
@@ -16,22 +14,24 @@ import {
   startOfMonth,
   startOfWeek
 } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
-// Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
 
-// Component Imports
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarCell } from './calendar-cell'
 import { EventItem } from './event-item'
 
-// Hook Imports
 import { useEventVisibility } from '@/hooks/use-event-visibility'
 
-// Util Imports
-import { getAllEventsForDay, getEventsForDay, getSpanningEventsForDay, sortEvents } from '@/utils/calendar-utils'
+import {
+  getAllEventsForDay,
+  getEventsForDay,
+  getSpanningEventsForDay,
+  isMultiDayEvent,
+  sortEvents
+} from '@/utils/calendar-utils'
 
-// Data Imports
 import { DefaultStartHour, EventGap, EventHeight } from '@/assets/data/constants'
 
 interface MonthViewProps {
@@ -39,9 +39,11 @@ interface MonthViewProps {
   events: CalendarEvent[]
   onEventSelect: (event: CalendarEvent) => void
   onEventCreate: (startTime: Date) => void
+
+  isDayEnabled?: (day: Date) => boolean
 }
 
-export function MonthView({ currentDate, events, onEventSelect, onEventCreate }: MonthViewProps) {
+export function MonthView({ currentDate, events, onEventSelect, onEventCreate, isDayEnabled }: MonthViewProps) {
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate)
     const monthEnd = endOfMonth(monthStart)
@@ -53,9 +55,10 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
   const weekdays = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => {
-      const date = addDays(startOfWeek(new Date()), i)
+      const date = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), i)
+      const dayName = format(date, 'EEE', { locale: ptBR }).replace('.', '')
 
-      return format(date, 'EEE')
+      return dayName.charAt(0).toUpperCase() + dayName.slice(1)
     })
   }, [])
 
@@ -98,7 +101,6 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
     setOpenPopoverDay(null)
 
-    // Prevent the dismiss click from reaching the day cell underneath (opens create dialog)
     if (eventDetails.reason === 'outside-press') {
       eventDetails.event.preventDefault()
       suppressCellClickRef.current = true
@@ -141,9 +143,9 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
   return (
     <div data-slot='month-view' className='contents'>
-      <div className='border-border/70 grid grid-cols-7 border-b'>
+      <div className='border-border/70 bg-muted/60 grid grid-cols-7 border-y'>
         {weekdays.map(day => (
-          <div key={day} className='text-muted-foreground/70 py-2 text-center text-sm'>
+          <div key={day} className='text-muted-foreground py-2 text-center text-xs font-bold tracking-wider uppercase'>
             {day}
           </div>
         ))}
@@ -152,7 +154,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
         {weeks.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className='grid grid-cols-7 [&:last-child>*]:border-b-0'>
             {week.map((day, dayIndex) => {
-              if (!day) return null // Skip if day is undefined
+              if (!day) return null
 
               const dayEvents = getEventsForDay(events, day)
               const spanningEvents = getSpanningEventsForDay(events, day)
@@ -174,9 +176,13 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                   className='group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0'
                   data-today={isToday(day) || undefined}
                   data-outside-cell={!isCurrentMonth || undefined}
+                  data-disabled-cell={(isDayEnabled && !isDayEnabled(day)) || undefined}
                 >
-                  <CalendarCell className='overflow-visible' onClick={event => handleCellClick(day, event)}>
-                    <div className='group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm'>
+                  <CalendarCell
+                    className='group-data-disabled-cell:text-muted-foreground/50 group-data-disabled-cell:hover:bg-transparent cursor-pointer overflow-visible transition-colors hover:bg-muted/20'
+                    onClick={event => handleCellClick(day, event)}
+                  >
+                    <div className='group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex group-data-today:font-bold size-6 items-center justify-center rounded-full text-sm'>
                       {format(day, 'd')}
                     </div>
                     <div
@@ -187,7 +193,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                         const eventStart = new Date(event.start)
                         const eventEnd = new Date(event.end)
                         const isFirstDay = isSameDay(day, eventStart)
-                        const isLastDay = isSameDay(day, eventEnd)
+                        const isLastDay = !isMultiDayEvent(event) || isSameDay(day, eventEnd)
                         const spansRight = !isLastDay && dayIndex < 6
                         const spansLeft = !isFirstDay && dayIndex > 0
 
@@ -251,7 +257,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             }
                           >
                             <span>
-                              + {remainingCount} <span className='max-sm:sr-only'>more</span>
+                              + {remainingCount} <span className='max-sm:sr-only'>mais</span>
                             </span>
                           </PopoverTrigger>
                           <PopoverContent
@@ -264,13 +270,15 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             }
                           >
                             <div className='space-y-2'>
-                              <div className='text-sm font-medium'>{format(day, 'EEE d')}</div>
+                              <div className='text-sm font-medium capitalize'>
+                                {format(day, "EEE, d 'de' MMM", { locale: ptBR })}
+                              </div>
                               <div className='space-y-1'>
                                 {sortEvents(allEvents).map(event => {
                                   const eventStart = new Date(event.start)
                                   const eventEnd = new Date(event.end)
                                   const isFirstDay = isSameDay(day, eventStart)
-                                  const isLastDay = isSameDay(day, eventEnd)
+                                  const isLastDay = !isMultiDayEvent(event) || isSameDay(day, eventEnd)
 
                                   return (
                                     <EventItem

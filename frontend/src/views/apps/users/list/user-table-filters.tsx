@@ -1,17 +1,13 @@
-// Type Imports
-import type { UserFilters, UserPlan, UserRole, UserStatus } from '@/types/apps/user-types'
+import type { UserFilters, UserRole, UserStatus } from '@/types/apps/user-types'
 
-// Component Imports
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-const ROLES: UserRole[] = ['Admin', 'Editor', 'Subscriber', 'Maintainer', 'Guest']
-const PLANS: UserPlan[] = ['Basic', 'Team', 'Enterprise']
-const STATUSES: UserStatus[] = ['Active', 'Pending', 'Suspended', 'Inactive']
+const ROLES: UserRole[] = ['admin', 'user']
+const STATUSES: UserStatus[] = ['Ativo', 'Suspenso']
 
-const ROLE_ITEMS = [{ label: 'All', value: 'all' }, ...ROLES.map(role => ({ label: role, value: role }))]
-const PLAN_ITEMS = [{ label: 'All', value: 'all' }, ...PLANS.map(plan => ({ label: plan, value: plan }))]
-const STATUS_ITEMS = [{ label: 'All', value: 'all' }, ...STATUSES.map(status => ({ label: status, value: status }))]
+const ROLE_ITEMS = [{ label: 'Todas', value: 'all' }, ...ROLES.map(role => ({ label: role, value: role }))]
+const STATUS_ITEMS = [{ label: 'Todos', value: 'all' }, ...STATUSES.map(status => ({ label: status, value: status }))]
 
 export interface UserTableFiltersProps {
   filters: UserFilters
@@ -23,7 +19,7 @@ export function UserTableFilters({ filters, onFilterChange }: UserTableFiltersPr
     <div className='flex flex-col gap-4 border-b p-6'>
       <div className='grid grid-cols-1 gap-6 max-md:*:last:col-span-full sm:grid-cols-2 md:grid-cols-3'>
         <div className='flex w-full flex-col gap-2'>
-          <Label htmlFor='filter-role'>Select Role</Label>
+          <Label htmlFor='filter-role'>Função</Label>
           <Select
             items={ROLE_ITEMS}
             value={filters.role}
@@ -38,7 +34,7 @@ export function UserTableFilters({ filters, onFilterChange }: UserTableFiltersPr
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value='all'>All</SelectItem>
+                <SelectItem value='all'>Todas</SelectItem>
                 {ROLES.map(role => (
                   <SelectItem key={role} value={role}>
                     {role}
@@ -49,35 +45,9 @@ export function UserTableFilters({ filters, onFilterChange }: UserTableFiltersPr
           </Select>
         </div>
 
-        <div className='flex w-full flex-col gap-2'>
-          <Label htmlFor='filter-plan'>Select Plan</Label>
-          <Select
-            items={PLAN_ITEMS}
-            value={filters.plan}
-            onValueChange={(value: string | null) => {
-              if (value) {
-                onFilterChange({ plan: value as UserFilters['plan'] })
-              }
-            }}
-          >
-            <SelectTrigger id='filter-plan' className='w-full'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value='all'>All</SelectItem>
-                {PLANS.map(plan => (
-                  <SelectItem key={plan} value={plan}>
-                    {plan}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
 
         <div className='flex w-full flex-col gap-2'>
-          <Label htmlFor='filter-status'>Select Status</Label>
+          <Label htmlFor='filter-status'>Status</Label>
           <Select
             items={STATUS_ITEMS}
             value={filters.status}
@@ -92,7 +62,7 @@ export function UserTableFilters({ filters, onFilterChange }: UserTableFiltersPr
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value='all'>All</SelectItem>
+                <SelectItem value='all'>Todos</SelectItem>
                 {STATUSES.map(status => (
                   <SelectItem key={status} value={status}>
                     {status}

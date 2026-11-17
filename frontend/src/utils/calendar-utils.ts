@@ -1,10 +1,7 @@
-// Third-party Imports
 import { isSameDay } from 'date-fns'
 
-// Type Imports
 import type { CalendarEvent, events } from '@/types/apps/calendar-types'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const EVENT_TYPES: events[] = ['etc', 'family', 'business', 'personal', 'holiday']
@@ -18,9 +15,7 @@ const LEGACY_COLOR_TO_EVENT_TYPE: Record<string, events> = {
   sky: 'etc'
 }
 
-/**
- * Normalize event color/type for filters and styling (supports legacy sample colors).
- */
+
 export function normalizeEventType(color?: string): events {
   if (color && EVENT_TYPES.includes(color as events)) {
     return color as events
@@ -29,9 +24,7 @@ export function normalizeEventType(color?: string): events {
   return LEGACY_COLOR_TO_EVENT_TYPE[color || ''] || 'etc'
 }
 
-/**
- * Get CSS classes for event colors / types
- */
+
 export function getEventColorClasses(color?: string): string {
   const eventType = normalizeEventType(color)
 
@@ -51,9 +44,7 @@ export function getEventColorClasses(color?: string): string {
   }
 }
 
-/**
- * Get CSS classes for border radius based on event position in multi-day events
- */
+
 export function getBorderRadiusClasses(isFirstDay: boolean, isLastDay: boolean): string {
   if (isFirstDay && isLastDay) {
     return 'rounded-sm'
@@ -70,10 +61,7 @@ export function getBorderRadiusClasses(isFirstDay: boolean, isLastDay: boolean):
   return 'rounded-none'
 }
 
-/**
- * Extend bar into the next day cell (right only — avoids double paint at day joins).
- * The previous cell's ::after fills the gap; continuation cells use a flush left edge.
- */
+
 export function getMonthViewBleedClasses(spansRight: boolean): string {
   if (!spansRight) {
     return ''
@@ -85,7 +73,6 @@ export function getMonthViewBleedClasses(spansRight: boolean): string {
   )
 }
 
-/** Text padding on outer edges only — inner join edges stay flush */
 export function getMonthViewEventPaddingClasses(spansLeft: boolean, spansRight: boolean): string {
   if (!spansLeft && !spansRight) {
     return 'px-1 sm:px-2'
@@ -94,19 +81,27 @@ export function getMonthViewEventPaddingClasses(spansLeft: boolean, spansRight: 
   return cn(!spansLeft && 'pl-1 sm:pl-2', !spansRight && 'pr-1 sm:pr-2', spansLeft && 'pl-0', spansRight && 'pr-0')
 }
 
-/**
- * Check if an event is a multi-day event
- */
+
+const TURNO_COLOR_CLASSES: Record<NonNullable<CalendarEvent['turno']>, string> = {
+  N1: 'bg-blue-200/50 text-blue-950/80 dark:bg-blue-500/25 dark:text-blue-200 shadow-blue-700/8',
+  N2: 'bg-violet-200/50 text-violet-950/80 dark:bg-violet-500/25 dark:text-violet-200 shadow-violet-700/8',
+  I: 'bg-emerald-200/50 text-emerald-950/80 dark:bg-emerald-500/25 dark:text-emerald-200 shadow-emerald-700/8',
+  D: 'bg-red-200/50 text-red-950/80 dark:bg-red-500/25 dark:text-red-200 shadow-red-700/8'
+}
+
+export function getEventClasses(event: CalendarEvent): string {
+  return event.turno ? TURNO_COLOR_CLASSES[event.turno] : getEventColorClasses(event.color)
+}
+
 export function isMultiDayEvent(event: CalendarEvent): boolean {
+  if (event.turno) return false
+
   const eventStart = new Date(event.start)
   const eventEnd = new Date(event.end)
 
   return event.allDay || eventStart.getDate() !== eventEnd.getDate()
 }
 
-/**
- * Filter events for a specific day
- */
 export function getEventsForDay(events: CalendarEvent[], day: Date): CalendarEvent[] {
   return events
     .filter(event => {
@@ -117,9 +112,6 @@ export function getEventsForDay(events: CalendarEvent[], day: Date): CalendarEve
     .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
 }
 
-/**
- * Sort events with multi-day events first, then by start time
- */
 export function sortEvents(events: CalendarEvent[]): CalendarEvent[] {
   return [...events].sort((a, b) => {
     const aIsMultiDay = isMultiDayEvent(a)
@@ -132,9 +124,6 @@ export function sortEvents(events: CalendarEvent[]): CalendarEvent[] {
   })
 }
 
-/**
- * Get multi-day events that span across a specific day (but don't start on that day)
- */
 export function getSpanningEventsForDay(events: CalendarEvent[], day: Date): CalendarEvent[] {
   return events.filter(event => {
     if (!isMultiDayEvent(event)) return false
@@ -142,18 +131,16 @@ export function getSpanningEventsForDay(events: CalendarEvent[], day: Date): Cal
     const eventStart = new Date(event.start)
     const eventEnd = new Date(event.end)
 
-    // Only include if it's not the start day but is either the end day or a middle day
     return !isSameDay(day, eventStart) && (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
   })
 }
 
-/**
- * Get all events visible on a specific day (starting, ending, or spanning)
- */
 export function getAllEventsForDay(events: CalendarEvent[], day: Date): CalendarEvent[] {
   return events.filter(event => {
     const eventStart = new Date(event.start)
     const eventEnd = new Date(event.end)
+
+    if (!isMultiDayEvent(event)) return isSameDay(day, eventStart)
 
     return isSameDay(day, eventStart) || isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd)
   })

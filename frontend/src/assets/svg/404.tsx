@@ -1,4 +1,3 @@
-// React Imports
 import type { SVGAttributes } from 'react'
 
 const Icon404 = (props: SVGAttributes<SVGElement>) => {

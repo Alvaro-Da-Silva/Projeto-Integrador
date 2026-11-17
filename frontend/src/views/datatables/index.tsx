@@ -1,4 +1,3 @@
-// Component Imports
 import DataTableBasic from '@/views/datatables/basic'
 import DataTableWithFilters from '@/views/datatables/filters'
 import DataTablePinnableColumn from '@/views/datatables/pinnable-columns'

@@ -69,7 +69,6 @@ const CircularProgress = ({
         {...props}
       >
         <svg viewBox='0 0 100 100' className='size-full overflow-visible'>
-          {/* Dynamic Background Track */}
           <circle
             cx='50'
             cy='50'
@@ -85,7 +84,6 @@ const CircularProgress = ({
               transformOrigin: '50px 50px'
             }}
           />
-          {/* Dynamic Progress Bar */}
           <circle
             cx='50'
             cy='50'

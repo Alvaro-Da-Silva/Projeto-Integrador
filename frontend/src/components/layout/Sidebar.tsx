@@ -1,23 +1,19 @@
 'use client'
 
-// React Imports
 import { type ComponentType } from 'react'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-// Next Imports
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-// Third-party Imports
 import * as Icon from 'lucide-react'
 import { ChevronRightIcon, SquareArrowOutUpRightIcon } from 'lucide-react'
 
-// Type Imports
 import type { MenuGroupSubItem, MenuItem, MenuLeafSubItem, MenuSubItem, NavItem } from '@/configs/navConfig'
 
-// Component Imports
-import LogoSvg from '@/assets/svg/logo'
+import bombeiroComunitarioLogo from '@/assets/images/bombeiro-comunitario.png'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
   DropdownMenu,
@@ -48,21 +44,16 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 
-// Config Imports
-import { navItems } from '@/configs/navConfig'
+import { navItems, filtrarMenu } from '@/configs/navConfig'
 import themeConfig from '@/configs/themeConfig'
 
-// Util Imports
 import { cn } from '@/lib/utils'
-
-import { getNavApps } from '@/lib/nav-apps'
+import { authClient } from '@/lib/auth-client'
 
 const isSubGroup = (item: MenuSubItem): item is MenuGroupSubItem => 'childItems' in item
 
 const isExternalLink = (href: string) => href.startsWith('http://') || href.startsWith('https://')
 
-// Key used to track the open state of a nested sub-group, namespaced by its parent
-// so two sub-groups sharing a label in different parents never collide.
 const subGroupKey = (itemLabel: string, subItemLabel: string) => `${itemLabel}::${subItemLabel}`
 
 function isLinkActive(
@@ -92,9 +83,6 @@ function isLinkActive(
   return pathname === href
 }
 
-// Keys of every branch (top-level item, plus nested sub-group) that contains the active
-// route. Branches the user has never toggled fall back to this, so the tree opens itself
-// on first render and follows the route on every navigation.
 function getActiveBranchKeys(
   groups: NavItem[],
   pathname: string,
@@ -120,7 +108,6 @@ function getActiveBranchKeys(
   return keys
 }
 
-// A single navigable link inside the icon-mode flyout, at either nesting level.
 const FlyoutMenuLink = ({ item, isActive }: { item: MenuLeafSubItem; isActive: boolean }) => (
   <DropdownMenuItem
     className={cn('justify-between gap-2', isActive && 'bg-primary/10 text-accent-foreground font-medium')}
@@ -138,9 +125,6 @@ const FlyoutMenuLink = ({ item, isActive }: { item: MenuLeafSubItem; isActive: b
   </DropdownMenuItem>
 )
 
-// Icon-mode stand-in for a collapsible menu item. The rail is too narrow to show the
-// inline sub-menu, so the children open in a dropdown to the right of the rail — with
-// nested sub-groups rendered as submenus so every leaf stays reachable.
 const FlyoutMenuItem = ({
   item,
   childItems,
@@ -167,7 +151,6 @@ const FlyoutMenuItem = ({
           <ChevronRightIcon className='ml-auto' />
         </DropdownMenuTrigger>
         <DropdownMenuContent side='right' align='start' sideOffset={12} className='w-auto min-w-52'>
-          {/* The label must live inside a Group — Base UI's GroupLabel throws without one. */}
           <DropdownMenuGroup>
             <DropdownMenuLabel className='text-foreground flex items-center gap-2 text-sm'>
               <span className='truncate'>{item.label}</span>
@@ -235,7 +218,7 @@ const SidebarGroupedMenuItems = ({
   return (
     <SidebarGroup>
       {groupLabel && (
-        <SidebarGroupLabel className='text-sidebar-foreground/50 tracking-wider uppercase'>
+        <SidebarGroupLabel className='text-sidebar-foreground/60 text-[0.6875rem] font-bold tracking-[0.12em] uppercase'>
           {groupLabel}
         </SidebarGroupLabel>
       )}
@@ -405,7 +388,7 @@ const SidebarGroupedMenuItems = ({
                   tooltip={item.label}
                   render={<Link href={item.href} target={item.target} />}
                   isActive={pathname === item.href}
-                  className='data-active:bg-primary/10!'
+                  className='data-active:bg-primary/10! data-active:font-semibold data-active:shadow-[inset_3px_0_0_var(--primary)] group-data-[collapsible=icon]:data-active:shadow-none'
                 >
                   {Tag && <Tag />}
                   <span
@@ -446,57 +429,30 @@ const SidebarLayout = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { state, isMobile } = useSidebar()
+  const { data: session } = authClient.useSession()
+  const role = session?.user.role
 
-  // Remove this state when the nav-apps API is removed. Until then, this state is used to hold the external nav-apps fetched from the API JSON.
   const [externalApps, setExternalApps] = useState<MenuItem[]>([])
 
-  // Branches the user has explicitly opened or closed, keyed by label. It lives here rather
-  // than inside each Collapsible so it survives the swap between the inline sub-menu and the
-  // icon-mode flyout — collapsing and re-expanding the sidebar keeps the tree as it was.
-  // Anything absent from this map falls back to "open if it holds the active route".
+
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({})
 
-  useEffect(() => {
-    let mounted = true
 
-    getNavApps().then(data => {
-      if (!mounted) return
 
-      setExternalApps(
-        data.map(app => ({
-          icon: app.icon as MenuItem['icon'],
-          label: app.name,
-          href: app.href,
-          badge: 'Pro',
-          badgeClassName: 'right-8',
-          ...(app.openInNewTab ? { target: '_blank' as const } : {})
-        }))
-      )
-    })
-
-    return () => {
-      mounted = false
-    }
-  }, [])
-
-  // Nav groups rendered in the sidebar.
-  // Remove the externalApps branch when the nav-apps API is removed. Until then, this is used to merge external nav-apps into the "Apps" group.
-  const navGroups = useMemo(
-    () =>
+  const navGroups = useMemo(() => {
+    const base =
       externalApps.length > 0
-        ? navItems.map(item =>
-            item.groupLabel === 'Apps' ? { ...item, items: item.items.concat(externalApps) } : item
-          )
-        : navItems,
-    [externalApps]
-  )
+        ? navItems.map(item => (item.groupLabel === 'Apps' ? { ...item, items: item.items.concat(externalApps) } : item))
+        : navItems
+
+    return filtrarMenu(base, role)
+  }, [externalApps, role])
 
   const activeBranchKeys = useMemo(
     () => getActiveBranchKeys(navGroups, pathname, searchParams),
     [navGroups, pathname, searchParams]
   )
 
-  // A user toggle wins; otherwise the branch mirrors whether it holds the active route.
   const isBranchOpen = useCallback(
     (key: string) => openItems[key] ?? activeBranchKeys.has(key),
     [openItems, activeBranchKeys]
@@ -506,28 +462,39 @@ const SidebarLayout = () => {
     setOpenItems(prev => ({ ...prev, [key]: open }))
   }, [])
 
-  // Only the icon rail is too narrow for the inline sub-menu. Mobile renders the full-width
-  // sheet, so it keeps the normal tree.
   const isIconMode = state === 'collapsed' && !isMobile
 
   return (
     <Sidebar collapsible='icon' variant='sidebar'>
-      <SidebarHeader>
-        <SidebarMenu>
+      <SidebarHeader className='cbmsc-fundo gap-0 p-0 text-white'>
+        <SidebarMenu className='p-2'>
           <SidebarMenuItem>
             <SidebarMenuButton
               size='lg'
-              className='gap-2.5 bg-transparent! [&>svg]:size-8'
+              className='gap-2.5 bg-transparent! text-white! focus-visible:ring-white/70'
               render={<Link href={`${themeConfig.homePageUrl}`} />}
             >
-              <LogoSvg className='[&_rect]:fill-sidebar [&_rect:first-child]:fill-primary' />
-              <div className='flex flex-col items-start'>
-                <span className='text-lg font-semibold text-nowrap'>{themeConfig.templateName}</span>
-                <span className='text-xs font-light text-nowrap'>Dashboard Template</span>
+              <span className='grid size-9 shrink-0 place-items-center rounded-full bg-white shadow-md ring-1 ring-black/10 group-data-[collapsible=icon]:size-8'>
+                <Image
+                  src={bombeiroComunitarioLogo}
+                  alt='Logomarca do Bombeiro Comunitário'
+                  sizes='36px'
+                  className='size-[86%] object-contain'
+                />
+              </span>
+              <div className='flex flex-col items-start leading-tight'>
+                <span className='text-lg font-black tracking-wide text-nowrap'>{themeConfig.templateName}</span>
+                <span className='text-[0.6875rem] font-medium tracking-wide text-nowrap text-white/85 uppercase'>
+                  Bombeiro Comunitário
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <div className='flex flex-col gap-0.5 pb-1' aria-hidden='true'>
+          <div className='cbmsc-faixa h-1.5' />
+          <div className='cbmsc-faixa h-0.5' />
+        </div>
       </SidebarHeader>
       <SidebarContent className='group-data-[collapsible=icon]:overflow-y-auto'>
         {navGroups.map((navItem, index) => {

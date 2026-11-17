@@ -1,14 +1,11 @@
 'use client'
 
-// Third-party Imports
 import { Bar, BarChart } from 'recharts'
 
-// Component Imports
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { Separator } from '@/components/ui/separator'
 
-// Product reached data
 const productReachChartData = [
   { month: 'January', reached: 168 },
   { month: 'February', reached: 305 },
@@ -24,7 +21,6 @@ const productReachChartConfig = {
   }
 } satisfies ChartConfig
 
-// Order placed data
 const orderPlacedChartData = [
   { month: 'January', orders: 168 },
   { month: 'February', orders: 305 },

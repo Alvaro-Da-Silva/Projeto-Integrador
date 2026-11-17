@@ -1,4 +1,3 @@
-// React Imports
 import type { ReactNode } from 'react'
 
 const BlankLayout = ({ children }: { children: ReactNode }) => {

@@ -1,102 +1,242 @@
 'use client'
 
-// React Import
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-// Next Imports
-import Link from 'next/link'
+import { EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon, MedalIcon, ShieldCheckIcon, UserIcon } from 'lucide-react'
 
-// Third-party Imports
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registerSchema, RegisterFormData } from "@/lib/schemas/login";
 
-// Component Import
+import { authClient } from "@/lib/auth-client";
+
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { PATENTES } from '@/lib/patentes'
+import { toast } from "sonner"
+import { Spinner } from '@/components/ui/spinner'
 
 const RegisterForm = () => {
+  const router = useRouter()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
+  const form = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      patent: undefined,
+      confirmPassword: "",
+    },
+  })
+
+  const onSubmit = async (values: RegisterFormData) => {
+    const { data, error } = await authClient.admin.createUser({
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      data: {
+        patent: values.patent,
+      },
+    },{
+      onSuccess: () => {
+        toast.success("Conta criada com sucesso!")
+        form.reset()
+        router.push("/")
+      },
+      onError: (ctx) => {
+        toast.error("Erro ao cadastrar conta, tente novamente")
+        console.log("Deu erro no cadastro:", ctx.error)
+        form.reset()
+      },
+    })
+  }
+
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <FieldGroup className='gap-4'>
-        {/* Username */}
-        <Field className='gap-2'>
-          <FieldLabel className='leading-5' htmlFor='username'>
-            Username*
-          </FieldLabel>
-          <Input type='text' id='username' placeholder='Enter your username' />
-        </Field>
-        {/* Email */}
-        <Field className='gap-2'>
-          <FieldLabel className='leading-5' htmlFor='userEmail'>
-            Email address*
-          </FieldLabel>
-          <Input type='email' id='userEmail' placeholder='Enter your email address' />
-        </Field>
-        {/* Password */}
-        <Field className='w-full gap-2'>
-          <FieldLabel className='leading-5' htmlFor='password'>
-            Password*
-          </FieldLabel>
-          <InputGroup>
-            <InputGroupInput
-              id='password'
-              type={isPasswordVisible ? 'text' : 'password'}
-              placeholder='••••••••••••••••'
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FieldGroup className='gap-5'>
+        <Controller
+          name='name'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='gap-2'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='username'>
+                Nome
+              </FieldLabel>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <UserIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  type='text'
+                  id='username'
+                  placeholder='Digite o nome'
+                  {...field}
+                  aria-invalid={!!fieldState.error} />
+              </InputGroup>
+              {fieldState.error && (
+                <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+              )}
+            </Field>
+          )}
+        />
+        <Controller
+          name='email'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='gap-2'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='userEmail'>
+                Email
+              </FieldLabel>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <MailIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  type='email'
+                  id='userEmail'
+                  placeholder='Digite o email'
+                  {...field}
+                  aria-invalid={!!fieldState.error} />
+              </InputGroup>
+              {fieldState.error && (
+                <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+              )}
+            </Field>
+          )}
+        />
+        <Controller
+          name='patent'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='gap-2'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='userPatent'>
+                Patente
+              </FieldLabel>
+              <Select
+                value={field.value ?? null}
+                onValueChange={(value: string | null) => value && field.onChange(value)}
+              >
+                <SelectTrigger
+                  id='userPatent'
+                  className='h-11! w-full rounded-lg bg-background'
+                  aria-invalid={!!fieldState.error}
+                  onBlur={field.onBlur}
+                >
+                  <MedalIcon className='text-muted-foreground' />
+                  <SelectValue placeholder='Selecione a patente' />
+                </SelectTrigger>
+                <SelectContent alignItemWithTrigger={false}>
+                  <SelectGroup>
+                    {PATENTES.map(patente => (
+                      <SelectItem key={patente} value={patente}>
+                        {patente}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {fieldState.error && (
+                <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+              )}
+            </Field>
+          )}
+        />
+        <Controller
+          name='password'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='w-full gap-2'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='password'>
+                Senha
+              </FieldLabel>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <LockKeyholeIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+                  id='password'
+                  type={isPasswordVisible ? 'text' : 'password'}
+                  placeholder='Digite a senha '
+                  {...field}
+                  aria-invalid={!!fieldState.error}
+                />
+                <InputGroupAddon align='inline-end' className='pr-1.5'>
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='icon'
+                    onClick={() => setIsPasswordVisible(prevState => !prevState)}
+                    className='text-muted-foreground rounded-l-none hover:bg-transparent'
+                  >
+                    {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
+                    <span className='sr-only'>{isPasswordVisible ? 'Hide password' : 'Show password'}</span>
+                  </Button>
+                </InputGroupAddon>
+              </InputGroup>
+              {fieldState.error && (
+                <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+              )}
+            </Field>
+          )}
+        />
+        <Controller
+          name='confirmPassword'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='w-full gap-2'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='confirmPassword'>
+                Confirmar Senha
+              </FieldLabel>
+              <InputGroup className='h-11 rounded-lg bg-background'>
+                <InputGroupAddon align='inline-start' className='pl-3'>
+                  <ShieldCheckIcon />
+                </InputGroupAddon>
+                <InputGroupInput
+              id='confirmPassword'
+              type={isConfirmPasswordVisible ? 'text' : 'password'}
+              placeholder='Confirme a senha '
+              {...field}
+              aria-invalid={!!fieldState.error}
             />
             <InputGroupAddon align='inline-end' className='pr-1.5'>
               <Button
                 type='button'
                 variant='ghost'
                 size='icon'
-                onClick={() => setIsPasswordVisible(prevState => !prevState)}
-                className='text-muted-foreground rounded-l-none hover:bg-transparent'
-              >
-                {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
-                <span className='sr-only'>{isPasswordVisible ? 'Hide password' : 'Show password'}</span>
-              </Button>
-            </InputGroupAddon>
-          </InputGroup>
-        </Field>
-        {/* Confirm Password */}
-        <Field className='w-full gap-2'>
-          <FieldLabel className='leading-5' htmlFor='confirmPassword'>
-            Confirm Password*
-          </FieldLabel>
-          <InputGroup>
-            <InputGroupInput
-              id='confirmPassword'
-              type={isConfirmPasswordVisible ? 'text' : 'password'}
-              placeholder='••••••••••••••••'
-            />
-            <InputGroupAddon align='inline-end' className='pr-1.5'>
-              <Button
-                variant='ghost'
-                size='icon'
                 onClick={() => setIsConfirmPasswordVisible(prevState => !prevState)}
                 className='text-muted-foreground rounded-l-none hover:bg-transparent'
               >
                 {isConfirmPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
-                <span className='sr-only'>{isConfirmPasswordVisible ? 'Hide password' : 'Show password'}</span>
+                <span className='sr-only'>{isConfirmPasswordVisible ? 'Esconder senha' : 'Mostrar senha'}</span>
               </Button>
             </InputGroupAddon>
           </InputGroup>
+          {fieldState.error && (
+            <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+          )}
         </Field>
-        {/* Privacy policy */}
-        <Field orientation='horizontal' className='flex items-center gap-2'>
-          <Checkbox id='privacyPolicy' />
-          <FieldLabel htmlFor='privacyPolicy'>
-            <span className='text-muted-foreground'>I agree to</span> <Link href='#'>privacy policy & terms</Link>
-          </FieldLabel>
-        </Field>
-        <Field>
-          <Button className='w-full' type='submit'>
-            Sign Up to Shadcn Studio
+        )}
+        />
+       <Field>
+          <Button
+            className='h-11 w-full rounded-lg text-base font-semibold shadow-lg shadow-primary/25 hover:bg-primary/90'
+            type='submit'
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
+            {form.formState.isSubmitting ? (
+              <span className='flex items-center gap-2'>
+                <Spinner className='size-4' />
+              </span>
+            ) : (
+              'Registrar'
+            )}
           </Button>
         </Field>
       </FieldGroup>

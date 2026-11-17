@@ -1,10 +1,7 @@
-// Third-party Imports
 import { FileIcon, FileSpreadsheetIcon, FileTextIcon, ImageIcon } from 'lucide-react'
 
-// Type Imports
 import type { ActivityFileType, UserActivityItem } from '@/types/apps/user-types'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -16,7 +13,6 @@ import {
   TimelineLine
 } from '@/components/ui/timeline'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const ATTACHMENT_FILE_ICONS: Record<ActivityFileType, typeof FileTextIcon> = {

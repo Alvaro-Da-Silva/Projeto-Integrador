@@ -1,29 +1,21 @@
 'use client'
 
-// React Imports
 import { useMemo } from 'react'
 
-// Third-party Imports
 import { differenceInMinutes, format, getMinutes, isPast } from 'date-fns'
 
-// Type Imports
 import type { CalendarEvent } from '@/types/apps/calendar-types'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 import {
   getBorderRadiusClasses,
-  getEventColorClasses,
+  getEventClasses,
   getMonthViewBleedClasses,
   getMonthViewEventPaddingClasses
 } from '@/utils/calendar-utils'
 
-// Using date-fns format with custom formatting:
-// 'h' - hours (1-12)
-// 'a' - am/pm
-// ':mm' - minutes with leading zero (only if the token 'mm' is present)
 const formatTimeWithOptionalMinutes = (date: Date) => {
-  return format(date, getMinutes(date) === 0 ? 'ha' : 'h:mma').toLowerCase()
+  return format(date, getMinutes(date) === 0 ? "HH'h'" : 'HH:mm')
 }
 
 interface EventWrapperProps {
@@ -36,7 +28,6 @@ interface EventWrapperProps {
   currentTime?: Date
 }
 
-// Shared wrapper component for event styling
 function EventWrapper({
   event,
   isFirstDay = true,
@@ -46,7 +37,6 @@ function EventWrapper({
   children,
   currentTime
 }: EventWrapperProps) {
-  // Always use the currentTime (if provided) to determine if the event is in the past
   const displayEnd = currentTime
     ? new Date(new Date(currentTime).getTime() + (new Date(event.end).getTime() - new Date(event.start).getTime()))
     : new Date(event.end)
@@ -56,8 +46,8 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        'focus-visible:border-ring focus-visible:ring-ring/50 flex h-full w-full text-left font-medium transition outline-none select-none focus-visible:ring-[3px] data-past-event:line-through',
-        getEventColorClasses(event.color),
+        'focus-visible:border-ring focus-visible:ring-ring/50 flex h-full w-full text-left font-medium transition outline-none select-none focus-visible:ring-[3px] data-past-event:opacity-75',
+        getEventClasses(event),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
       )}
@@ -107,20 +97,17 @@ export function EventItem({
       : new Date(event.end)
   }, [currentTime, event.start, event.end])
 
-  // Calculate event duration in minutes
   const durationMinutes = useMemo(() => {
     return differenceInMinutes(displayEnd, displayStart)
   }, [displayStart, displayEnd])
 
   const getEventTime = () => {
-    if (event.allDay) return 'All day'
+    if (event.allDay) return 'O dia todo'
 
-    // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
       return formatTimeWithOptionalMinutes(displayStart)
     }
 
-    // For longer events, show both start and end time
     return `${formatTimeWithOptionalMinutes(displayStart)} - ${formatTimeWithOptionalMinutes(displayEnd)}`
   }
 

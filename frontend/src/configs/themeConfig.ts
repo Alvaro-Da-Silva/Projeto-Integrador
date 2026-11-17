@@ -1,6 +1,6 @@
 const themeConfig = {
-  templateName: 'AdminCN',
-  homePageUrl: '/dashboard/orders'
+  templateName: 'SISCOTA',
+  homePageUrl: '/'
 } as const
 
 export default themeConfig

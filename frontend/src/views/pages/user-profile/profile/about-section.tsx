@@ -1,4 +1,3 @@
-// Third-party Imports
 import {
   CheckCheckIcon,
   CheckIcon,
@@ -13,14 +12,7 @@ import {
   UserIcon
 } from 'lucide-react'
 
-// Components Imports
 import { Card, CardContent } from '@/components/ui/card'
-
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
-
-// Type Imports
-import type { UserProfileInfoIconKey, UserProfileOverviewIconKey } from '@/types/pages/user-profile-types'
 
 type AboutItem = {
   label: string
@@ -28,46 +20,37 @@ type AboutItem = {
   icon?: LucideIcon
 }
 
-const profileIconMap: Record<UserProfileInfoIconKey, LucideIcon> = {
-  UserIcon,
-  CheckCheckIcon,
-  StarIcon,
-  FlagIcon,
-  LanguagesIcon,
-  PhoneIcon,
-  MessagesSquareIcon,
-  MailIcon
-}
+const profileSections = [
+  {
+    title: 'About',
+    items: [
+      { label: 'Full Name', value: 'John Doe', icon: UserIcon },
+      { label: 'Status', value: 'Active', icon: CheckCheckIcon },
+      { label: 'Role', value: 'Developer', icon: StarIcon },
+      { label: 'Country', value: 'USA', icon: FlagIcon },
+      { label: 'Language', value: 'English', icon: LanguagesIcon }
+    ]
+  },
+  {
+    title: 'Contacts',
+    items: [
+      { label: 'Contact', value: '(123) 456-7890', icon: PhoneIcon },
+      { label: 'Skype', value: 'john.doe', icon: MessagesSquareIcon },
+      { label: 'Email', value: 'john@example.com', icon: MailIcon }
+    ]
+  }
+]
 
-const overviewIconMap: Record<UserProfileOverviewIconKey, LucideIcon> = {
-  CheckIcon,
-  UserIcon,
-  LayoutGridIcon
-}
-
-const profileSections = db.profileSections.map(section => ({
-  title: section.title,
-  items: section.items.map<AboutItem>(item => ({
-    label: item.label,
-    value: item.value,
-    icon:
-      item.iconKey && item.iconKey in profileIconMap
-        ? profileIconMap[item.iconKey as UserProfileInfoIconKey]
-        : undefined
-  }))
-}))
-
-const overviewSections = db.overviewSections.map(section => ({
-  title: section.title,
-  items: section.items.map<AboutItem>(item => ({
-    label: item.label,
-    value: item.value,
-    icon:
-      item.iconKey && item.iconKey in overviewIconMap
-        ? overviewIconMap[item.iconKey as UserProfileOverviewIconKey]
-        : undefined
-  }))
-}))
+const overviewSections = [
+  {
+    title: 'Overview',
+    items: [
+      { label: 'Task Compiled', value: '13.5k', icon: CheckIcon },
+      { label: 'Connections', value: '897', icon: UserIcon },
+      { label: 'Projects Compiled', value: '146', icon: LayoutGridIcon }
+    ]
+  }
+]
 
 function AboutSection() {
   return (

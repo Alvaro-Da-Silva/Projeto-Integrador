@@ -1,9 +1,7 @@
 'use client'
 
-// React Imports
 import { useEffect, useMemo, useState } from 'react'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const getInitialActiveSet = (totalCells: number, activeSquares: number) => {
@@ -35,7 +33,6 @@ const BackgroundRippleEffect = ({
   const [activeSet, setActiveSet] = useState<Set<number>>(() => {
     const totalCells = rows * cols
 
-    // Keep server and client initial render deterministic to avoid hydration mismatch.
     return getInitialActiveSet(totalCells, activeSquares)
   })
 
@@ -88,7 +85,7 @@ type DivGridProps = {
   className?: string
   rows: number
   cols: number
-  cellSize: number // in pixels
+  cellSize: number
   borderColor: string
   fillColor: string
   activeSet: Set<number>

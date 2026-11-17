@@ -1,15 +1,11 @@
 'use client'
 
-// React Imports
 import { useMemo, useState } from 'react'
 
-// Third-party Imports
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react'
 
-// Type Imports
 import type { ProfileProjectDatatableProps, ProjectDatatable } from '@/types/pages/user-profile-types'
 
-// Component Imports
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -27,13 +23,10 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem } fro
 import { Progress } from '@/components/ui/progress'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-// Data Imports
-import { db } from '@/fake-db/pages/user-profile'
 
-// Hook Imports
+
 import { usePagination } from '@/hooks/use-pagination'
 
-// Util Imports
 import { cn } from '@/lib/utils'
 
 const PAGE_SIZE = 5
@@ -89,7 +82,25 @@ function ProjectTeamAvatars({ project }: { project: ProjectDatatable }) {
   )
 }
 
-const { projectDatatable } = db
+const projectDatatable: ProjectDatatable[] = [
+  {
+    id: '1',
+    name: 'Website SEO',
+    type: 'React Project',
+    leader: 'Eileen',
+    team: [{ avatar: '', initials: 'AB' }],
+    teamExtraCount: 2,
+    progress: 75
+  },
+  {
+    id: '2',
+    name: 'Dashboard UI',
+    type: 'Figma Design',
+    leader: 'Owen',
+    team: [{ avatar: '', initials: 'CD' }],
+    progress: 30
+  }
+]
 
 function ProfileProjectDatatable({ className }: ProfileProjectDatatableProps) {
   const [search, setSearch] = useState('')

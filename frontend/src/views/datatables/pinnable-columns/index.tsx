@@ -1,4 +1,3 @@
-// Component Imports
 import { Card } from '@/components/ui/card'
 import DataTablePinnableColumns, { type Product } from '@/views/datatables/pinnable-columns/pinnable-columns-datatable'
 

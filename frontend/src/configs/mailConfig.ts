@@ -1,7 +1,5 @@
-// Third-party Imports
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns'
 
-// Type Imports
 import type { EmailLabel, EmailStatus } from '@/types/apps/mail-types'
 
 export const MAIL_CURRENT_USER = {
@@ -57,11 +55,18 @@ export const MAIL_LABEL_STYLES: MailNavLabelStyle[] = [
   { id: 'promotions', label: 'Promotions', color: 'bg-pink-500' }
 ]
 
-export const getInitialsFromName = (name: string) => {
-  return name
-    .split(' ')
-    .map(namePart => namePart[0])
-    .join('')
+export const getInitialsFromName = (name: string, maxChars = 2): string => {
+  if (!name || typeof name !== 'string') return ''
+
+  const words = name.trim().split(/\s+/).filter(Boolean)
+
+  if (words.length === 0) return ''
+
+  if (words.length === 1) {
+    return words[0].slice(0, maxChars).toUpperCase()
+  }
+
+  return (words[0][0] + words[words.length - 1][0]).slice(0, maxChars).toUpperCase()
 }
 
 export const formatMailDate = (date: Date) => {

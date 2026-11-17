@@ -1,12 +1,9 @@
 'use client'
 
-// React Imports
 import { useEffect } from 'react'
 
-// Third-party Imports
 import { parseAsString, useQueryState } from 'nuqs'
 
-// Component Imports
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import ConnectionsCard from '@/views/pages/user-profile/connections'

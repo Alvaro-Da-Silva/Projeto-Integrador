@@ -1,20 +1,16 @@
 'use client'
 
-// React Imports
 import * as React from 'react'
 
-// Third-party Imports
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-// Component Imports
 import { Input } from '@/components/ui/input'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-// Schema for validation mode demo
 const modeSchema = z.object({
   onChange: z.string().min(5, 'Must be at least 5 characters').max(20, 'Must be at most 20 characters'),
   onBlur: z.string().min(5, 'Must be at least 5 characters').max(20, 'Must be at most 20 characters'),
@@ -25,7 +21,6 @@ const modeSchema = z.object({
 type ModeFormValues = z.infer<typeof modeSchema>
 
 const ValidationModesDemo = () => {
-  // Form with onChange mode
   const onChangeForm = useForm<Pick<ModeFormValues, 'onChange'>>({
     resolver: zodResolver(z.object({ onChange: modeSchema.shape.onChange })),
     mode: 'onChange',
@@ -34,7 +29,6 @@ const ValidationModesDemo = () => {
     }
   })
 
-  // Form with onBlur mode
   const onBlurForm = useForm<Pick<ModeFormValues, 'onBlur'>>({
     resolver: zodResolver(z.object({ onBlur: modeSchema.shape.onBlur })),
     mode: 'onBlur',
@@ -43,7 +37,6 @@ const ValidationModesDemo = () => {
     }
   })
 
-  // Form with onSubmit mode
   const onSubmitForm = useForm<Pick<ModeFormValues, 'onSubmit'>>({
     resolver: zodResolver(z.object({ onSubmit: modeSchema.shape.onSubmit })),
     mode: 'onSubmit',
@@ -52,7 +45,6 @@ const ValidationModesDemo = () => {
     }
   })
 
-  // Form with onTouched mode
   const onTouchedForm = useForm<Pick<ModeFormValues, 'onTouched'>>({
     resolver: zodResolver(z.object({ onTouched: modeSchema.shape.onTouched })),
     mode: 'onTouched',
@@ -72,7 +64,6 @@ const ValidationModesDemo = () => {
       </div>
 
       <div className='grid gap-6 md:grid-cols-2 xl:grid-cols-4'>
-        {/* onChange Mode */}
         <Card>
           <CardHeader>
             <CardTitle className='text-lg font-semibold'>onChange Mode</CardTitle>
@@ -112,7 +103,6 @@ const ValidationModesDemo = () => {
           </CardContent>
         </Card>
 
-        {/* onBlur Mode */}
         <Card>
           <CardHeader>
             <CardTitle className='text-lg font-semibold'>onBlur Mode</CardTitle>
@@ -152,7 +142,6 @@ const ValidationModesDemo = () => {
           </CardContent>
         </Card>
 
-        {/* onSubmit Mode */}
         <Card>
           <CardHeader>
             <CardTitle className='text-lg font-semibold'>onSubmit Mode (Default)</CardTitle>
@@ -192,7 +181,6 @@ const ValidationModesDemo = () => {
           </CardContent>
         </Card>
 
-        {/* onTouched Mode */}
         <Card>
           <CardHeader>
             <CardTitle className='text-lg font-semibold'>onTouched Mode</CardTitle>
@@ -233,7 +221,6 @@ const ValidationModesDemo = () => {
         </Card>
       </div>
 
-      {/* Comparison Table */}
       <div className='overflow-hidden rounded-lg border'>
         <table className='w-full text-sm'>
           <thead className='bg-muted'>

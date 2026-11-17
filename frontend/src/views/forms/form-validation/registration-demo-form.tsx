@@ -18,7 +18,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-// Define the form schema
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters.'),
   phone: z
@@ -134,7 +133,6 @@ const ContactUSFormDemo = () => {
             )}
           />
 
-          {/* Email Field */}
           <Controller
             name='email'
             control={form.control}
@@ -166,7 +164,6 @@ const ContactUSFormDemo = () => {
             )}
           />
 
-          {/* Issue Select Field */}
           <Controller
             name='issue'
             control={form.control}
@@ -233,7 +230,6 @@ const ContactUSFormDemo = () => {
             )}
           />
 
-          {/* Radio Group Field */}
           <Controller
             name='selectedOption'
             control={form.control}
@@ -265,7 +261,6 @@ const ContactUSFormDemo = () => {
             )}
           />
 
-          {/* Message Textarea Field */}
           <Controller
             name='message'
             control={form.control}

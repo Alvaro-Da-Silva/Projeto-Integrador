@@ -1,5 +1,3 @@
-// Remove this file when the nav-apps API is removed. Until then, this file is used to fetch the nav-apps from the backend and validate them.
-
 const NAV_APPS_API_URL = '/api/nav-apps'
 
 export type NavApp = {

@@ -1,15 +1,11 @@
 'use client'
 
-// React Imports
 import { useState } from 'react'
 
-// Third-party Imports
 import { MailIcon, MonitorIcon, SmartphoneIcon } from 'lucide-react'
 
-// Type Imports
 import type { AppUser, UserNotificationSetting } from '@/types/apps/user-types'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'

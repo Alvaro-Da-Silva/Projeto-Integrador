@@ -1,26 +1,23 @@
 'use client'
 
-// React Imports
 import { useEffect } from 'react'
 
-// Third-party Imports
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-// Type Imports
 import type { AppUser, UserFormData, UserPlan, UserRole, UserSheetMode, UserStatus } from '@/types/apps/user-types'
 
-// Component Imports
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { PATENTES } from '@/lib/patentes'
 
-const ROLES: UserRole[] = ['Admin', 'Editor', 'Subscriber', 'Maintainer', 'Guest']
+const ROLES: UserRole[] = ['admin', 'user']
 const PLANS: UserPlan[] = ['Basic', 'Team', 'Enterprise']
-const STATUSES: UserStatus[] = ['Active', 'Pending', 'Suspended', 'Inactive']
+const STATUSES: UserStatus[] = ['Ativo', 'Suspenso', 'Inativo']
 
 const COUNTRIES = [
   'United States',
@@ -46,9 +43,10 @@ const userFormSchema = z.object({
   contact: z.string().optional(),
   company: z.string().optional(),
   country: z.string().optional(),
-  role: z.enum(['Admin', 'Editor', 'Subscriber', 'Maintainer', 'Guest']),
+  patent: z.string().optional(),
+  role: z.enum(['admin', 'user']),
   plan: z.enum(['Basic', 'Team', 'Enterprise']),
-  status: z.enum(['Active', 'Pending', 'Suspended', 'Inactive'])
+  status: z.enum(['Ativo', 'Suspenso', 'Inativo'])
 })
 
 type UserFormValues = z.infer<typeof userFormSchema>
@@ -59,9 +57,10 @@ const defaultValues: UserFormValues = {
   contact: '',
   company: '',
   country: '',
-  role: 'Subscriber',
+  patent: '',
+  role: 'user',
   plan: 'Basic',
-  status: 'Active'
+  status: 'Ativo'
 }
 
 export interface AddEditUserSheetProps {
@@ -86,6 +85,7 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
         contact: user.contact ?? '',
         company: user.company ?? '',
         country: user.country ?? '',
+        patent: user.patent ?? '',
         role: user.role,
         plan: user.plan,
         status: user.status
@@ -106,6 +106,7 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
       contact: values.contact || undefined,
       company: values.company || undefined,
       country: values.country || undefined,
+      patent: values.patent || undefined,
       role: values.role,
       plan: values.plan,
       status: values.status
@@ -124,7 +125,7 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
     <Sheet open={mode !== null} onOpenChange={open => !open && onClose()}>
       <SheetContent side='right' className='w-full overflow-y-auto sm:max-w-[420px]'>
         <SheetHeader className='pb-0'>
-          <SheetTitle className='text-lg font-medium'>{mode === 'edit' ? 'Edit User' : 'Add New User'}</SheetTitle>
+          <SheetTitle className='text-lg font-medium'>{mode === 'edit' ? 'Editar Usuário' : 'Adicionar Usuário'}</SheetTitle>
         </SheetHeader>
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className='flex flex-col gap-4 px-4 pb-4'>
@@ -172,6 +173,31 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
                     placeholder='+1 (555) 000-0000'
                     aria-invalid={fieldState.invalid}
                   />
+                  {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : null}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name='patent'
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className='gap-2'>
+                  <FieldLabel htmlFor={field.name}>Patente</FieldLabel>
+                  <Select value={field.value || null} onValueChange={(value: string | null) => field.onChange(value ?? '')}>
+                    <SelectTrigger id={field.name} className='w-full' aria-invalid={fieldState.invalid}>
+                      <SelectValue placeholder='Selecione a patente' />
+                    </SelectTrigger>
+                    <SelectContent alignItemWithTrigger={false}>
+                      <SelectGroup>
+                        {PATENTES.map(patente => (
+                          <SelectItem key={patente} value={patente}>
+                            {patente}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : null}
                 </Field>
               )}
@@ -292,10 +318,10 @@ export function AddEditUserSheet({ mode, user, onClose, onAdd, onEdit }: AddEdit
 
           <SheetFooter className='px-0 sm:flex-row'>
             <Button type='submit' variant='outline' onClick={onClose} className='sm:flex-1'>
-              Cancel
+              Cancelar
             </Button>
             <Button type='submit' className='sm:flex-1'>
-              Save Changes
+              Salvar Alterações
             </Button>
           </SheetFooter>
         </form>

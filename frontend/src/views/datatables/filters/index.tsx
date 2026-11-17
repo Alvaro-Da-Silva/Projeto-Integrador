@@ -1,4 +1,3 @@
-// Component Imports
 import { Card } from '@/components/ui/card'
 import DataTableFilters, { type Item } from '@/views/datatables/filters/filters-datatable'
 
