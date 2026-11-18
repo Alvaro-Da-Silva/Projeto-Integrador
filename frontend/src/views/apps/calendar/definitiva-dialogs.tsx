@@ -60,7 +60,8 @@ export const ordenarPlantoes = (plantoes: PlantaoDefinitivo[]) =>
 const SITUACAO: Record<SituacaoPlantao, { label: string; variant: 'default' | 'secondary' | 'destructive' }> = {
   preenchido: { label: 'Preenchido', variant: 'default' },
   parcial: { label: 'Parcial', variant: 'secondary' },
-  nao_preenchido: { label: 'Não preenchido', variant: 'destructive' }
+  nao_preenchido: { label: 'Não preenchido', variant: 'destructive' },
+  opcional: { label: 'Opcional', variant: 'secondary' }
 }
 
 function Stat({ label, value, destaque }: { label: string; value: ReactNode; destaque?: boolean }) {
@@ -400,7 +401,7 @@ export function DefinitivaDiaDialog({
         <div className='flex flex-col gap-3'>
           {doDia.map(plantao => {
             const situacao = SITUACAO[plantao.situacao]
-            const completo = plantao.atribuicoes.length >= plantao.quantidadeNecessaria
+            const completo = plantao.situacao !== 'opcional' && plantao.atribuicoes.length >= plantao.vagas
             const adicionando = acao?.tipo === 'adicionar' && acao.plantaoId === plantao.id
             const removendo = acao?.tipo === 'remover' && acao.plantaoId === plantao.id ? acao : null
             const opcoes = adicionando ? opcoesCotistas(plantao) : []
@@ -416,7 +417,9 @@ export function DefinitivaDiaDialog({
                     <span className='text-muted-foreground text-xs'>{horarioTurno(plantao.codigoPeriodo)}</span>
                   </div>
                   <Badge variant={situacao.variant}>
-                    {situacao.label} · {plantao.atribuicoes.length}/{plantao.quantidadeNecessaria}
+                    {plantao.situacao === 'opcional'
+                      ? situacao.label
+                      : `${situacao.label} · ${plantao.atribuicoes.length}/${plantao.vagas}`}
                   </Badge>
                   {editavel && !adicionando && (
                     <Button

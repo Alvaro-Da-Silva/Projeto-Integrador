@@ -1,7 +1,8 @@
 import { pool } from '../config/database.js';
 import { transaction } from '../config/transaction.js';
 import * as repo from '../repositories/definitivaRepository.js';
-import { conflitaHorario, distribuir } from './distributionEngine.js';
+import { conflitaHorario, distribuir, limitesDoDia, motivoSemVaga, totalVagas as contarVagas,
+  vagasEfetivas } from './distributionEngine.js';
 import { HttpError } from './workflowValidation.js';
 
 async function scaleOr404(db, id, lock = false) {
@@ -31,8 +32,8 @@ async function loadInputs(db, scale) {
 function runEngine({ plantoes, disponibilidades, atribuicoes }) {
   const fixas = atribuicoes.filter(a => a.origem === 'manual');
   const resultado = distribuir({ plantoes, disponibilidades, fixas });
-  const totalVagas = plantoes.reduce((soma, p) => soma + p.quantidadeNecessaria, 0);
-  const preenchidas = fixas.length + resultado.atribuicoes.length;
+  const totalVagas = contarVagas(plantoes);
+  const preenchidas = Math.min(totalVagas, fixas.length + resultado.atribuicoes.length);
   return {
     ...resultado,
     resumo: {
@@ -108,9 +109,25 @@ export async function confirmDistribution(scaleId, usuarioId) {
   return { simulacao: false, escala: scale, avisos: [], ...(await describe(resultado, plantoes)) };
 }
 
-function situacao(quantidade, atribuidos) {
+function situacao(vagas, atribuidos) {
+  if (!vagas && !atribuidos) return 'opcional';
   if (!atribuidos) return 'nao_preenchido';
-  return atribuidos >= quantidade ? 'preenchido' : 'parcial';
+  return atribuidos >= vagas ? 'preenchido' : 'parcial';
+}
+
+function vagasPorPlantao(plantoes, porPlantao) {
+  const porDia = new Map();
+  for (const p of plantoes) {
+    const dia = String(p.diaId);
+    if (!porDia.has(dia)) porDia.set(dia, []);
+    porDia.get(dia).push(p);
+  }
+  const vagas = new Map();
+  for (const plantoesDia of porDia.values()) {
+    const ocupacao = new Map(plantoesDia.map(p => [p.codigo, (porPlantao.get(String(p.id)) ?? []).length]));
+    for (const [id, qtd] of vagasEfetivas(plantoesDia, ocupacao)) vagas.set(id, qtd);
+  }
+  return vagas;
 }
 
 export async function getDefinitiveScale(scaleId, user) {
@@ -134,15 +151,17 @@ export async function getDefinitiveScale(scaleId, user) {
       ...(admin ? { observacao: a.observacao, atribuidaEm: a.atribuidaEm } : {}) });
   }
 
+  const vagas = vagasPorPlantao(plantoes.rows, porPlantao);
   const lista = plantoes.rows.map(p => {
     const atribuidos = porPlantao.get(String(p.id)) ?? [];
+    const vagasPlantao = vagas.get(String(p.id)) ?? p.quantidadeNecessaria;
     return { id: p.id, diaId: p.diaId, data: p.data, codigoPeriodo: p.codigo,
-      quantidadeNecessaria: p.quantidadeNecessaria, situacao: situacao(p.quantidadeNecessaria, atribuidos.length),
-      atribuicoes: atribuidos };
+      quantidadeNecessaria: p.quantidadeNecessaria, vagas: vagasPlantao,
+      situacao: situacao(vagasPlantao, atribuidos.length), atribuicoes: atribuidos };
   });
 
-  const totalVagas = lista.reduce((s, p) => s + p.quantidadeNecessaria, 0);
-  const preenchidas = lista.reduce((s, p) => s + Math.min(p.atribuicoes.length, p.quantidadeNecessaria), 0);
+  const totalVagas = lista.reduce((s, p) => s + p.vagas, 0);
+  const preenchidas = lista.reduce((s, p) => s + Math.min(p.atribuicoes.length, p.vagas), 0);
   return {
     ...base,
     plantoes: lista,
@@ -195,9 +214,12 @@ export async function assignManually(scaleId, { plantaoId, cotistaId, substituir
     if (doPlantao.some(a => String(a.cotistaId) === String(cotistaId))) {
       throw new HttpError(409, 'Este cotista já está atribuído a este plantão.');
     }
-    if (doPlantao.length >= plantao.quantidadeNecessaria) {
-      throw new HttpError(409, 'O plantão já está completo. Substitua um cotista ou remova uma atribuição.');
-    }
+    const plantoesDia = (await repo.findShiftsByScale(client, scale.id)).rows
+      .filter(p => String(p.diaId) === String(plantao.diaId));
+    const ocupacao = new Map(plantoesDia.map(p => [p.codigo,
+      atuais.filter(a => String(a.plantaoId) === String(p.id)).length]));
+    const semVaga = motivoSemVaga(limitesDoDia(plantoesDia), ocupacao, plantao.codigo);
+    if (semVaga) throw new HttpError(409, semVaga);
 
     const doCotista = atuais.filter(a => String(a.cotistaId) === String(cotistaId));
     const conflito = doCotista.find(a => conflitaHorario(a, plantao));

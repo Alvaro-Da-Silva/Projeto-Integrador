@@ -89,7 +89,7 @@ export interface Cotista {
 
 export type CodigoPlantaoDefinitivo = 'D' | 'N1' | 'N2'
 
-export type SituacaoPlantao = 'preenchido' | 'parcial' | 'nao_preenchido'
+export type SituacaoPlantao = 'preenchido' | 'parcial' | 'nao_preenchido' | 'opcional'
 
 export interface EscalaDefinitivaInfo extends Escala {
   publicadaEm: string | null
@@ -110,6 +110,7 @@ export interface PlantaoDefinitivo {
   data: string
   codigoPeriodo: CodigoPlantaoDefinitivo
   quantidadeNecessaria: number
+  vagas: number
   situacao: SituacaoPlantao
   atribuicoes: AtribuicaoDefinitiva[]
 }

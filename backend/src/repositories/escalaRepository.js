@@ -17,13 +17,19 @@ export function insertAllDays(client,scaleId,start,end) {
       ON CONFLICT (escala_id,data) DO NOTHING`,[scaleId,start,end]);
 }
 
-export function insertAllShifts(client,scaleId,dayQuantity,nightQuantity) {
+export function insertAllShifts(client,scaleId,dayQuantity,nightQuantity,n2Quantity) {
   return client.query(`INSERT INTO plantao (dia_id,periodo_id,quantidade_necessaria)
       SELECT d.id,p.id,q.qtd FROM dia d
-      CROSS JOIN (VALUES ('D',$2::int),('N1',$3::int),('N2',$3::int)) AS q(codigo,qtd)
+      CROSS JOIN (VALUES ('D',$2::int),('N1',$3::int),('N2',$4::int)) AS q(codigo,qtd)
       JOIN periodo p ON p.codigo=q.codigo AND p.status='ativo'
       WHERE d.escala_id=$1
-      ON CONFLICT (dia_id,periodo_id) DO NOTHING`,[scaleId,dayQuantity,nightQuantity]);
+      ON CONFLICT (dia_id,periodo_id) DO NOTHING`,[scaleId,dayQuantity,nightQuantity,n2Quantity]);
+}
+
+export function findDayShiftQuantities(client,dayId) {
+  return client.query(`SELECT r.codigo,p.quantidade_necessaria AS "quantidadeNecessaria"
+      FROM plantao p JOIN periodo r ON r.id=p.periodo_id
+      WHERE p.dia_id=$1 AND r.codigo IN ('D','N1','N2') AND p.quantidade_necessaria>0`,[dayId]);
 }
 
 export function updateScaleStatus(client,id,status) {
