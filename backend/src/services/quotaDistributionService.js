@@ -1,10 +1,19 @@
+import { MAX_COTAS_POR_DIA, MAX_N2_POR_DIA } from './distributionEngine.js';
+
 const HOURS_PER_QUOTA = 12;
+
+const NIGHT_RULE = {
+  nightPeriodAllocation: 'compartilhada',
+  maxN2PerDay: MAX_N2_POR_DIA,
+  maxQuotasPerDay: MAX_COTAS_POR_DIA,
+  allowedNightCombinations: ['N1+N1', 'N1+N2']
+};
 
 export function getDailyQuotaDistribution(totalQuotas) {
   const base = {
     totalQuotas,
     hoursPerQuota: HOURS_PER_QUOTA,
-    nightPeriodAllocation: 'pending'
+    ...NIGHT_RULE
   };
 
   if (totalQuotas === 4) {

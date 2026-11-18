@@ -79,7 +79,7 @@ try {
       const distribution=body.distribuicaoDiariaPadrao;
       const supported=[3,4].includes(expected.cotas);
       if (distribution.totalQuotas!==expected.cotas || distribution.hoursPerQuota!==12
-          || distribution.nightPeriodAllocation!=='pending' || distribution.supported!==supported
+          || distribution.nightPeriodAllocation!=='compartilhada' || distribution.supported!==supported
           || distribution.diurnalQuotas!==(expected.cotas===4 ? 2 : expected.cotas===3 ? 1 : null)
           || distribution.nightQuotas!==(supported ? 2 : null)) {
         report.falhas.push({escala:row.id,motivo:'Distribuicao HTTP diverge das regras implementadas'});

@@ -119,9 +119,9 @@ export function AdminDefinitivaCalendar() {
   const events = useMemo(() => {
     if (!definitiva || !temDistribuicao) return []
 
-    return definitiva.plantoes.map(p => {
+    return definitiva.plantoes.filter(p => p.situacao !== 'opcional').map(p => {
       const nomes = p.atribuicoes.map(a => a.cotistaNome.split(' ')[0]).join(', ')
-      const contagem = `${p.atribuicoes.length}/${p.quantidadeNecessaria}`
+      const contagem = `${p.atribuicoes.length}/${p.vagas}`
 
       return turnoToEvent(p.id, p.data, p.codigoPeriodo, `${p.codigoPeriodo} ${contagem}${nomes ? ` · ${nomes}` : ''}`)
     })

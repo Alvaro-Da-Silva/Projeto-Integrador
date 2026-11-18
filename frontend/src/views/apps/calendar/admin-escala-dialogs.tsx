@@ -45,11 +45,22 @@ const capitalize = (str: string) => (str ? str.charAt(0).toUpperCase() + str.sli
 const corTurno = (codigo: string) => TURNOS.find(t => t.id === codigo)?.cor ?? 'bg-muted'
 const horarioTurno = (codigo: string) => TURNOS.find(t => t.id === codigo)?.horario ?? ''
 
+const MAX_COTAS_POR_DIA = 4
+const MAX_N2_POR_DIA = 1
+
 function distribuicaoPadrao(cotas: number) {
   if (cotas === 4) return { dia: 2, noite: 2 }
   if (cotas === 3) return { dia: 1, noite: 2 }
 
   return { dia: cotas, noite: cotas }
+}
+
+const quantidadePadrao = (codigo: CodigoPlantao, cotas: number) => {
+  const { dia, noite } = distribuicaoPadrao(cotas || 1)
+
+  if (codigo === 'D') return dia
+
+  return codigo === 'N2' ? Math.min(noite, MAX_N2_POR_DIA) : noite
 }
 
 export function plantoesPorCodigo(calendario: CalendarioMensal | null) {
@@ -88,7 +99,12 @@ export function NovaEscalaDialog({ open, onOpenChange, ano, mes, onCreated }: No
   const [isSaving, setIsSaving] = useState(false)
 
   const quantidadeNum = Number(quantidade)
-  const valido = nome.trim().length > 0 && nome.trim().length <= 100 && Number.isInteger(quantidadeNum) && quantidadeNum > 0
+  const valido =
+    nome.trim().length > 0 &&
+    nome.trim().length <= 100 &&
+    Number.isInteger(quantidadeNum) &&
+    quantidadeNum > 0 &&
+    quantidadeNum <= MAX_COTAS_POR_DIA
   const distribuicao = valido ? distribuicaoPadrao(quantidadeNum) : null
 
   const handleSubmit = async (event: FormEvent) => {
@@ -145,11 +161,13 @@ export function NovaEscalaDialog({ open, onOpenChange, ano, mes, onCreated }: No
               type='number'
               inputMode='numeric'
               min={1}
+              max={MAX_COTAS_POR_DIA}
               step={1}
               value={quantidade}
               onChange={e => setQuantidade(e.target.value)}
               required
             />
+            <span className='text-muted-foreground text-xs'>Máximo de {MAX_COTAS_POR_DIA} cotas por dia.</span>
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -163,7 +181,7 @@ export function NovaEscalaDialog({ open, onOpenChange, ano, mes, onCreated }: No
               <span className='font-medium'>Liberar todos os dias do mês</span>
               <span className='text-muted-foreground text-xs'>
                 {distribuicao
-                  ? `Cria D, N1 e N2 em todos os dias — D com ${distribuicao.dia} e cada noturno com ${distribuicao.noite} cotista(s).`
+                  ? `Cria D, N1 e N2 em todos os dias — D com ${distribuicao.dia} e ${distribuicao.noite} vaga(s) na noite, divididas entre N1 e N2 (no máximo ${MAX_N2_POR_DIA} no N2).`
                   : 'Cria D, N1 e N2 em todos os dias.'}{' '}
                 Os cotistas já podem escolher assim que a escala for criada.
               </span>
@@ -200,7 +218,7 @@ export function LiberarDiasDialog({ open, onOpenChange, calendario, onDone }: Li
 
   const [selecionados, setSelecionados] = useState<Set<string>>(new Set())
   const [codigos, setCodigos] = useState<Set<CodigoPlantao>>(new Set(CODIGOS))
-  const [quantidade, setQuantidade] = useState(String(escala.quantidadeCotasPadrao || 1))
+  const [quantidade, setQuantidade] = useState(String(quantidadePadrao('N1', escala.quantidadeCotasPadrao)))
   const [isSaving, setIsSaving] = useState(false)
 
   const selecionar = (filtro: (dia: Date) => boolean) => setSelecionados(new Set(dias.filter(filtro).map(toDateKey)))
@@ -354,6 +372,10 @@ export function LiberarDiasDialog({ open, onOpenChange, calendario, onDone }: Li
             value={quantidade}
             onChange={e => setQuantidade(e.target.value)}
           />
+          <p className='text-muted-foreground text-xs'>
+            N1 e N2 dividem as vagas da noite: N1+N1 ou N1+N2. O N2 recebe no máximo {MAX_N2_POR_DIA} cotista por dia, e o
+            dia não pode passar de {MAX_COTAS_POR_DIA} cotas.
+          </p>
         </div>
 
         <DialogFooter>
@@ -385,7 +407,9 @@ export function DiaAdminDialog({ open, onOpenChange, calendario, data, cotas, no
   const plantoes = useMemo(() => (data ? plantoesPorCodigo(calendario).get(data) : undefined), [calendario, data])
 
   const [quantidades, setQuantidades] = useState<Record<string, string>>(() =>
-    Object.fromEntries(CODIGOS.map(c => [c, String(plantoes?.get(c)?.quantidade ?? (escala.quantidadeCotasPadrao || 1))]))
+    Object.fromEntries(
+      CODIGOS.map(c => [c, String(plantoes?.get(c)?.quantidade ?? quantidadePadrao(c, escala.quantidadeCotasPadrao))])
+    )
   )
 
   const [salvando, setSalvando] = useState<string | null>(null)
@@ -425,7 +449,8 @@ export function DiaAdminDialog({ open, onOpenChange, calendario, data, cotas, no
           {CODIGOS.map(codigo => {
             const plantao = plantoes?.get(codigo)
             const quantidade = Number(quantidades[codigo])
-            const quantidadeValida = Number.isInteger(quantidade) && quantidade > 0
+            const maximo = codigo === 'N2' ? MAX_N2_POR_DIA : MAX_COTAS_POR_DIA
+            const quantidadeValida = Number.isInteger(quantidade) && quantidade > 0 && quantidade <= maximo
             const ocupado = salvando !== null
 
             return (
@@ -449,6 +474,7 @@ export function DiaAdminDialog({ open, onOpenChange, calendario, data, cotas, no
                       type='number'
                       inputMode='numeric'
                       min={1}
+                      max={maximo}
                       step={1}
                       aria-label={`Quantidade do plantão ${codigo}`}
                       className='h-8 w-16'
