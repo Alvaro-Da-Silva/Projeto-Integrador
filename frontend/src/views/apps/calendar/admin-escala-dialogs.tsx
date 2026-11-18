@@ -99,12 +99,14 @@ export function NovaEscalaDialog({ open, onOpenChange, ano, mes, onCreated }: No
   const [isSaving, setIsSaving] = useState(false)
 
   const quantidadeNum = Number(quantidade)
+
   const valido =
     nome.trim().length > 0 &&
     nome.trim().length <= 100 &&
     Number.isInteger(quantidadeNum) &&
     quantidadeNum > 0 &&
     quantidadeNum <= MAX_COTAS_POR_DIA
+
   const distribuicao = valido ? distribuicaoPadrao(quantidadeNum) : null
 
   const handleSubmit = async (event: FormEvent) => {
