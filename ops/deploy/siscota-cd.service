@@ -1,0 +1,9 @@
+[Unit]
+Description=Atualização controlada do SISCOTA
+ConditionPathExists=/etc/siscota-cd/enabled
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/local/lib/siscota-cd/poll.sh
+TimeoutStartSec=55min
+UMask=0077

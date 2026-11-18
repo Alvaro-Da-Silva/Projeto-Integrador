@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/schemas/login";
 
 import { authClient } from "@/lib/auth-client";
+import { appBasePath } from "@/lib/app-paths";
 
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -35,7 +36,7 @@ const ForgotPasswordForm = () => {
 
       const { data, error } = await authClient.requestPasswordReset({
         email: values.email,
-        redirectTo: `${process.env.NEXT_PUBLIC_BASEPATH}/reset_password`
+        redirectTo: new URL(`${appBasePath}/reset_password`, window.location.origin).href
       },{
         onSuccess: () => {
           toast.success("Email de redefinição enviado com sucesso!")

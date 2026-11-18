@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 
 import type { Metadata } from 'next'
-import { Roboto, Roboto_Mono } from 'next/font/google'
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
@@ -12,19 +11,10 @@ import { Toaster } from '@/components/ui/sonner'
 
 import { cn } from '@/lib/utils'
 
+import './fonts/roboto.css'
 import './globals.css'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 
-
-const roboto = Roboto({
-  variable: '--font-roboto',
-  subsets: ['latin']
-})
-
-const robotoMono = Roboto_Mono({
-  variable: '--font-roboto-mono',
-  subsets: ['latin']
-})
 
 export const metadata: Metadata = {
   title: 'SISCOTA',
@@ -34,7 +24,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html
       lang='en'
-      className={cn(roboto.variable, robotoMono.variable, 'flex min-h-full w-full antialiased')}
+      className={cn('flex min-h-full w-full antialiased')}
       data-scroll-behavior='smooth'
       suppressHydrationWarning
     >

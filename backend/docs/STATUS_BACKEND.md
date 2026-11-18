@@ -18,7 +18,7 @@ BETTER_AUTH_URL/BETTER_AUTH_SECRET/SISCOTA_TRUSTED_ORIGINS ausentes no ambiente 
 
 **Verificações desta etapa:** SQL real somente leitura, schema/índices/contagens, constraints validadas, vínculos/status e permissões/configuração transacional. Nenhum teste HTTP, login/logout ou escrita real. Os 81 testes simulados/em memória são da etapa anterior. Login real BLOQUEADO por permissões, configuração privada e identidade aprovada/vinculada; não declarar autenticação funcional.
 
-Atualizados os quatro documentos solicitados; criados script de privilégios preparado e [evidência sem dados pessoais](evidence/better-auth-postgres-activation-audit.json). Próxima etapa: disponibilizar conexão administrativa autorizada ou responsável executar o script revisado, conferir read-write/permissões em conexões novas, configurar ambiente privado e confirmar a identidade antes de provisionamento/testes. Não executar 004/005 novamente. Escalas, disponibilidades, participações, cotistas históricos e sessões preexistentes intocados.
+Atualizados os quatro documentos solicitados; criados script de privilégios preparado e evidência administrativa. Próxima etapa: disponibilizar conexão administrativa autorizada ou responsável executar o script revisado, conferir read-write/permissões em conexões novas, configurar ambiente privado e confirmar a identidade antes de provisionamento/testes. Não executar 004/005 novamente. Escalas, disponibilidades, participações, cotistas históricos e sessões preexistentes intocados.
 
 # Histórico — Better Auth oficial no Express
 
@@ -173,7 +173,7 @@ Contas TESTE persistentes: usuario 1/admin e usuario 2/cotista, este vinculado a
 
 É necessário **reiniciar o processo Node** para carregar as novas rotas. Os testes do fluxo usaram processos/instâncias Express novos e PostgreSQL real; o servidor que já estava aberto em 8080 não foi encerrado por Codex. Os plantões antigos TESTE_D/TESTE_N não foram convertidos automaticamente: para preencher um dia com os novos códigos, o administrador deve liberá-lo pela API. A gravação de escolha não cria participação nem consome vaga.
 
-Contrato atualizado: [API_FRONTEND.md](API_FRONTEND.md). Nova coleção: [siscota-workflow.postman_collection.json](../thunder-client/siscota-workflow.postman_collection.json), com [ambiente sem senhas/tokens preenchidos](../thunder-client/siscota-workflow.postman_environment.json). Dados de setup e smoke sem segredos: [workflow-setup.json](evidence/workflow-setup.json), [workflow-smoke.json](evidence/workflow-smoke.json).
+Contrato atualizado: [API_FRONTEND.md](API_FRONTEND.md). Nova coleção: [siscota-workflow.postman_collection.json](../thunder-client/siscota-workflow.postman_collection.json), com [ambiente sem senhas/tokens preenchidos](../thunder-client/siscota-workflow.postman_environment.json). Os registros dessa execução ficam fora do pacote de publicação.
 
 ## Remoção de CPF — decisão do cliente (05/11/2026)
 
@@ -194,7 +194,7 @@ Inventário das referências encontradas na auditoria inicial:
 | Scripts de desenvolvimento | scripts/seed-development.js (geração/INSERT), seed-demo.js (INSERT), diagnose-development.js (probe), demo-plan.json (quatro valores) — removidos |
 | Teste/fixture | test/support/fixtures.js, test/development/workflow-postgres.test.js (INSERTs), test/integration/backend.test.js (duplicidade) — adaptados, sem execução |
 | Documentação | docs/API_FRONTEND.md e STATUS_BACKEND.md (contrato/carga); test/SIMULACAO.md (plano/colisão); test/RELATORIO.md (fixture/constraint) — atualizados |
-| Histórico | docs/evidence/environment.json: SQL antigo, coluna e constraints cotista_cpf_key/cotista_cpf_not_null — evidência histórica preservada, não é configuração nem contrato atual |
+| Histórico | Diagnóstico histórico: SQL antigo, coluna e constraints cotista_cpf_key/cotista_cpf_not_null |
 | Frontend | Nenhuma referência textual a CPF encontrada nas fontes pesquisadas; nenhum arquivo alterado |
 
 Referências restantes intencionais: esta decisão e notas históricas; migração de remoção; identificação da migração no DDL alvo; evidência antiga environment.json. Nenhum uso ativo do campo deve permanecer no código executável pesquisado. Não foi inspecionado histórico Git, arquivos privados ou dependências geradas.
@@ -261,7 +261,7 @@ Cotistas históricos: TESTE Cotista 01 a 04; cotista 5 vinculado ao usuario 2. A
 
 Autenticação antes/depois: user=1, account=1, session=10, verification=0, jwks=1; contagens inalteradas. Os scripts desta tarefa não executam escrita nessas tabelas.
 
-Evidências: [permissões/probes](evidence/environment.json), [primeira carga persistida e todos os IDs](evidence/seed-persisted.json), [repetição sem duplicidade](evidence/seed.json), [persistência e total por dia](evidence/persistence.json).
+Os registros dessa execução ficam fora do pacote de publicação.
 
 ## 3. Testes
 
@@ -284,7 +284,7 @@ Verificações reais aprovadas: banco correto; 404 para período confirmado ause
 
 Além da suíte, **12 GETs da coleção foram efetivamente executados e aprovados**, incluindo novembro/2026 com 200. Não somar essas requisições à contagem de casos da suíte. Não foi induzida indisponibilidade do PostgreSQL para provocar 500; esse tratamento permanece coberto com banco simulado.
 
-Evidências: [log da suíte](evidence/test-run.txt), [requisições/status/corpos reais](evidence/http.json), [calendário JSON completo](evidence/calendar-november.json).
+Os registros dessa execução ficam fora do pacote de publicação.
 
 ## 4. Endpoints disponíveis
 
