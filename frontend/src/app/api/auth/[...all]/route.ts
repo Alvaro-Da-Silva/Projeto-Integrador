@@ -9,6 +9,8 @@ async function handle(request: Request) {
 
   const segments = path.split("/").filter(Boolean);
 
+  // Criar/editar/suspender contas é feito pelo backend (/api/usuarios), que mantém a identidade
+  // Better Auth e o usuário SISCOTA sincronizados. Aqui só a listagem do plugin admin é liberada.
   if (segments.includes("admin")) {
     if (request.method !== "GET" || segments.at(-1) !== "list-users") {
       return Response.json({ error: "Alterações de identidade exigem provisionamento supervisionado." }, { status: 403 });

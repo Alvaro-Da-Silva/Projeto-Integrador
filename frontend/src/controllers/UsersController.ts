@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth-client";
+import { api, toApiError } from "@/controllers/CotasController";
 import type { AppUser, UserBilling, UserFilters, UserPlan, UserRole, UserSorting, UserStatus } from "@/types/apps/user-types";
 
 export type User = {
@@ -104,24 +105,31 @@ export async function getUsers(
     return { users, total: data?.total ?? 0 }
 }
 
+// Alterações de identidade passam pelo backend, que grava a conta Better Auth e o usuário
+// SISCOTA (perfil/cotista) na mesma transação. O /api/auth/admin do Next só permite listar.
+
+function contaPath(userId: string, sufixo = ''): string {
+    return `/api/usuarios/conta/${encodeURIComponent(userId)}${sufixo}`
+}
+
 export async function banUser(userId: string): Promise<AppUser> {
-    const { data, error } = await authClient.admin.banUser({ userId })
+    try {
+        const { data } = await api.post<User>(contaPath(userId, '/suspensao'))
 
-    if (error || !data?.user) {
-        throw new Error(error?.message ?? 'Erro ao suspender usuário')
+        return mapApiUserToAppUser(data)
+    } catch (error) {
+        throw toApiError(error, 'Erro ao suspender usuário')
     }
-
-    return mapApiUserToAppUser(data.user as User)
 }
 
 export async function unbanUser(userId: string): Promise<AppUser> {
-    const { data, error } = await authClient.admin.unbanUser({ userId })
+    try {
+        const { data } = await api.post<User>(contaPath(userId, '/reativacao'))
 
-    if (error || !data?.user) {
-        throw new Error(error?.message ?? 'Erro ao ativar usuário')
+        return mapApiUserToAppUser(data)
+    } catch (error) {
+        throw toApiError(error, 'Erro ao ativar usuário')
     }
-
-    return mapApiUserToAppUser(data.user as User)
 }
 
 export type UpdateUserPayload = {
@@ -131,34 +139,35 @@ export type UpdateUserPayload = {
 }
 
 export async function updateUser(userId: string, payload: UpdateUserPayload): Promise<AppUser> {
-    if (payload.role) {
-        const { error: roleError } = await authClient.admin.setRole({ userId, role: payload.role })
-        if (roleError) {
-            throw new Error(roleError.message ?? 'Erro ao atualizar função do usuário')
-        }
-    }
-
-    const fieldsToUpdate: Record<string, unknown> = {}
-    if (payload.name !== undefined) fieldsToUpdate.name = payload.name
-    if (payload.patent !== undefined) fieldsToUpdate.patent = payload.patent
-
-    if (Object.keys(fieldsToUpdate).length > 0) {
-        const { error: updateError } = await authClient.admin.updateUser({
-            userId,
-            data: fieldsToUpdate
+    try {
+        const { data } = await api.patch<User>(contaPath(userId), {
+            ...(payload.name !== undefined && { nome: payload.name }),
+            ...(payload.patent !== undefined && { patente: payload.patent }),
+            ...(payload.role !== undefined && { role: payload.role })
         })
 
-        if (updateError) {
-            throw new Error(updateError.message ?? 'Erro ao atualizar usuário')
-        }
+        return mapApiUserToAppUser(data)
+    } catch (error) {
+        throw toApiError(error, 'Erro ao atualizar usuário')
     }
+}
 
-    const result = await authClient.admin.listUsers({ query: { limit: 100 } })
-    const updatedRaw = result.data?.users?.find(u => u.id === userId)
+export type CreateUserPayload = {
+    nome: string
+    email: string
+    senha: string
+    patente: string
+    perfil: 'admin' | 'cotista'
+    telefone?: string
+    dataNascimento?: string
+}
 
-    if (!updatedRaw) {
-        throw new Error('Usuário não encontrado após atualização')
+export async function createUser(payload: CreateUserPayload): Promise<AppUser> {
+    try {
+        const { data } = await api.post<User>('/api/usuarios', payload)
+
+        return mapApiUserToAppUser(data)
+    } catch (error) {
+        throw toApiError(error, 'Erro ao cadastrar usuário')
     }
-
-    return mapApiUserToAppUser(updatedRaw as User)
 }

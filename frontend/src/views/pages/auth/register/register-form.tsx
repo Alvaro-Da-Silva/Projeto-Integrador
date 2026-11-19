@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon, MedalIcon, ShieldCheckIcon, UserIcon } from 'lucide-react'
+import { CalendarIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon, MedalIcon, PhoneIcon, ShieldCheckIcon, UserIcon, UsersIcon } from 'lucide-react'
 
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema, RegisterFormData } from "@/lib/schemas/login";
 
-import { authClient } from "@/lib/auth-client";
+import { createUser } from '@/controllers/UsersController'
 
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -18,6 +18,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { PATENTES } from '@/lib/patentes'
 import { toast } from "sonner"
 import { Spinner } from '@/components/ui/spinner'
+
+const PERFIS = [
+  { value: 'cotista', label: 'Cotista' },
+  { value: 'admin', label: 'Administrador' },
+] as const
 
 const RegisterForm = () => {
   const router = useRouter()
@@ -30,32 +35,36 @@ const RegisterForm = () => {
     defaultValues: {
       name: "",
       email: "",
-      password: "",
+      perfil: "cotista",
       patent: undefined,
+      telefone: "",
+      dataNascimento: "",
+      password: "",
       confirmPassword: "",
     },
   })
 
+  const isCotista = useWatch({ control: form.control, name: 'perfil' }) === 'cotista'
+
   const onSubmit = async (values: RegisterFormData) => {
-    const { data, error } = await authClient.admin.createUser({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      data: {
-        patent: values.patent,
-      },
-    },{
-      onSuccess: () => {
-        toast.success("Conta criada com sucesso!")
-        form.reset()
-        router.push("/")
-      },
-      onError: (ctx) => {
-        toast.error("Erro ao cadastrar conta, tente novamente")
-        console.log("Deu erro no cadastro:", ctx.error)
-        form.reset()
-      },
-    })
+    try {
+      await createUser({
+        nome: values.name,
+        email: values.email,
+        senha: values.password,
+        patente: values.patent,
+        perfil: values.perfil,
+        ...(values.perfil === 'cotista' && {
+          telefone: values.telefone,
+          dataNascimento: values.dataNascimento,
+        }),
+      })
+      toast.success("Conta criada com sucesso!")
+      form.reset()
+      router.push("/users")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao cadastrar conta, tente novamente")
+    }
   }
 
   return (
@@ -148,6 +157,100 @@ const RegisterForm = () => {
             </Field>
           )}
         />
+        <Controller
+          name='perfil'
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field className='gap-2'>
+              <FieldLabel className='leading-5 font-semibold' htmlFor='userPerfil'>
+                Perfil
+              </FieldLabel>
+              <Select
+                value={field.value ?? null}
+                onValueChange={(value: string | null) => value && field.onChange(value)}
+              >
+                <SelectTrigger
+                  id='userPerfil'
+                  className='h-11! w-full rounded-lg bg-background'
+                  aria-invalid={!!fieldState.error}
+                  onBlur={field.onBlur}
+                >
+                  <UsersIcon className='text-muted-foreground' />
+                  <SelectValue placeholder='Selecione o perfil'>
+                    {(value: string | null) => PERFIS.find(p => p.value === value)?.label ?? 'Selecione o perfil'}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent alignItemWithTrigger={false}>
+                  <SelectGroup>
+                    {PERFIS.map(perfil => (
+                      <SelectItem key={perfil.value} value={perfil.value}>
+                        {perfil.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {fieldState.error && (
+                <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+              )}
+            </Field>
+          )}
+        />
+        {isCotista && (
+          <>
+            <Controller
+              name='telefone'
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field className='gap-2'>
+                  <FieldLabel className='leading-5 font-semibold' htmlFor='userTelefone'>
+                    Telefone
+                  </FieldLabel>
+                  <InputGroup className='h-11 rounded-lg bg-background'>
+                    <InputGroupAddon align='inline-start' className='pl-3'>
+                      <PhoneIcon />
+                    </InputGroupAddon>
+                    <InputGroupInput
+                      type='tel'
+                      id='userTelefone'
+                      placeholder='(48) 99999-0000'
+                      autoComplete='tel'
+                      {...field}
+                      aria-invalid={!!fieldState.error} />
+                  </InputGroup>
+                  {fieldState.error && (
+                    <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name='dataNascimento'
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field className='gap-2'>
+                  <FieldLabel className='leading-5 font-semibold' htmlFor='userNascimento'>
+                    Data de nascimento
+                  </FieldLabel>
+                  <InputGroup className='h-11 rounded-lg bg-background'>
+                    <InputGroupAddon align='inline-start' className='pl-3'>
+                      <CalendarIcon />
+                    </InputGroupAddon>
+                    <InputGroupInput
+                      type='date'
+                      id='userNascimento'
+                      max={new Date().toISOString().slice(0, 10)}
+                      {...field}
+                      aria-invalid={!!fieldState.error} />
+                  </InputGroup>
+                  {fieldState.error && (
+                    <p className='text-sm text-destructive'>{fieldState.error.message}</p>
+                  )}
+                </Field>
+              )}
+            />
+          </>
+        )}
         <Controller
           name='password'
           control={form.control}
