@@ -1,0 +1,10 @@
+[Unit]
+Description=Consulta periódica de versões do SISCOTA
+
+[Timer]
+OnBootSec=15min
+OnUnitInactiveSec=15min
+Unit=siscota-cd.service
+
+[Install]
+WantedBy=timers.target
