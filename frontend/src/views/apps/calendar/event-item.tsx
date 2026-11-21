@@ -117,7 +117,7 @@ export function EventItem({
       (isFirstDay ? (
         <span className='truncate'>
           {!event.allDay && (
-            <span className='truncate font-normal opacity-70 sm:text-[11px]'>
+            <span className='truncate font-normal opacity-70 max-sm:hidden sm:text-[11px]'>
               {formatTimeWithOptionalMinutes(displayStart)}{' '}
             </span>
           )}

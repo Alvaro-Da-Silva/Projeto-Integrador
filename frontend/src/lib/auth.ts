@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { Pool } from "pg";
 import { jwt,admin } from "better-auth/plugins";
 import { Resend } from "resend";
+
 import { authPath } from "./app-paths";
 
 const resend = process.env.KEY_RESEND ? new Resend(process.env.KEY_RESEND) : undefined;
@@ -77,8 +78,10 @@ function createAuth() {
     ],
 });
 }
+
 export type Auth = ReturnType<typeof createAuth>;
 let instance: Auth | undefined;
+
 export function getAuth() { return instance ??= createAuth(); }
 
 export async function hasDomainAdmin(userId: string) {
@@ -86,5 +89,6 @@ export async function hasDomainAdmin(userId: string) {
     "SELECT 1 FROM public.usuario u JOIN public.perfil p ON p.id=u.perfil_id WHERE u.better_auth_user_id=$1 AND u.status='ativo' AND p.nome='admin'",
     [userId]
   );
+
   return rowCount === 1;
 }

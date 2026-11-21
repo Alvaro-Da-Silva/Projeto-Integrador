@@ -9,11 +9,11 @@ const UserGeneral = () => {
   return (
     <section className='py-3'>
       <PersonalInfo />
-      <Separator className='my-10' />
+      <Separator className='my-6 sm:my-10' />
       <ChangePassword />
-      <Separator className='my-10' />
+      <Separator className='my-6 sm:my-10' />
       <ChangeEmail />
-      <Separator className='my-10' />
+      <Separator className='my-6 sm:my-10' />
       <DangerZone />
     </section>
   )

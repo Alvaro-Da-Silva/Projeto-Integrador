@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+
 import UserGeneral from '@/views/user-settings/general'
 import { Spinner } from '@/components/ui/spinner'
 

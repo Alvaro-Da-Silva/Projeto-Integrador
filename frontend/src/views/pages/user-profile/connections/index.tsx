@@ -14,6 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 
 const connectionCardActions = ['Share', 'Block', 'Delete']
+
 const connectionCards = [
   {
     id: '1',

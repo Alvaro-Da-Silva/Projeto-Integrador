@@ -11,6 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils'
 import { userTableColumns, type UserTableColumnHandlers } from './user-table-columns'
 
+// Colunas secundárias escondidas em telas pequenas para reduzir a rolagem horizontal
+const RESPONSIVE_COLUMN_CLASSES: Record<string, string> = {
+  joinedDate: 'max-md:hidden'
+}
+
 export interface UserTableProps {
   paginatedUsers: AppUser[]
   totalPages: number
@@ -99,7 +104,10 @@ export function UserTable({
               <TableHead
                 key={header.id}
                 style={{ width: `${header.getSize()}px` }}
-                className='text-muted-foreground text-xs font-bold tracking-wider uppercase first:pl-4 last:px-4 last:text-center'
+                className={cn(
+                  'text-muted-foreground text-xs font-bold tracking-wider uppercase first:pl-4 last:px-4 last:text-center',
+                  RESPONSIVE_COLUMN_CLASSES[header.column.id]
+                )}
               >
                 {header.isPlaceholder ? null : header.column.getCanSort() ? (
                   <div
@@ -141,7 +149,10 @@ export function UserTable({
           rows.map(row => (
             <TableRow key={row.id} className={cn(editingUserId === row.id && 'bg-muted/40')}>
               {row.getVisibleCells().map(cell => (
-                <TableCell key={cell.id} className='h-14 first:w-12.5 first:pl-4 last:w-29 last:px-4'>
+                <TableCell
+                  key={cell.id}
+                  className={cn('h-14 first:w-12.5 first:pl-4 last:w-29 last:px-4', RESPONSIVE_COLUMN_CLASSES[cell.column.id])}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

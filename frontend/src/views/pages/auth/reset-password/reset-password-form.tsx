@@ -1,12 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+
 import { useRouter,useSearchParams } from "next/navigation";
 
 import { EyeIcon, EyeOffIcon, LockKeyholeIcon, ShieldCheckIcon } from 'lucide-react'
 
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { toast } from "sonner";
+
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/lib/schemas/login";
 
 import { authClient } from "@/lib/auth-client";
@@ -14,7 +18,6 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
-import { toast } from "sonner";
 import { Spinner } from '@/components/ui/spinner'
 
 
@@ -49,7 +52,7 @@ const ResetPasswordForm = () => {
   }
 
   const onSubmit = async (values: ResetPasswordFormData) => {
-    const { data, error } = await authClient.resetPassword({
+    await authClient.resetPassword({
       token,
       newPassword: values.password,
     },{
@@ -58,7 +61,7 @@ const ResetPasswordForm = () => {
         form.reset()
         router.push("/login")
       },
-      onError: (ctx) => {
+      onError: () => {
         toast.error("Erro ao alterar senha, tente novamente")
         form.reset()
       },

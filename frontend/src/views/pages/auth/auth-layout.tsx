@@ -182,7 +182,7 @@ const AuthLayout = ({ eyebrow, title, description, children, topSlot, logoHref }
                 <span className='h-0.5 w-6 rounded-full bg-(--auth-accent)' />
                 {eyebrow}
               </p>
-              <h1 className='text-3xl font-bold tracking-tight text-foreground'>{title}</h1>
+              <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>{title}</h1>
               <p className='mt-2 text-base leading-relaxed text-muted-foreground'>{description}</p>
             </div>
 

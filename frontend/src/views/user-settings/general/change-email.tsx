@@ -1,15 +1,21 @@
 'use client'
 
-import { useState } from 'react'
 
-import { UpdateEmailFormSchema, updateEmailSchema } from '@/lib/schemas/user-configs'
 import { useForm, Controller } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { sendEmail } from '@/lib/email'
+
+import { toast } from 'sonner'
+
+import type { UpdateEmailFormSchema} from '@/lib/schemas/user-configs';
+import { updateEmailSchema } from '@/lib/schemas/user-configs'
+
+
 
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
-import { toast } from 'sonner'
+
+
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
@@ -25,7 +31,7 @@ const ChangeEmail = () => {
   })
 
   const onSubmit = async (values: UpdateEmailFormSchema) => {
-    const { data, error } = await authClient.changeEmail({
+    await authClient.changeEmail({
       newEmail: values.newEmail,
     }, {
       onSuccess: () => {

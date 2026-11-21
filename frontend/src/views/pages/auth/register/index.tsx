@@ -1,11 +1,11 @@
 'use client'
 
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
+import { ArrowLeft } from 'lucide-react'
 
 import AuthLayout from '@/views/pages/auth/auth-layout'
 import RegisterForm from '@/views/pages/auth/register/register-form'
-import { ArrowLeft } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 

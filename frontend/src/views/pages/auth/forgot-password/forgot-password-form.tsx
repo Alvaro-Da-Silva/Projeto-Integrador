@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter,useSearchParams } from "next/navigation";
 
-import { EyeIcon, EyeOffIcon, MailIcon, SendIcon } from 'lucide-react'
+import { useRouter } from "next/navigation";
+
+import { MailIcon, SendIcon } from 'lucide-react'
 
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { toast } from "sonner";
+
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/schemas/login";
 
 import { authClient } from "@/lib/auth-client";
@@ -14,9 +17,7 @@ import { appBasePath } from "@/lib/app-paths";
 
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
-import { toast } from "sonner";
 import { Spinner } from '@/components/ui/spinner'
 
 
@@ -34,7 +35,7 @@ const ForgotPasswordForm = () => {
   
   const onSubmit = async (values: ForgotPasswordFormData) => {
 
-      const { data, error } = await authClient.requestPasswordReset({
+      await authClient.requestPasswordReset({
         email: values.email,
         redirectTo: new URL(`${appBasePath}/reset_password`, window.location.origin).href
       },{
@@ -43,7 +44,7 @@ const ForgotPasswordForm = () => {
           form.reset()
           router.push("/login")
         },
-        onError: (ctx) => {
+        onError: () => {
           toast.error("Erro ao enviar email, tente novamente")
           form.reset()
         },

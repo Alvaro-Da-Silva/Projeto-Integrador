@@ -1,14 +1,7 @@
-import { DownloadIcon, FileSpreadsheetIcon, FileTextIcon, PlusIcon, SearchIcon, UploadIcon } from 'lucide-react'
+import { PlusIcon, SearchIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -31,8 +24,8 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
   const router = useRouter()
 
   return (
-    <div className='flex gap-4 p-6 max-sm:flex-col sm:items-center sm:justify-between'>
-      <div className='w-full max-w-2xs'>
+    <div className='flex gap-4 p-4 max-sm:flex-col sm:items-center sm:justify-between sm:p-6'>
+      <div className='w-full sm:max-w-2xs'>
         <Label htmlFor='search-user' className='sr-only'>
           Pesquisar usuário
         </Label>
@@ -50,7 +43,7 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
         </InputGroup>
       </div>
 
-      <div className='flex flex-wrap items-center gap-2 sm:justify-between'>
+      <div className='flex flex-wrap items-center justify-between gap-2'>
         <div className='flex items-center gap-2'>
           <Label htmlFor='rows-per-page' className='sr-only'>
             Mostrar
@@ -81,6 +74,7 @@ export function UserTableToolbar({ search, rowsPerPage, onSearch, onRowsPerPageC
 
         <Button onClick={() => router.push('/register')}>
           <PlusIcon />
+          <span className='lg:hidden'>Novo usuário</span>
           <span className='max-lg:hidden'>Adicionar Novo Usuário</span>
         </Button>
       </div>

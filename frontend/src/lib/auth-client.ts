@@ -1,5 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 import { adminClient, jwtClient, inferAdditionalFields } from 'better-auth/client/plugins'
+
 import type { Auth } from "./auth";
 import { authPath } from "./app-paths";
 

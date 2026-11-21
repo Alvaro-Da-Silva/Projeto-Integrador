@@ -198,8 +198,8 @@ export function EventCalendar({
           } as React.CSSProperties
         }
       >
-        <div className={cn('flex items-center justify-between gap-1 p-2 sm:p-4', className)}>
-          <div className='flex items-center gap-1 max-sm:justify-between sm:gap-4'>
+        <div className={cn('flex flex-wrap items-center justify-between gap-2 p-2 sm:p-4', className)}>
+          <div className='flex items-center gap-1 sm:gap-4'>
             <div className='flex items-center gap-1'>
               {canCreate && (
                 <>
@@ -216,7 +216,7 @@ export function EventCalendar({
                 <CalendarCheckIcon size={16} aria-hidden='true' />
                 <span>Hoje</span>
               </Button>
-              <Button variant='outline' size='icon-sm' className='sm:hidden' onClick={goToToday}>
+              <Button variant='outline' size='icon-sm' className='sm:hidden' onClick={goToToday} aria-label='Hoje'>
                 <CalendarCheckIcon size={16} aria-hidden='true' />
               </Button>
             </div>
@@ -225,12 +225,12 @@ export function EventCalendar({
             <Button variant='ghost' size='icon-sm' onClick={goToPrevious} aria-label='Anterior'>
               <ChevronLeftIcon size={16} aria-hidden='true' />
             </Button>
-            <h2 className='cbmsc-titulo text-sm sm:text-lg md:text-xl'>{viewTitle}</h2>
+            <h2 className='cbmsc-titulo text-center text-sm whitespace-nowrap sm:text-lg md:text-xl'>{viewTitle}</h2>
             <Button variant='ghost' size='icon-sm' onClick={goToNext} aria-label='Próximo'>
               <ChevronRightIcon size={16} aria-hidden='true' />
             </Button>
           </div>
-          <div className='flex items-center gap-2'>
+          <div className='ml-auto flex flex-wrap items-center justify-end gap-2 max-sm:w-full'>
             {toolbar}
             <DropdownMenu>
               <DropdownMenuTrigger render={<Button variant='outline' className='max-sm:h-8!' />}>
