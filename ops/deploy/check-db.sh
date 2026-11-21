@@ -23,3 +23,18 @@ for migration in 003_require_cotista_contact 004_link_better_auth_identity 005_b
   sql -q -d siscota -f "$root/backend/migrations/$migration.sql"
 done
 sql -q -1 -d siscota -f "$root/ops/deploy/runtime.sql" -f "$root/ops/deploy/smoke-schema.sql"
+# Valida primeiro o baseline anterior e depois a expansão revisada para cadastro.
+sql -q -d siscota -f "$root/backend/migrations/008_user_provisioning_runtime.sql"
+sql -q -d siscota <<'SQL'
+DO $$
+BEGIN
+  IF NOT has_table_privilege('siscota', 'public."user"', 'INSERT')
+     OR NOT has_table_privilege('siscota', 'public.account', 'INSERT')
+     OR NOT has_table_privilege('siscota', 'public.usuario', 'INSERT')
+     OR NOT has_table_privilege('siscota', 'public.cotista', 'INSERT')
+     OR has_table_privilege('siscota', 'public."user"', 'DELETE')
+     OR has_schema_privilege('siscota', 'public', 'CREATE') THEN
+    RAISE EXCEPTION 'Contrato de permissões de cadastro divergente';
+  END IF;
+END $$;
+SQL
