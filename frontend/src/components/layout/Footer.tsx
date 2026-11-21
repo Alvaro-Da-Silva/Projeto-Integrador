@@ -1,8 +1,10 @@
 'use client'
 
+import { useState } from 'react'
+
 import { Button } from '@base-ui/react'
 import Link from 'next/link'
-import { useState } from 'react'
+
 import CreditModal from '../modals/CreditModal'
 
 const Footer = () => {

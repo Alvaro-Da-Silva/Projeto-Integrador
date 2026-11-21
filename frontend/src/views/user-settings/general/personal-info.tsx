@@ -3,23 +3,33 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { ImageIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
-import { UpdateUserDataFormSchema, updateUserDataSchema } from '@/lib/schemas/user-configs'
+
 import { Controller, useForm } from 'react-hook-form'
+
 import { useRouter } from 'next/navigation'
+
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { toast } from 'sonner'
+
+import type { UpdateUserDataFormSchema} from '@/lib/schemas/user-configs';
+import { updateUserDataSchema } from '@/lib/schemas/user-configs'
+
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/auth-client'
 import { Field, FieldLabel } from '@/components/ui/field'
-import { toast } from 'sonner'
+
+
 import ImageCropperModal from '@/components/modals/ImageCropperModal'
 import { Spinner } from '@/components/ui/spinner'
 
 const fileToBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
+
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = reject
     reader.readAsDataURL(file)
@@ -42,6 +52,15 @@ const PersonalInfo = () => {
     },
   })
 
+  const sessionImage = session?.user.image ?? null
+  const [syncedSessionImage, setSyncedSessionImage] = useState<string | null>(null)
+
+  // Sincroniza o preview com a imagem da sessão durante o render (evita setState dentro de effect)
+  if (sessionImage && sessionImage !== syncedSessionImage) {
+    setSyncedSessionImage(sessionImage)
+    setPreview(sessionImage)
+  }
+
   useEffect(() => {
     form.register('image')
   }, [form])
@@ -53,8 +72,8 @@ const PersonalInfo = () => {
       if (session?.user.name) {
         form.setValue("name", session.user.name)
       }
+
       if (session?.user.image) {
-        setPreview(session.user.image)
         form.setValue("image", session.user.image)
       }
     }
@@ -69,7 +88,7 @@ const PersonalInfo = () => {
       imageToUpdate = null
     }
 
-    const { data, error } = await authClient.updateUser({
+    await authClient.updateUser({
       name: values.name,
       ...(imageToUpdate !== undefined ? { image: imageToUpdate } : {}),
     }, {
@@ -87,16 +106,20 @@ const PersonalInfo = () => {
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
+
     if (!selectedFile) return
 
     form.setValue('image', selectedFile, { shouldValidate: true, shouldDirty: true })
     const isValid = await form.trigger('image')
+
     if (!isValid) {
       if (inputRef.current) inputRef.current.value = ''
+
       return
     }
 
     const objectUrl = URL.createObjectURL(selectedFile)
+
     setCropImageSrc(objectUrl)
   }
 
@@ -144,7 +167,7 @@ const PersonalInfo = () => {
         <form className='mx-auto' onSubmit={form.handleSubmit(onSubmit)}>
           <div className='mb-6 w-full space-y-2'>
             <Label>Foto de Perfil</Label>
-            <div className='flex items-center gap-4'>
+            <div className='flex flex-wrap items-center gap-4'>
               <div
                 role='button'
                 tabIndex={0}
@@ -156,7 +179,7 @@ const PersonalInfo = () => {
                     openPicker()
                   }
                 }}
-                className='flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed hover:opacity-95'
+                className='flex h-20 w-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed hover:opacity-95'
               >
                 {preview ? (
                   <img src={preview} alt='Foto de perfil' className='h-full w-full object-cover' />
@@ -177,7 +200,7 @@ const PersonalInfo = () => {
                   <UploadCloudIcon />
                   Carregar foto de perfil
                 </Button>
-                <Button type='button' variant='ghost' onClick={remove} disabled={!file && !preview} className='text-destructive! cursor-pointer'>
+                <Button type='button' variant='ghost' aria-label='Remover foto de perfil' onClick={remove} disabled={!file && !preview} className='text-destructive! cursor-pointer'>
                   <Trash2Icon />
                 </Button>
               </div>
@@ -209,7 +232,7 @@ const PersonalInfo = () => {
               )}
             />
           </div>
-          <div className='flex justify-end'>
+          <div className='mt-6 flex justify-end'>
             <Button type='submit' className='max-sm:w-full' disabled={form.formState.isSubmitting || !form.formState.isValid}>
               {form.formState.isSubmitting ? (
                 <span className='flex items-center gap-2'>

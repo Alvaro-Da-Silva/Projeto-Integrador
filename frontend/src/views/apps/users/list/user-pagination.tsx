@@ -31,7 +31,7 @@ export function UserPagination({
   })
 
   return (
-    <div className='flex items-center justify-between gap-3 px-6 py-4 max-sm:flex-col md:max-lg:flex-col'>
+    <div className='flex items-center justify-between gap-3 px-4 py-4 max-sm:flex-col sm:px-6 md:max-lg:flex-col'>
       <p className='text-muted-foreground text-sm whitespace-nowrap' aria-live='polite'>
         Mostrando <span>{showingFrom}</span> de <span>{showingTo}</span> de <span>{total}</span> entradas
       </p>

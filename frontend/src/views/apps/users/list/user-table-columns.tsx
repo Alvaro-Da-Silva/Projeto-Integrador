@@ -21,7 +21,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
@@ -66,7 +65,7 @@ export interface UserTableColumnHandlers {
 }
 
 declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type
   interface TableMeta<TData> extends Partial<UserTableColumnHandlers> {}
 }
 
@@ -328,6 +327,6 @@ export const userTableColumns: ColumnDef<AppUser>[] = [
   }
 ]
 
-export function getUserTableColumns(_handlers?: Partial<UserTableColumnHandlers>): ColumnDef<AppUser>[] {
+export function getUserTableColumns(): ColumnDef<AppUser>[] {
   return userTableColumns
 }

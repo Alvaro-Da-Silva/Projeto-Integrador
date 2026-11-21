@@ -16,7 +16,7 @@ export interface UserTableFiltersProps {
 
 export function UserTableFilters({ filters, onFilterChange }: UserTableFiltersProps) {
   return (
-    <div className='flex flex-col gap-4 border-b p-6'>
+    <div className='flex flex-col gap-4 border-b p-4 sm:p-6'>
       <div className='grid grid-cols-1 gap-6 max-md:*:last:col-span-full sm:grid-cols-2 md:grid-cols-3'>
         <div className='flex w-full flex-col gap-2'>
           <Label htmlFor='filter-role'>Função</Label>

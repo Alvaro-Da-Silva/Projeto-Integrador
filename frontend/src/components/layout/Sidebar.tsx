@@ -428,11 +428,16 @@ const SidebarGroupedMenuItems = ({
 const SidebarLayout = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { state, isMobile } = useSidebar()
+  const { state, isMobile, setOpenMobile } = useSidebar()
   const { data: session } = authClient.useSession()
   const role = session?.user.role
 
-  const [externalApps, setExternalApps] = useState<MenuItem[]>([])
+  // No celular o menu é um painel sobreposto: fecha ao navegar para outra página
+  useEffect(() => {
+    setOpenMobile(false)
+  }, [pathname, setOpenMobile])
+
+  const [externalApps] = useState<MenuItem[]>([])
 
 
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({})

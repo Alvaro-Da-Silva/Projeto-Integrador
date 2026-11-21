@@ -317,7 +317,7 @@ export function AdminCotasCalendar() {
                 if (value) setCotistaId(value)
               }}
             >
-              <SelectTrigger className='w-44 max-sm:h-8 max-sm:w-32' aria-label='Filtrar por cotista'>
+              <SelectTrigger className='w-44 max-sm:h-8 max-sm:w-auto max-sm:min-w-0 max-sm:flex-1' aria-label='Filtrar por cotista'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

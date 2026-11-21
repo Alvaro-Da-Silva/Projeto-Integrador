@@ -20,7 +20,12 @@ type AboutItem = {
   icon?: LucideIcon
 }
 
-const profileSections = [
+type AboutSectionGroup = {
+  title: string
+  items: AboutItem[]
+}
+
+const profileSections: AboutSectionGroup[] = [
   {
     title: 'About',
     items: [
@@ -41,7 +46,7 @@ const profileSections = [
   }
 ]
 
-const overviewSections = [
+const overviewSections: AboutSectionGroup[] = [
   {
     title: 'Overview',
     items: [

@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import Link from 'next/link'
 
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
@@ -13,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { useState } from 'react'
 import LogoutModal from '../modals/LogoutModal'
 import { authClient } from '@/lib/auth-client'
 import { getInitialsFromName } from '@/configs/mailConfig'
@@ -44,9 +45,9 @@ const ProfileDropdown = () => {
               </Avatar>
     
             </div>
-            <div className='flex flex-1 flex-col items-start'>
-              <span className='text-foreground text-base font-semibold'>{session?.user?.name || 'Usuário'}</span>
-              <span className='text-muted-foreground text-xs'>{session?.user?.email || ''}</span>
+            <div className='flex min-w-0 flex-1 flex-col items-start'>
+              <span className='text-foreground w-full truncate text-base font-semibold'>{session?.user?.name || 'Usuário'}</span>
+              <span className='text-muted-foreground w-full truncate text-xs'>{session?.user?.email || ''}</span>
             </div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>

@@ -3,15 +3,24 @@
 import { useMemo, useState } from 'react'
 
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from 'lucide-react'
-import { updatePasswordSchema, UpdatePasswordFormSchema } from '@/lib/schemas/user-configs'
-import { useForm, Controller } from 'react-hook-form'
+
+import { useForm, useWatch, Controller } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { toast } from 'sonner'
+
+import type { UpdatePasswordFormSchema } from '@/lib/schemas/user-configs';
+import { updatePasswordSchema } from '@/lib/schemas/user-configs'
+
+
 import { authClient } from '@/lib/auth-client'
 
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
-import { toast } from 'sonner'
+
+
 import { Spinner } from '@/components/ui/spinner'
 
 import { cn } from '@/lib/utils'
@@ -62,7 +71,7 @@ const ChangePassword = () => {
     })
   }
 
-  const password = form.watch('newPassword')
+  const password = useWatch({ control: form.control, name: 'newPassword' }) ?? ''
 
   const strength = requirements.map(req => ({
     met: req.regex.test(password),

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+
 import Cropper from 'react-easy-crop';
 import { CropIcon } from 'lucide-react';
+
 import {
     Dialog,
     DialogContent,
@@ -35,6 +37,7 @@ interface ImageCropperProps {
 const createImage = (url: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
         const image = new Image();
+
         image.addEventListener('load', () => resolve(image));
         image.addEventListener('error', (error) => reject(error));
         image.setAttribute('crossOrigin', 'anonymous');
@@ -84,9 +87,12 @@ async function getCroppedImg(
         canvas.toBlob((blob) => {
             if (!blob) {
                 resolve(null);
+
                 return;
             }
+
             const file = new File([blob], 'cropped_image.jpg', { type: 'image/jpeg' });
+
             resolve({ file, url: URL.createObjectURL(blob) });
         }, 'image/jpeg');
     });
@@ -113,6 +119,7 @@ export default function ImageCropper({
     const handleConfirm = async () => {
         if (croppedAreaPixels) {
             const result = await getCroppedImg(imageSrc, croppedAreaPixels);
+
             if (result) {
                 onCropComplete(result.file, result.url);
             }
@@ -122,7 +129,7 @@ export default function ImageCropper({
     return (
         <Dialog open={open} onOpenChange={v => !v && onCancel()}>
             <DialogContent
-                className='flex max-w-2xl flex-col gap-4 p-6'
+                className='flex flex-col gap-4 sm:max-w-2xl'
                 showCloseButton={false}
             >
                 <DialogHeader>
@@ -132,7 +139,7 @@ export default function ImageCropper({
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className='relative h-[400px] w-full overflow-hidden rounded-lg bg-black'>
+                <div className='relative h-[min(400px,55dvh)] w-full overflow-hidden rounded-lg bg-black'>
                     <Cropper
                         image={imageSrc}
                         crop={crop}
@@ -145,7 +152,7 @@ export default function ImageCropper({
                 </div>
 
                 <p className='text-muted-foreground text-center text-xs'>
-                    Arraste para posicionar e use a rolagem do mouse para ajustar o zoom.
+                    Arraste para posicionar e use a rolagem do mouse (ou o gesto de pinça) para ajustar o zoom.
                 </p>
 
                 <DialogFooter>

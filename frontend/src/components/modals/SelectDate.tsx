@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+
 import { format } from 'date-fns'
 import { CheckIcon, ChevronLeftIcon, Trash2Icon } from 'lucide-react'
 
@@ -41,13 +42,19 @@ export default function SelectDate({
   isSaving = false
 }: SelectDateProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const [prevOpen, setPrevOpen] = useState(open)
+  const [prevDate, setPrevDate] = useState(date)
   const displayDate = date instanceof Date && !isNaN(date.getTime()) ? date : new Date()
 
-  useEffect(() => {
+  // Reseta a confirmação de exclusão ao abrir o modal ou trocar de dia (ajuste de estado durante o render)
+  if (open !== prevOpen || date !== prevDate) {
+    setPrevOpen(open)
+    setPrevDate(date)
+
     if (open) {
       setIsConfirmingDelete(false)
     }
-  }, [open, date])
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

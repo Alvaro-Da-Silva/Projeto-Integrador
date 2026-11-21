@@ -18,6 +18,7 @@ type ConnectionsProps = {
 }
 
 const connectionActions = ['Share', 'Block']
+
 const connections = [
   { id: '1', avatar: '', initials: 'MD', name: 'Mark Doe', totalConnections: '45 Connections', isConnected: true },
   { id: '2', avatar: '', initials: 'JS', name: 'Jane Smith', totalConnections: '12 Connections', isConnected: false }

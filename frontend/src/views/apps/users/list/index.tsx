@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react'
 
+import { toast } from 'sonner'
+
 import type { AppUser, UserFilters, UserRole, UserSorting } from '@/types/apps/user-types'
 
 import { getUsers, banUser, unbanUser, updateUser } from '@/controllers/UsersController'
@@ -12,7 +14,6 @@ import { UserPagination } from './user-pagination'
 import { UserTable } from './user-table'
 import { UserTableFilters } from './user-table-filters'
 import { UserTableToolbar } from './user-table-toolbar'
-import { toast } from 'sonner'
 
 const DEFAULT_FILTERS: UserFilters = {
   role: 'all',
@@ -99,6 +100,7 @@ const UserListApp = () => {
   const handleBan = useCallback(async (userId: string) => {
     try {
       const updated = await banUser(userId)
+
       setUsers(prev => prev.map(u => u.id === userId ? updated : u))
       toast.success('Usuário suspenso com sucesso.')
     } catch (err) {
@@ -109,6 +111,7 @@ const UserListApp = () => {
   const handleUnban = useCallback(async (userId: string) => {
     try {
       const updated = await unbanUser(userId)
+
       setUsers(prev => prev.map(u => u.id === userId ? updated : u))
       toast.success('Usuário ativado com sucesso.')
     } catch (err) {
@@ -118,6 +121,7 @@ const UserListApp = () => {
 
   const handleEdit = useCallback((userId: string) => {
     const user = users.find(u => u.id === userId)
+
     if (!user) return
 
     setEditingUserId(userId)
@@ -149,10 +153,12 @@ const UserListApp = () => {
         toast.info('Nenhuma alteração detectada.')
         setEditingUserId(null)
         setEditingState(null)
+
         return
       }
 
       const updated = await updateUser(userId, payload)
+
       setUsers(prev => prev.map(u => u.id === userId ? updated : u))
       setEditingUserId(null)
       setEditingState(null)

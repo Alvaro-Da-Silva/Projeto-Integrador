@@ -10,7 +10,11 @@ import { ArrowRightIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon } from '
 
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginSchema, LoginFormData } from "@/lib/schemas/login";
+
+import { toast } from "sonner"
+
+import type { LoginFormData } from "@/lib/schemas/login";
+import { loginSchema } from "@/lib/schemas/login";
 
 import { authClient } from '@/lib/auth-client'
 
@@ -18,7 +22,8 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
-import { toast } from "sonner"
+
+
 import { Spinner } from '@/components/ui/spinner'
 
 const LoginForm = () => {
@@ -36,7 +41,7 @@ const LoginForm = () => {
   })
 
   const onSubmit = async (values: LoginFormData) => {
-    const { data, error } = await authClient.signIn.email({
+    await authClient.signIn.email({
       email: values.email,
       password: values.password,
       rememberMe: values.rememberMe,

@@ -1,4 +1,5 @@
 import z from 'zod';
+
 import { PATENTES } from '@/lib/patentes';
 
 export const loginSchema = z.object({

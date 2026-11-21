@@ -161,7 +161,7 @@ export function CotistaDefinitivaCalendar() {
                 if (value) setFiltro(value)
               }}
             >
-              <SelectTrigger className='w-40 max-sm:h-8 max-sm:w-32' aria-label='Filtrar escala'>
+              <SelectTrigger className='w-40 max-sm:h-8 max-sm:w-auto max-sm:min-w-0 max-sm:flex-1' aria-label='Filtrar escala'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

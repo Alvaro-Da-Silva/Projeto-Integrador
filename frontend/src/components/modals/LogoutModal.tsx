@@ -1,4 +1,7 @@
 import { LogOutIcon } from "lucide-react"
+
+import { useRouter } from "next/navigation"
+
 import {
     Dialog,
     DialogContent,
@@ -9,7 +12,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "../ui/button"
 import { authClient } from "@/lib/auth-client"
-import { useRouter } from "next/navigation"
 
 export default function LogoutModal({
     open,

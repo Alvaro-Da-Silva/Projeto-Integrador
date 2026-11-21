@@ -1,13 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+
 import { useRouter } from 'next/navigation'
 
 import { CalendarIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon, MailIcon, MedalIcon, PhoneIcon, ShieldCheckIcon, UserIcon, UsersIcon } from 'lucide-react'
 
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { registerSchema, RegisterFormData } from "@/lib/schemas/login";
+
+import { toast } from "sonner"
+
+import type { RegisterFormData } from "@/lib/schemas/login";
+import { registerSchema } from "@/lib/schemas/login";
 
 import { createUser } from '@/controllers/UsersController'
 
@@ -16,7 +21,8 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PATENTES } from '@/lib/patentes'
-import { toast } from "sonner"
+
+
 import { Spinner } from '@/components/ui/spinner'
 
 const PERFIS = [
