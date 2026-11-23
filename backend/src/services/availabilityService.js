@@ -41,3 +41,28 @@ export async function listScaleAvailability(scaleId,cotistaId) {
   const result = await availabilityRepository.findAvailabilityByScale(scaleId,cotistaId);
   return result.rows;
 }
+
+export async function deleteAvailability(cotistaId,dayId) {
+  return transaction(async client => {
+    const cotista = await availabilityRepository.findActiveCotistaForUpdate(client,cotistaId);
+    if (!cotista.rowCount) throw new HttpError(403,'Cotista não encontrado ou inativo.');
+    const day = await availabilityRepository.findDayById(client,dayId);
+    if (!day.rowCount) throw new HttpError(404,'Dia não encontrado.');
+    const scale = await lockedScale(client,day.rows[0].escalaId);
+    if (scale.status !== 'aberta') throw new HttpError(409,'A escala não está aberta para preenchimento.');
+    if (day.rows[0].data < scale.dataInicio || day.rows[0].data > scale.dataFim) {
+      throw new HttpError(409,'Dia fora do intervalo da escala.');
+    }
+    const current = await availabilityRepository.findCurrentAvailabilityForUpdate(client,cotistaId,dayId);
+    if (!current.rowCount) throw new HttpError(404,'Disponibilidade não encontrada.');
+    if (current.rowCount > 1) throw new HttpError(409,'Há múltiplas escolhas antigas neste dia. Solicite revisão administrativa.');
+    const period = await availabilityRepository.findActivePeriodByIdForShare(client,current.rows[0].periodo_id);
+    if (!period.rowCount) throw new HttpError(409,'Período não cadastrado ou inativo.');
+    const codes = period.rows[0].codigo === 'I' ? ['D','N1','N2'] : [period.rows[0].codigo];
+    const released = await availabilityRepository.findReleasedShiftsForUpdate(client,dayId,codes);
+    if (!released.rowCount) throw new HttpError(409,'Dia/período não liberado pelo administrador.');
+    const result = await availabilityRepository.deleteCurrentAvailability(client,cotistaId,dayId);
+    if (!result.rowCount) throw new HttpError(404,'Disponibilidade não encontrada.');
+    return result.rows[0];
+  });
+}

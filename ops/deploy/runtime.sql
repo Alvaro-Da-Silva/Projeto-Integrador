@@ -6,6 +6,7 @@ GRANT USAGE ON SCHEMA public TO siscota;
 GRANT SELECT ON public.usuario, public.cotista, public.perfil, public.periodo,
   public.escala, public.dia, public.plantao, public.disponibilidade TO siscota;
 GRANT INSERT, UPDATE ON public.escala, public.dia, public.plantao, public.disponibilidade TO siscota;
+GRANT DELETE ON public.disponibilidade TO siscota;
 GRANT UPDATE (id) ON public.cotista, public.periodo TO siscota;
 GRANT USAGE ON SEQUENCE public.escala_id_seq, public.dia_id_seq, public.plantao_id_seq,
   public.disponibilidade_id_seq, public.participacao_id_seq, public.escala_ajuste_id_seq TO siscota;

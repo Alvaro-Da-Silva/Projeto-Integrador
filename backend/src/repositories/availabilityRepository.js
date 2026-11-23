@@ -54,3 +54,11 @@ export function findAvailabilityByCotistaAndScale(cotistaId,scaleId) {
     FROM disponibilidade a JOIN dia d ON d.id=a.dia_id JOIN periodo r ON r.id=a.periodo_id
     WHERE a.cotista_id=$1 AND d.escala_id=$2 ORDER BY d.data,a.id`,[cotistaId,scaleId]);
 }
+
+export function findActivePeriodByIdForShare(client,periodId) {
+  return client.query("SELECT id,codigo FROM periodo WHERE id=$1 AND status='ativo' FOR SHARE",[periodId]);
+}
+
+export function deleteCurrentAvailability(client,cotistaId,dayId) {
+  return client.query('DELETE FROM disponibilidade WHERE cotista_id=$1 AND dia_id=$2 RETURNING id',[cotistaId,dayId]);
+}
