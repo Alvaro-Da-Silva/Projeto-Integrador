@@ -46,11 +46,16 @@ test('Sessao simulada, permissoes, liberacao e disponibilidade (PostgreSQL simul
       const rows=users.filter(u=>sql.includes('lower(u.email)') ? u.email===values[0] : `auth-${u.id}`===values[0]);
       return {rows,rowCount:rows.length};
     }
+    if(sql.includes('FROM escala WHERE id=$1')) return values[0]==='20' ? row({id:'20'}) : {rows:[],rowCount:0};
+    if(sql.includes('FROM disponibilidade a JOIN dia d ON d.id=a.dia_id')) {
+      return deleteWasDone ? {rows:[],rowCount:0} : row({id:'60',diaId:'30',data:'2026-11-01',codigoPeriodo:'D',periodoId:'40'});
+    }
     throw new Error('Query fora de transacao nao esperada');
   });
   let handle;
   let queries=[];
   let releases=0;
+  let deleteWasDone=false;
   t.mock.method(pool,'connect',async()=>({
     query:async(sql,values)=> {
       queries.push({sql,values});
@@ -65,7 +70,7 @@ test('Sessao simulada, permissoes, liberacao e disponibilidade (PostgreSQL simul
     const response=await fetch(`http://127.0.0.1:${server.address().port}${path}`,{
       method,headers:{'Content-Type':'application/json',Origin:'http://localhost:3000',...(userId?{Cookie:`test-session=${userId}`}:{})},
       body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(10000)});
-    return {status:response.status,body:await response.json(),headers:response.headers};
+    return {status:response.status,body:response.status===204?undefined:await response.json(),headers:response.headers};
   };
   const row = value=>({rows:[value],rowCount:1});
   const scale={id:'20',ano:2026,mes:11,status:'aberta',dataInicio:'2026-11-01',dataFim:'2026-11-30'};
@@ -189,5 +194,100 @@ test('Sessao simulada, permissoes, liberacao e disponibilidade (PostgreSQL simul
     const before=releases;
     await assert.rejects(transaction(async()=> {throw new Error('teste');}));
     assert.equal(releases,before+1);assert.equal(queries.at(-1).sql,'ROLLBACK');
+  });
+  const configureDelete=({cotistaId='10',availability=true,scaleStatus='aberta',periodActive=true,released=true,deleteRow=true}={})=> {
+    handle=async(sql,values)=> {
+      if(sql.includes('FROM cotista')) return row({id:values[0]});
+      if(sql.includes('FROM dia WHERE id=')) return row({id:'30',escalaId:'20',data:'2026-11-01'});
+      if(sql.includes('FROM escala')) return row({...scale,status:scaleStatus});
+      if(sql.includes('SELECT id,periodo_id FROM disponibilidade')) {
+        assert.equal(values[1],'30');
+        return availability&&values[0]===cotistaId ? row({id:'60',periodo_id:'40'}) : {rows:[],rowCount:0};
+      }
+      if(sql.includes('FROM periodo WHERE id=$1')) return periodActive ? row({id:'40',codigo:'D'}) : {rows:[],rowCount:0};
+      if(sql.includes('SELECT p.id FROM plantao')) {
+        assert.deepEqual(values,['30',['D']]);
+        return released ? row({id:'50'}) : {rows:[],rowCount:0};
+      }
+      if(sql.startsWith('DELETE FROM disponibilidade')) {
+        assert.deepEqual(values,[cotistaId,'30']);
+        if(deleteRow) deleteWasDone=true;
+        return deleteRow ? row({id:'60'}) : {rows:[],rowCount:0};
+      }
+      return defaultHandle(sql,values);
+    };
+  };
+  await t.test('GET de disponibilidades continua retornando as escolhas do cotista',async()=> {
+    deleteWasDone=false;
+    const response=await request('GET','/api/disponibilidades?escalaId=20',undefined,'2');
+    assert.equal(response.status,200);
+    assert.equal(response.headers.get('cache-control'),'no-store');
+    assert.equal(response.body[0].diaId,'30');
+  });
+  await t.test('DELETE exige sessão e perfil cotista',async()=> {
+    queries=[];
+    assert.equal((await request('DELETE','/api/disponibilidades/30')).status,401);
+    assert.equal((await request('DELETE','/api/disponibilidades/30',undefined,'1')).status,403);
+    assert(!queries.some(q=>q.sql==='BEGIN READ WRITE'));
+  });
+  await t.test('DELETE recusa cotista inativo antes de abrir transação',async()=> {
+    users[1].cotistaStatus='inativo';queries=[];
+    const response=await request('DELETE','/api/disponibilidades/30',undefined,'2');
+    assert.equal(response.status,403);
+    assert(!queries.some(q=>q.sql==='BEGIN READ WRITE'));
+    users[1].cotistaStatus='ativo';
+  });
+  await t.test('DELETE remove somente a escolha do cotista autenticado e o calendário reflete a remoção',async()=> {
+    deleteWasDone=false;configureDelete();queries=[];
+    const response=await request('DELETE','/api/disponibilidades/30',undefined,'2');
+    assert.equal(response.status,204);assert.equal(response.body,undefined);
+    const deletion=queries.find(q=>q.sql.startsWith('DELETE FROM disponibilidade'));
+    assert.deepEqual(deletion.values,['10','30']);
+    assert.equal(queries.at(-1).sql,'COMMIT');
+    const calendar=await request('GET','/api/disponibilidades?escalaId=20',undefined,'2');
+    assert.equal(calendar.status,200);assert.deepEqual(calendar.body,[]);
+  });
+  await t.test('DELETE inexistente retorna 404 sem executar DELETE',async()=> {
+    configureDelete({availability:false});queries=[];
+    const response=await request('DELETE','/api/disponibilidades/30',undefined,'2');
+    assert.equal(response.status,404);
+    assert(!queries.some(q=>q.sql.startsWith('DELETE FROM disponibilidade')));
+    assert.equal(queries.at(-1).sql,'ROLLBACK');
+  });
+  await t.test('Cotista nao pode excluir escolha pertencente a outro cotista',async()=> {
+    configureDelete({cotistaId:'10'});queries=[];
+    const response=await request('DELETE','/api/disponibilidades/30',undefined,'3');
+    assert.equal(response.status,404);
+    assert.deepEqual(queries.find(q=>q.sql.includes('SELECT id,periodo_id FROM disponibilidade')).values,['11','30']);
+    assert(!queries.some(q=>q.sql.startsWith('DELETE FROM disponibilidade')));
+  });
+  await t.test('DELETE respeita escala fechada',async()=> {
+    configureDelete({scaleStatus:'fechada'});queries=[];
+    const response=await request('DELETE','/api/disponibilidades/30',undefined,'2');
+    assert.equal(response.status,409);
+    assert(!queries.some(q=>q.sql.startsWith('DELETE FROM disponibilidade')));
+  });
+  await t.test('DELETE sem privilégio SQL retorna erro sanitizado e reverte',async()=> {
+    configureDelete();queries=[];
+    const delegate=handle;
+    handle=async(sql,values)=> {
+      if(sql.startsWith('DELETE FROM disponibilidade')) throw Object.assign(new Error('permission denied'),{code:'42501'});
+      return delegate(sql,values);
+    };
+    const response=await request('DELETE','/api/disponibilidades/30',undefined,'2');
+    assert.equal(response.status,503);
+    assert.deepEqual(response.body,{error:'Permissões de escrita do banco não configuradas para esta operação.'});
+    assert.equal(queries.at(-1).sql,'ROLLBACK');
+    handle=defaultHandle;
+  });
+  await t.test('DELETE respeita período inativo ou plantão não liberado',async()=> {
+    for(const options of [{periodActive:false},{released:false}]) {
+      configureDelete(options);queries=[];
+      const response=await request('DELETE','/api/disponibilidades/30',undefined,'2');
+      assert.equal(response.status,409);
+      assert(!queries.some(q=>q.sql.startsWith('DELETE FROM disponibilidade')));
+      assert.equal(queries.at(-1).sql,'ROLLBACK');
+    }
+    handle=defaultHandle;
   });
 });
