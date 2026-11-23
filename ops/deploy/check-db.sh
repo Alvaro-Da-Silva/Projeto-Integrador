@@ -32,6 +32,7 @@ BEGIN
      OR NOT has_table_privilege('siscota', 'public.account', 'INSERT')
      OR NOT has_table_privilege('siscota', 'public.usuario', 'INSERT')
      OR NOT has_table_privilege('siscota', 'public.cotista', 'INSERT')
+     OR NOT has_table_privilege('siscota', 'public.disponibilidade', 'DELETE')
      OR has_table_privilege('siscota', 'public."user"', 'DELETE')
      OR has_schema_privilege('siscota', 'public', 'CREATE') THEN
     RAISE EXCEPTION 'Contrato de permissões de cadastro divergente';
